@@ -12,7 +12,10 @@ handlers:
   static_files: favicon.ico
   upload: favicon\.ico
 
-- url: .*
+- url: /api/users/.*
+  script: api.users.app
+
+- url: /.*
   script: main.app
 
 libraries:
