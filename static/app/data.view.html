@@ -5,13 +5,19 @@
 </style>
 
 <div id="dataView" class="container-fluid" ng-controller="DataController">
+
+    <div class="btn-group" role="group">
+        <button type="button" ng-click="addNewGameNightRow()" class="btn btn-primary btn-sm">+</button>
+        <button type="button" ng-click="save()" class="btn btn-success btn-sm ">Save</button>
+    </div>
+
     <div id="gameNightRow_{{$index}}" ng-repeat="gameNight in gameNights" class="row game-night">
         <div class="col-sm-12">
             <div class="col-sm-2 col-lg-1">
-                <input type="date" ng-model="gameNight.date" class="form-control" placeholder="dd.MM.yyyy" />
+                <input type="date" ng-model="gameNight.date" class="form-control" placeholder="yyyy-mm-dd" />
             </div >
             <div class="col-sm-2 col-lg-1 nopadding">
-                <select class="form-control" ng-model="gameNight.host">
+                <select class="form-control" ng-model="gameNight.host" ng-disabled="gameNight.id">
                     <option ng-repeat="person in persons" value="{{person}}">{{person}}</option>
                 </select>
             </div >
@@ -23,15 +29,14 @@
             </div>
         </div>
         <div id="collapseGameNight_{{$index}}" class="collapse col-sm-12">
-            <div ng-show="voter.name != gameNight.host" ng-repeat="voter in gameNight.voters" class="form-inline">
-                <span class="label label-default person-label">{{voter.name}}</span>
-                <input type="text" class="form-control form-control-sm dice" ng-model="voter.appertizer" placeholder="Appertizer">
-                <input type="text" class="form-control form-control-sm dice" ng-model="voter.main_course" placeholder="Main course">
-                <input type="text" class="form-control form-control-sm dice" ng-model="voter.dessert" placeholder="Dessert">
-                <input type="text" class="form-control form-control-sm dice" ng-model="voter.game" placeholder="Game">
+            <div ng-show="vote.voter != gameNight.host" ng-repeat="vote in gameNight.votes | orderBy:['voter']" class="form-inline">
+                <span class="label label-default person-label">{{vote.voter}}</span>
+                <input type="number" class="form-control form-control-sm dice" ng-model="vote.appetizer" placeholder="Appetizer" title="Appetizer">
+                <input type="number" class="form-control form-control-sm dice" ng-model="vote.main_course" placeholder="Main course" title="Main course">
+                <input type="number" class="form-control form-control-sm dice" ng-model="vote.dessert" placeholder="Dessert" title="Dessert">
+                <input type="number" class="form-control form-control-sm dice" ng-model="vote.game" placeholder="Game" title="Game">
             </div>
         </div>
     </div>
-    <button type="button" ng-click="addNewGameNightRow()" class="btn btn-primary btn-sm btn-block">Add game night</button>
-    <button type="button" ng-click="save()" class="btn btn-success btn-sm btn-block">Save</button>
+
 </div>

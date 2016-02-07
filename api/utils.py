@@ -47,9 +47,9 @@ def forbidden_403(response, code, message):
 #         return True
 
 
-def validate_request_data(response, request_data, list_of_dict_keys):
+def validate_request_data(response, data_dict, list_of_dict_keys):
     for key in list_of_dict_keys:
-        if request_data.get(key, None) in [None, '']:
+        if data_dict.get(key, None) in [None, '']:
             error_400(response, "VALIDATION_ERROR_MISSING_DATA", "The request data is missing the input value '%s'" % key)
             return False
     return True
