@@ -9,4 +9,6 @@ app.controller('LoginController', function($rootScope, $scope, $http){
 
     console.log("LoginController loaded")
 
+
+
 });

@@ -1,0 +1,20 @@
+.game-night {
+    margin-bottom: 2px;
+    padding-top: 2px;
+    padding-bottom: 10px;
+    border: 1px solid #EBEBEB;
+}
+
+.nopadding {
+   padding: 0 !important;
+   margin: 0 !important;
+}
+
+.person-label {
+    width: 75px;
+    font-size: 15px;
+}
+
+input.dice {
+    width: 75px !important;
+}
