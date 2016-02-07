@@ -1,5 +1,6 @@
 # CUSTOM STUFF
 .idea/*
+config_hidden.py
 
 # PYTHON
 *.pyc
