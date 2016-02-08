@@ -10,6 +10,11 @@ from config import *
 persons = [u'Stian', u'André', u'Ole', u'Damian']
 
 
+class Person(ndb.Model):
+    userid = ndb.StringProperty(required=True)
+    nickname = ndb.StringProperty(required=True)
+
+
 class GameNight(ndb.Model):
     host = ndb.StringProperty(required=True, choices=persons)
     date = ndb.DateProperty(required=True)
@@ -20,7 +25,7 @@ class GameNight(ndb.Model):
         return {
             'id': self.key.id(),
             'host': self.host,
-            'date_epoch': _date_to_epoch(self.date), #self.date.strftime("%d.%m.%Y"),
+            'date_epoch': _date_to_epoch(self.date),
             'description': self.description,
             'sum': round(self.sum, 1),
             'votes': [vote.get_data() for vote in Vote.query(Vote.game_night == self.key)]

@@ -1,6 +1,7 @@
 import json
 from google.appengine.api import users
 from datetime import datetime
+from models import Person
 
 
 def error_400(response, code, message):
@@ -20,23 +21,20 @@ def forbidden_403(response, code, message):
     response.set_status(403)
     response.out.write(json.dumps({'error_code': code, 'error_message': message}))
 
-#
-# def validate_authenticated(response):
-#     user = users.get_current_user()
-#     if users.is_current_user_admin():
-#         return True
-#     elif not user:
-#         unauthorized_401(response, "VALIDATION_ERROR_NOT_LOGGED_INN", "The browsing user is not logged in.")
-#         return False
-#
-#     player = Player.query(Player.userid == user.user_id()).get()
-#     if not player:
-#         unauthorized_401(response, "VALIDATION_ERROR_NOT_CLAIMED", "The browsing user is logged in with google account, but have not claimed a player.")
-#         return False
-#     elif not player.verified:
-#         unauthorized_401(response, "VALIDATION_ERROR_NOT_VERIFIED", "The browsing user has not been verified, the player claim has not been verified by an admin.")
-#         return False
-#     return True
+
+def validate_authenticated(response):
+    user = users.get_current_user()
+    if users.is_current_user_admin():
+        return True
+    elif not user:
+        unauthorized_401(response, "VALIDATION_ERROR_NOT_LOGGED_INN", "The browsing user is not logged in.")
+        return False
+
+    person = Person.query(Person.userid == user.user_id()).get()
+    if not person:
+        unauthorized_401(response, "VALIDATION_ERROR_NOT_CLAIMED", "The browsing user is logged in with a google account, but has not verified it.")
+        return False
+    return True
 #
 #
 # def validate_logged_in_admin(response):
@@ -53,11 +51,6 @@ def validate_request_data(response, data_dict, list_of_dict_keys):
             error_400(response, "VALIDATION_ERROR_MISSING_DATA", "The request data is missing the input value '%s'" % key)
             return False
     return True
-
-#
-# def current_user_player():
-#     user = users.get_current_user()
-#     return Player.query(Player.userid == user.user_id()).get()
 
 
 def date_to_epoch(date_value):

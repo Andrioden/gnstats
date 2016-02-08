@@ -18,11 +18,13 @@ class GameNightsHandler(webapp2.RequestHandler):
 
 class SyncHandler(webapp2.RequestHandler):
     def put(self):
+        if not validate_authenticated(self.response):
+            return
+
         request_data = json.loads(self.request.body)
         logging.info(request_data)
 
         return_data = []
-
         for updated_game_night in request_data:
 
             if not validate_request_data(self.response, updated_game_night, ['host', 'date', 'description']):

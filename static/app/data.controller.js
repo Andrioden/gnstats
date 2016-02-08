@@ -32,7 +32,10 @@ app.controller('DataController', function($rootScope, $scope, $http){
         sortByDate();
     }
 
+    $scope.isSaving = false;
+
     $scope.save = function() {
+        $scope.isSaving = true;
         var changedGameNights = findChangedGameNights();
 
         if (changedGameNights.length > 0) {
@@ -42,12 +45,15 @@ app.controller('DataController', function($rootScope, $scope, $http){
                         $scope.gameNights[response.data[i].index].id = response.data[i].id;
                         $scope.gameNights[response.data[i].index].sum = response.data[i].sum;
                     }
+                    $scope.isSaving = false;
                 }, function(response) {
                     alertError(response);
+                    $scope.isSaving = false;
                 });
         }
         else {
             console.log("No games to save");
+            $scope.isSaving = false;
         }
     }
 

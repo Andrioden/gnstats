@@ -8,7 +8,7 @@
 
     <div class="btn-group" role="group">
         <button type="button" ng-click="addNewGameNightRow()" class="btn btn-primary btn-sm">+</button>
-        <button type="button" ng-click="save()" class="btn btn-success btn-sm ">Save</button>
+        <button type="button" ng-click="save()" ng-disabled="isSaving" class="btn btn-success btn-sm ">Save</button>
     </div>
 
     <div id="gameNightRow_{{$index}}" ng-repeat="gameNight in gameNights" class="row game-night">
