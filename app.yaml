@@ -18,6 +18,10 @@ handlers:
 - url: /api/users/.*
   script: api.users.app
 
+- url: /api/actions/admin/.*
+  script: api.actions_admin.app
+  login: admin
+
 - url: /.*
   script: main.app
 

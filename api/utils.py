@@ -35,8 +35,8 @@ def validate_authenticated(response):
         unauthorized_401(response, "VALIDATION_ERROR_NOT_CLAIMED", "The browsing user is logged in with a google account, but has not verified it.")
         return False
     return True
-#
-#
+
+
 # def validate_logged_in_admin(response):
 #     if not users.is_current_user_admin():
 #         forbidden_403(response, "VALIDATION_ERROR_MISSING_ADMIN_PERMISSION", "The browsing user is logged in and authenticated, but does not have admin permissions.")

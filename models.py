@@ -16,8 +16,8 @@ class Person(ndb.Model):
 
 
 class GameNight(ndb.Model):
+    date = ndb.DateProperty()
     host = ndb.StringProperty(required=True, choices=persons)
-    date = ndb.DateProperty(required=True)
     description = ndb.StringProperty(required=True)
     sum = ndb.FloatProperty(default=0)
 
@@ -25,7 +25,7 @@ class GameNight(ndb.Model):
         return {
             'id': self.key.id(),
             'host': self.host,
-            'date_epoch': _date_to_epoch(self.date),
+            'date_epoch': _date_to_epoch(self.date) if self.date else None,
             'description': self.description,
             'sum': round(self.sum, 1),
             'votes': [vote.get_data() for vote in Vote.query(Vote.game_night == self.key)]

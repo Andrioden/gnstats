@@ -98,7 +98,10 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
 
     function setGameNightDates(gameNights) {
         for(var i=0; i<gameNights.length; i++) {
-            gameNights[i].date = new Date(gameNights[i].date_epoch * 1000);
+            if (gameNights[i].date_epoch)
+                gameNights[i].date = new Date(gameNights[i].date_epoch * 1000);
+            else
+                gameNights[i].date = null;
         }
     }
 

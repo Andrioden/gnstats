@@ -30,13 +30,10 @@ class SyncHandler(webapp2.RequestHandler):
             if not validate_request_data(self.response, updated_game_night, ['host', 'date', 'description']):
                 return
 
-            if updated_game_night.has_key('id'):
-                gn = GameNight.get_by_id(int(updated_game_night['id']))
-            else:
-                gn = GameNight()
+            gn = self._get_or_create_game_night_object(updated_game_night.get('id'))
 
-            gn.host = updated_game_night['host']
             gn.date = datetime.strptime(updated_game_night['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
+            gn.host = updated_game_night['host']
             gn.description = updated_game_night['description']
             gn.sum = 0
             gn.put()
@@ -67,6 +64,13 @@ class SyncHandler(webapp2.RequestHandler):
             })
 
         set_json_response(self.response, return_data)
+
+    @staticmethod
+    def _get_or_create_game_night_object(id):
+        if id:
+            return GameNight.get_by_id(int(id))
+        else:
+            return GameNight()
 
 
 app = webapp2.WSGIApplication([
