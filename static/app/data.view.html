@@ -6,35 +6,53 @@
 
 <div id="dataView" class="container-fluid" ng-controller="DataController">
 
+    <div ng-show="showLandscapeWarning" class="alert alert-warning alert-dismissible fade in" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        Tilt your device, looks better!
+    </div>
+
     <div class="btn-group" role="group">
         <button type="button" ng-click="addNewGameNightRow()" class="btn btn-primary btn-sm">+</button>
         <button type="button" ng-click="save()" ng-disabled="isSaving" class="btn btn-success btn-sm ">Save</button>
     </div>
 
-    <div id="gameNightRow_{{$index}}" ng-repeat="gameNight in gameNights" class="row game-night">
-        <div class="col-sm-12">
-            <div class="col-sm-2 col-lg-1">
+    <div id="gameNightRow_{{$index}}" ng-repeat="gameNight in gameNights" class="game-night row">
+        <div class="col-xs-12">
+            <div class="col-xs-2 col-md-2 nopadding">
                 <input type="date" ng-model="gameNight.date" class="form-control" placeholder="yyyy-mm-dd" />
             </div >
-            <div class="col-sm-2 col-lg-1 nopadding">
-                <select class="form-control" ng-model="gameNight.host" ng-disabled="gameNight.id">
+            <div class="col-xs-2 col-md-2 nopadding">
+                <select ng-if="!gameNight.id" class="form-control" ng-model="gameNight.host">
                     <option ng-repeat="person in persons" value="{{person}}">{{person}}</option>
                 </select>
+                <span ng-if="gameNight.id" class="label label-default person-label">{{gameNight.host}}</span>
             </div >
-            <div class="col-sm-7 col-lg-9 nopadding">
+            <div class="col-xs-7 col-md-7 nopadding">
                 <input type="text" class="form-control" ng-model="gameNight.description"  placeholder="description..." />
             </div>
-            <div class="col-sm-1 col-lg-1 nopadding">
-                <a class="btn btn-primary" data-toggle="collapse" href="#collapseGameNight_{{$index}}">{{gameNight.sum}}</a>
+            <div class="col-xs-1 col-md-1 nopadding">
+                <a class="btn btn-primary" data-toggle="collapse" href="#collapseGameNight_{{$index}}" aria-expanded="true" aria-controls="collapseGameNight_{{$index}}">{{gameNight.sum}}</a>
             </div>
         </div>
-        <div id="collapseGameNight_{{$index}}" class="collapse col-sm-12">
-            <div ng-show="vote.voter != gameNight.host" ng-repeat="vote in gameNight.votes | orderBy:['voter']" class="form-inline">
-                <span class="label label-default person-label">{{vote.voter}}</span>
-                <input type="number" class="form-control form-control-sm dice" ng-model="vote.appetizer" placeholder="Appetizer" title="Appetizer">
-                <input type="number" class="form-control form-control-sm dice" ng-model="vote.main_course" placeholder="Main course" title="Main course">
-                <input type="number" class="form-control form-control-sm dice" ng-model="vote.dessert" placeholder="Dessert" title="Dessert">
-                <input type="number" class="form-control form-control-sm dice" ng-model="vote.game" placeholder="Game" title="Game">
+        <div id="collapseGameNight_{{$index}}" class="collapse col-xs-12">
+            <div ng-show="vote.voter != gameNight.host" ng-repeat="vote in gameNight.votes | orderBy:['voter']">
+                <div class="col-xs-4 nopadding">
+                    <span class="label label-default person-label">{{vote.voter}}</span>
+                </div>
+                <div class="col-xs-2 nopadding">
+                    <input type="number" class="form-control form-control-sm dice" ng-model="vote.appetizer" placeholder="Appetizer" title="Appetizer">
+                </div>
+                <div class="col-xs-2 nopadding">
+                    <input type="number" class="form-control form-control-sm dice" ng-model="vote.main_course" placeholder="Main course" title="Main course">
+                </div>
+                <div class="col-xs-2 nopadding">
+                    <input type="number" class="form-control form-control-sm dice" ng-model="vote.dessert" placeholder="Dessert" title="Dessert">
+                </div>
+                <div class="col-xs-2 nopadding">
+                    <input type="number" class="form-control form-control-sm dice" ng-model="vote.game" placeholder="Game" title="Game">
+                </div>
             </div>
         </div>
     </div>

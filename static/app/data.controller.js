@@ -1,9 +1,10 @@
-app.controller('DataController', function($rootScope, $scope, $http){
+app.controller('DataController', function($rootScope, $scope, $http, $window){
 
     // *************** PUBLIC VARIABLES ***************
 
     $scope.persons = ['Stian', 'André', 'Ole', 'Damian'];
     $scope.gameNights = [];
+    $scope.showLandscapeWarning = false;
 
 
     // *************** CONSTRUCTOR ***************
@@ -11,6 +12,14 @@ app.controller('DataController', function($rootScope, $scope, $http){
     console.log("DataController loaded")
 
     loadGameNights();
+
+    hideOrShowLandscapeWarning();
+
+    $(window).resize(function(){
+        $scope.$apply(function(){
+            hideOrShowLandscapeWarning();
+        });
+    });
 
 
     // *************** PUBLIC METHODS ***************
@@ -91,6 +100,10 @@ app.controller('DataController', function($rootScope, $scope, $http){
         for(var i=0; i<gameNights.length; i++) {
             gameNights[i].date = new Date(gameNights[i].date_epoch * 1000);
         }
+    }
+
+    function hideOrShowLandscapeWarning() {
+        $scope.showLandscapeWarning = $window.innerHeight > $window.innerWidth;
     }
 
 

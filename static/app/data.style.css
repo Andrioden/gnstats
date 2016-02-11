@@ -4,16 +4,26 @@
     border: 1px solid #EBEBEB;
 }
 
+.nopadding-right {
+   padding-right: 0 !important;
+   margin-right: 0 !important;
+}
+
+.nopadding-left {
+   padding-left: 0 !important;
+   margin-left: 0 !important;
+}
+
 .nopadding {
    padding: 0 !important;
    margin: 0 !important;
 }
 
 .person-label {
-    width: 75px;
+    width: 100%;
     font-size: 15px;
 }
 
 input.dice {
-    width: 75px !important;
+    width: 100% !important;
 }
