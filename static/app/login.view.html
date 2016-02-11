@@ -6,7 +6,7 @@
                 <a ng-show="!nickname" class="nav-link" href="/api/users/login/">Login</a>
                 <a ng-show="nickname" class="nav-link" href="/api/users/logout/">Logout {{nickname}}</a>
             </li>
-            <li ng-if="!verified" class="nav-item">
+            <li ng-show="!verified && nickname" class="nav-item">
                 <a class="nav-link" href="#" data-toggle="modal" data-target="#verifyModal">Verify login</a>
             </li>
         </ul>
