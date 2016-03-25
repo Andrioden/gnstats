@@ -22,15 +22,18 @@ class GameNight(ndb.Model):
     description = ndb.StringProperty(required=True)
     sum = ndb.FloatProperty(default=0)
 
-    def get_data(self):
-        return {
+    def get_data(self, query_person_name=None):
+        votes = [vote for vote in Vote.query(Vote.game_night == self.key)]
+        data = {
             'id': self.key.id(),
             'host': self.host,
             'date_epoch': _date_to_epoch(self.date) if self.date else None,
             'description': self.description,
             'sum': round(self.sum, 1),
-            'votes': [vote.get_data() for vote in Vote.query(Vote.game_night == self.key)]
+            'votes': [vote.get_data() for vote in votes],
+            'own_vote': next((vote.get_data() for vote in votes if vote.voter == query_person_name), None)
         }
+        return data
 
 
 def _validate_dice(prop, value):
@@ -56,7 +59,9 @@ class Vote(ndb.Model):
             'appetizer': self.appetizer,
             'main_course': self.main_course,
             'dessert': self.dessert,
-            'game': self.game
+            'game': self.game,
+            'sum': self.weighed_sum(),
+            'complete_vote': None not in [self.appetizer, self.main_course, self.dessert, self.game]
         }
 
     def weighed_sum(self):

@@ -11,7 +11,14 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
 
     console.log("DataController loaded")
 
-    loadGameNights();
+    $http.get('/api/game_night/').
+        then(function(response) {
+            $scope.gameNights = response.data
+            setGameNightDates($scope.gameNights);
+            sortByDate();
+        }, function(response) {
+            alertError(response);
+        });
 
     hideOrShowLandscapeWarning();
 
@@ -53,6 +60,8 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
                     for(var i=0; i<response.data.length; i++) {
                         $scope.gameNights[response.data[i].index].id = response.data[i].id;
                         $scope.gameNights[response.data[i].index].sum = response.data[i].sum;
+                        $scope.gameNights[response.data[i].index].votes = response.data[i].votes;
+                        $scope.gameNights[response.data[i].index].own_vote = response.data[i].own_vote;
                     }
                     $scope.isSaving = false;
                 }, function(response) {
@@ -68,17 +77,6 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
 
 
     // *************** PRIVATE METHODS ***************
-
-    function loadGameNights() {
-        $http.get('/api/game_night/').
-            then(function(response) {
-                $scope.gameNights = response.data
-                setGameNightDates($scope.gameNights);
-                sortByDate();
-            }, function(response) {
-                alertError(response);
-            });
-    }
 
     function sortByDate() {
         $scope.gameNights.sort(function(a, b){return b.date-a.date;});
@@ -108,6 +106,5 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
     function hideOrShowLandscapeWarning() {
         $scope.showLandscapeWarning = $window.innerHeight > $window.innerWidth;
     }
-
 
 });

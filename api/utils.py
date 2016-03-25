@@ -60,3 +60,16 @@ def date_to_epoch(date_value):
 def set_json_response(response, data):
     response.headers['Content-Type'] = 'application/json'
     response.out.write(json.dumps(data))
+
+
+def current_user_person():
+    user = users.get_current_user()
+    return Person.query(Person.userid == user.user_id()).get()
+
+
+def current_user_person_name():
+    person = current_user_person()
+    if person:
+        return person.name
+    else:
+        return None

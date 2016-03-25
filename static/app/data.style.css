@@ -24,6 +24,14 @@
     font-size: 15px;
 }
 
+.person-label-big {
+    height: 36px;
+}
+
 input.dice {
     width: 100% !important;
+}
+
+.red-background {
+    background-color: #EB4B4B;
 }

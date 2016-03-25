@@ -12,7 +12,7 @@ from utils import *
 
 class GameNightsHandler(webapp2.RequestHandler):
     def get(self):
-        data = [game_night.get_data() for game_night in GameNight.query()]
+        data = [game_night.get_data(current_user_person_name()) for game_night in GameNight.query()]
         set_json_response(self.response, data)
 
 
@@ -38,6 +38,7 @@ class SyncHandler(webapp2.RequestHandler):
             gn.sum = 0
             gn.put()
 
+            votes = []
             for vote_data in updated_game_night['votes']:
                 if not vote_data['voter'] == updated_game_night['host']:
                     if vote_data.has_key('id'):
@@ -52,6 +53,7 @@ class SyncHandler(webapp2.RequestHandler):
                     vote.dessert = vote_data.get('dessert')
                     vote.game = vote_data.get('game')
                     vote.put()
+                    votes.append(vote)
 
                     gn.sum += vote.weighed_sum()
 
@@ -60,7 +62,9 @@ class SyncHandler(webapp2.RequestHandler):
             return_data.append({
                 'index': updated_game_night['index'],
                 'id': gn.key.id(),
-                'sum': round(gn.sum, 1)
+                'sum': round(gn.sum, 1),
+                'votes': [vote.get_data() for vote in votes],
+                'own_vote': next((vote.get_data() for vote in votes if vote.voter == current_user_person_name()), None)
             })
 
         set_json_response(self.response, return_data)
