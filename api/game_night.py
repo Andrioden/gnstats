@@ -64,7 +64,8 @@ class SyncHandler(webapp2.RequestHandler):
                 'id': gn.key.id(),
                 'sum': round(gn.sum, 1),
                 'votes': [vote.get_data() for vote in votes],
-                'own_vote': next((vote.get_data() for vote in votes if vote.voter == current_user_person_name()), None)
+                'own_vote': next((vote.get_data() for vote in votes if vote.voter == current_user_person_name()), None),
+                'completely_voted': len([vote for vote in votes if not vote.complete_vote()]) == 0
             })
 
         set_json_response(self.response, return_data)

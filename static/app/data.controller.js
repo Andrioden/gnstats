@@ -15,6 +15,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
         then(function(response) {
             $scope.gameNights = response.data
             setGameNightDates($scope.gameNights);
+            setGameNightBackgroundColorClasses($scope.gameNights);
             sortByDate();
         }, function(response) {
             alertError(response);
@@ -58,10 +59,13 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
             $http.put('/api/game_night/sync', changedGameNights, {}).
                 then(function(response) {
                     for(var i=0; i<response.data.length; i++) {
-                        $scope.gameNights[response.data[i].index].id = response.data[i].id;
-                        $scope.gameNights[response.data[i].index].sum = response.data[i].sum;
-                        $scope.gameNights[response.data[i].index].votes = response.data[i].votes;
-                        $scope.gameNights[response.data[i].index].own_vote = response.data[i].own_vote;
+                        var localGameNightObject = $scope.gameNights[response.data[i].index];
+                        localGameNightObject.id = response.data[i].id;
+                        localGameNightObject.sum = response.data[i].sum;
+                        localGameNightObject.votes = response.data[i].votes;
+                        localGameNightObject.own_vote = response.data[i].own_vote;
+                        localGameNightObject.completely_voted = response.data[i].completely_voted;
+                        localGameNightObject.backgroundColorClass = backgroundColorClass(localGameNightObject);
                     }
                     $scope.isSaving = false;
                 }, function(response) {
@@ -74,6 +78,8 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
             $scope.isSaving = false;
         }
     }
+
+
 
 
     // *************** PRIVATE METHODS ***************
@@ -101,6 +107,21 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
             else
                 gameNights[i].date = null;
         }
+    }
+
+    function setGameNightBackgroundColorClasses(gameNights) {
+        for(var i=0; i<gameNights.length; i++) {
+            gameNights[i].backgroundColorClass = backgroundColorClass(gameNights[i]);
+        }
+    }
+
+    function backgroundColorClass(gameNight) {
+        if (!gameNight.own_vote.complete_vote && gameNight.host != $rootScope.user.name)
+            return "red-background";
+        else if (!gameNight.completely_voted)
+            return "orange-background";
+        else
+            return "";
     }
 
     function hideOrShowLandscapeWarning() {

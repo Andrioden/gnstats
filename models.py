@@ -31,7 +31,8 @@ class GameNight(ndb.Model):
             'description': self.description,
             'sum': round(self.sum, 1),
             'votes': [vote.get_data() for vote in votes],
-            'own_vote': next((vote.get_data() for vote in votes if vote.voter == query_person_name), None)
+            'own_vote': next((vote.get_data() for vote in votes if vote.voter == query_person_name), None),
+            'completely_voted': len([vote for vote in votes if not vote.complete_vote()]) == 0
         }
         return data
 
@@ -61,7 +62,7 @@ class Vote(ndb.Model):
             'dessert': self.dessert,
             'game': self.game,
             'sum': self.weighed_sum(),
-            'complete_vote': None not in [self.appetizer, self.main_course, self.dessert, self.game]
+            'complete_vote': self.complete_vote()
         }
 
     def weighed_sum(self):
@@ -71,6 +72,9 @@ class Vote(ndb.Model):
         weighed_sum += self.dessert * Weight_Dessert if self.dessert else 0
         weighed_sum += self.game * Weight_Game if self.game else 0
         return weighed_sum
+
+    def complete_vote(self):
+        return None not in [self.appetizer, self.main_course, self.dessert, self.game]
 
 
 def _date_to_epoch(date_value):

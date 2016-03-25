@@ -18,7 +18,7 @@
         <button type="button" ng-click="save()" ng-disabled="isSaving" class="btn btn-success btn-sm" style="width: 100px;">Save</button>
     </div>
 
-    <div id="gameNightRow_{{$index}}" ng-repeat="gameNight in gameNights" class="game-night row" ng-class="{'red-background': !gameNight.own_vote.complete_vote && gameNight.host != user.name}">
+    <div id="gameNightRow_{{$index}}" ng-repeat="gameNight in gameNights" class="game-night row" ng-class="gameNight.backgroundColorClass">
         <div class="col-xs-12">
             <div class="col-xs-2 col-md-2 nopadding">
                 <input type="date" ng-model="gameNight.date" class="form-control" placeholder="yyyy-mm-dd" />
