@@ -5,7 +5,7 @@ import csv
 import webapp2
 import json
 from google.appengine.ext import ndb
-from models import GameNight, Vote, persons
+from models import GameNight, Vote, person_names
 from api.utils import *
 from datetime import datetime
 import logging
@@ -42,16 +42,16 @@ class ImportDataHandler(webapp2.RequestHandler):
                 )
                 gn.put()
 
-                for person in persons:
-                    if person == host:
+                for person_name in person_names:
+                    if person_name == host:
                         continue
-                    elif person == u'André':
+                    elif person_name == u'André':
                         vote = self._create_and_get_vote_object(row, gn.key, u'André', 3)
-                    elif person == "Damian":
+                    elif person_name == "Damian":
                         vote = self._create_and_get_vote_object(row, gn.key, u'Damian', 7)
-                    elif person == "Stian":
+                    elif person_name == "Stian":
                         vote = self._create_and_get_vote_object(row, gn.key, u'Stian', 11)
-                    elif person == "Ole":
+                    elif person_name == "Ole":
                         vote = self._create_and_get_vote_object(row, gn.key, u'Ole', 15)
                     if vote:
                         gn.sum += vote.weighed_sum()

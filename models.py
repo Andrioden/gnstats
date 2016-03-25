@@ -7,17 +7,18 @@ import logging
 from config import *
 
 
-persons = [u'Stian', u'André', u'Ole', u'Damian']
+person_names = [u'Stian', u'André', u'Ole', u'Damian']
 
 
 class Person(ndb.Model):
+    name = ndb.StringProperty(required=True, choices=person_names)
     userid = ndb.StringProperty(required=True)
     nickname = ndb.StringProperty(required=True)
 
 
 class GameNight(ndb.Model):
     date = ndb.DateProperty()
-    host = ndb.StringProperty(required=True, choices=persons)
+    host = ndb.StringProperty(required=True, choices=person_names)
     description = ndb.StringProperty(required=True)
     sum = ndb.FloatProperty(default=0)
 
@@ -42,7 +43,7 @@ def _validate_dice(prop, value):
 class Vote(ndb.Model):
     game_night = ndb.KeyProperty(GameNight, required=True)
     date = ndb.DateProperty(default=datetime.now())
-    voter = ndb.StringProperty(required=True, choices=persons)
+    voter = ndb.StringProperty(required=True, choices=person_names)
     appetizer = ndb.IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
     main_course = ndb.IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
     dessert = ndb.IntegerProperty(choices=[1, 2, 3, 4, 5, 6])

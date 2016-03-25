@@ -2,7 +2,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
 
     // *************** PUBLIC VARIABLES ***************
 
-    $scope.persons = ['Stian', 'André', 'Ole', 'Damian'];
+    $scope.personNames = ['Stian', 'André', 'Ole', 'Damian'];
     $scope.gameNights = [];
     $scope.showLandscapeWarning = false;
 
@@ -30,9 +30,9 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
             sum: "vote",
             votes: (function(){
                 var votes = [];
-                for(var i=0; i<$scope.persons.length; i++) {
+                for(var i=0; i<$scope.personNames.length; i++) {
                     votes.push({
-                        voter: $scope.persons[i],
+                        voter: $scope.personNames[i],
                     });
                 }
                 return votes;

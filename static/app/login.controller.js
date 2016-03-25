@@ -2,9 +2,12 @@ app.controller('LoginController', function($rootScope, $scope, $http){
 
 
     // *************** PUBLIC VARIABLES ***************
-    $scope.nickname = "";
+    $rootScope.user = {
+        nickname: "",
+        verified: false
+    }
+    $scope.personNames = ['Stian', 'André', 'Ole', 'Damian'];
     $scope.password = "";
-    $scope.verified = false;
 
 
     // *************** CONSTRUCTOR ***************
@@ -13,8 +16,7 @@ app.controller('LoginController', function($rootScope, $scope, $http){
 
     $http.get('/api/users/me/').
         then(function(response) {
-            $scope.nickname = response.data.nickname;
-            $scope.verified = response.data.verified;
+            $rootScope.user = response.data;
         }, function(response) {
             alertError(response);
         });
@@ -22,9 +24,10 @@ app.controller('LoginController', function($rootScope, $scope, $http){
     // *************** PUBLIC METHODS ***************
 
     $scope.verify = function() {
-        $http.post('/api/users/verify/', {nickname: $scope.nickname, password: $scope.password}, {}).
+        console.log($rootScope.user)
+        $http.post('/api/users/verify/', {name: $rootScope.user.name, nickname: $rootScope.user.nickname, password: $scope.password}, {}).
             then(function(response) {
-                $scope.verified = true;
+                $rootScope.user.verified = true;
                 $("#verifyModal").modal("hide");
             }, function(response) {
                 alertError(response);
