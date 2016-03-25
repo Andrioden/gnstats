@@ -11,15 +11,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
 
     console.log("DataController loaded")
 
-    $http.get('/api/game_night/').
-        then(function(response) {
-            $scope.gameNights = response.data
-            setGameNightDates($scope.gameNights);
-            setGameNightBackgroundColorClasses($scope.gameNights);
-            sortByDate();
-        }, function(response) {
-            alertError(response);
-        });
+    loadGameNightData();
 
     hideOrShowLandscapeWarning();
 
@@ -58,16 +50,8 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
         if (changedGameNights.length > 0) {
             $http.put('/api/game_night/sync', changedGameNights, {}).
                 then(function(response) {
-                    for(var i=0; i<response.data.length; i++) {
-                        var localGameNightObject = $scope.gameNights[response.data[i].index];
-                        localGameNightObject.id = response.data[i].id;
-                        localGameNightObject.sum = response.data[i].sum;
-                        localGameNightObject.votes = response.data[i].votes;
-                        localGameNightObject.own_vote = response.data[i].own_vote;
-                        localGameNightObject.completely_voted = response.data[i].completely_voted;
-                        localGameNightObject.backgroundColorClass = backgroundColorClass(localGameNightObject);
-                    }
                     $scope.isSaving = false;
+                    loadGameNightData();
                 }, function(response) {
                     alertError(response);
                     $scope.isSaving = false;
@@ -83,6 +67,18 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
 
 
     // *************** PRIVATE METHODS ***************
+
+    function loadGameNightData() {
+        $http.get('/api/game_night/').
+            then(function(response) {
+                $scope.gameNights = response.data
+                setGameNightDates($scope.gameNights);
+                setGameNightBackgroundColorClasses($scope.gameNights);
+                sortByDate();
+            }, function(response) {
+                alertError(response);
+            });
+    }
 
     function sortByDate() {
         $scope.gameNights.sort(function(a, b){return b.date-a.date;});
@@ -116,9 +112,9 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
     }
 
     function backgroundColorClass(gameNight) {
-        if (!gameNight.own_vote.complete_vote && gameNight.host != $rootScope.user.name)
+        if (gameNight.own_vote && !gameNight.own_vote.complete_vote && gameNight.host != $rootScope.user.name)
             return "red-background";
-        else if (!gameNight.completely_voted)
+        else if (gameNight.votes.length != 3)
             return "orange-background";
         else
             return "";

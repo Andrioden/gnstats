@@ -34,7 +34,7 @@
             </div>
             <div class="col-xs-1 col-md-1 nopadding">
                 <a class="btn btn-primary" data-toggle="collapse" href="#collapseGameNight_{{$index}}" aria-expanded="true" aria-controls="collapseGameNight_{{$index}}">
-                    <span ng-show="{{gameNight.own_vote}}">{{gameNight.own_vote.sum.toFixed(1)}} /</span>
+                    <span ng-show="{{gameNight.own_vote}}" class="tiny-text">{{gameNight.own_vote.sum.toFixed(1)}} /</span>
                     {{gameNight.sum.toFixed(1)}}
                 </a>
             </div>
@@ -56,6 +56,9 @@
                 <div class="col-xs-2 nopadding">
                     <input type="number" class="form-control form-control-sm dice" ng-model="vote.game" ng-disabled="vote.voter != user.name" placeholder="Game" title="Game">
                 </div>
+            </div>
+            <div ng-show="gameNight.not_voted.length > 0">
+                Not voted: <span ng-repeat="person in gameNight.not_voted">{{person}}, </span>
             </div>
         </div>
     </div>

@@ -30,19 +30,28 @@ class SyncHandler(webapp2.RequestHandler):
             if not validate_request_data(self.response, updated_game_night, ['host', 'date', 'description']):
                 return
 
-            gn = self._get_or_create_game_night_object(updated_game_night.get('id'))
+            gn_id = updated_game_night.get('id')
+            if gn_id:
+                gn = GameNight.get_by_id(int(gn_id))
+            else:
+                gn = GameNight()
 
             gn.date = datetime.strptime(updated_game_night['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
             gn.host = updated_game_night['host']
             gn.description = updated_game_night['description']
             gn.sum = 0
-            gn.put()
 
-            votes = []
+            if not gn_id:
+                gn.put()
+
+            # Update votes which was supplied to sync call, should only be the logged in players vote. But keeping code to support multiple update.
+            vote_ids = []
             for vote_data in updated_game_night['votes']:
                 if not vote_data['voter'] == updated_game_night['host']:
                     if vote_data.has_key('id'):
-                        vote = Vote.get_by_id(int(vote_data['id']))
+                        vote_id = int(vote_data['id'])
+                        vote = Vote.get_by_id(vote_id)
+                        vote_ids.append(vote_id)
                     else:
                         vote = Vote()
 
@@ -53,22 +62,17 @@ class SyncHandler(webapp2.RequestHandler):
                     vote.dessert = vote_data.get('dessert')
                     vote.game = vote_data.get('game')
                     vote.put()
-                    votes.append(vote)
 
+                    gn.sum += vote.weighed_sum()
+
+            # The game night sum also has to have the sum added from the other votes
+            for vote in Vote.query(Vote.game_night == gn.key):
+                if vote.key.id() not in vote_ids:
                     gn.sum += vote.weighed_sum()
 
             gn.put()
 
-            return_data.append({
-                'index': updated_game_night['index'],
-                'id': gn.key.id(),
-                'sum': round(gn.sum, 1),
-                'votes': [vote.get_data() for vote in votes],
-                'own_vote': next((vote.get_data() for vote in votes if vote.voter == current_user_person_name()), None),
-                'completely_voted': len([vote for vote in votes if not vote.complete_vote()]) == 0
-            })
-
-        set_json_response(self.response, return_data)
+        set_json_response(self.response, {'response': "OK"})
 
     @staticmethod
     def _get_or_create_game_night_object(id):

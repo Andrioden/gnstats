@@ -39,3 +39,7 @@ input.dice {
 .orange-background {
     background-color: orange;
 }
+
+.tiny-text {
+    font-size: 70%;
+}

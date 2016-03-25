@@ -68,8 +68,12 @@ def current_user_person():
 
 
 def current_user_person_name():
-    person = current_user_person()
-    if person:
-        return person.name
-    else:
+    user = users.get_current_user()
+    if not user:
         return None
+    else:
+        person = Person.query(Person.userid == user.user_id()).get()
+        if person:
+            return person.name
+        else:
+            return None

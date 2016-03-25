@@ -1,4 +1,4 @@
-app.controller('LoginController', function($rootScope, $scope, $http){
+app.controller('LoginController', function($rootScope, $scope, $http, $window){
 
 
     // *************** PUBLIC VARIABLES ***************
@@ -29,6 +29,7 @@ app.controller('LoginController', function($rootScope, $scope, $http){
             then(function(response) {
                 $rootScope.user.verified = true;
                 $("#verifyModal").modal("hide");
+                $window.location.reload();
             }, function(response) {
                 alertError(response);
             });
