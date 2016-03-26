@@ -20,11 +20,27 @@
     <script src="static/app/login.controller.js"></script>
     <script src="static/app/data.controller.js"></script>
 
+    <style>
+        #footer {
+            color: gray;
+            font-size: 70%;
+            padding-bottom: 15px;
+            padding-top: 5px;
+            text-align: center;
+        }
+    </style>
+
 </head>
 <body>
 
     <div data-ng-include data-src="'static/app/login.view.html'"></div>
     <div data-ng-include data-src="'static/app/data.view.html'"></div>
+
+    <footer id="footer">
+        <p>Created by Andr&eacute; S. Hansen</p>
+        <a href="https://github.com/Andrioden/gnstats/issues" target="_blank">Suggestions</a> -
+        <a href="https://github.com/Andrioden/gnstats/commits/master" target="_blank">Recent changes</a>
+    </footer>
 
 </body>
 </html>
