@@ -5,6 +5,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
     $scope.personNames = ['Stian', 'André', 'Ole', 'Damian'];
     $scope.gameNights = [];
     $scope.showLandscapeWarning = false;
+    $scope.sortByText = "";
 
 
     // *************** CONSTRUCTOR ***************
@@ -38,7 +39,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
                 return votes;
             })()
         });
-        sortByDate($scope.gameNights);
+        $scope.sortByDate();
     }
 
     $scope.isSaving = false;
@@ -72,7 +73,48 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
             });
     }
 
+    $scope.sortByDate = function() {
+        $scope.gameNights.sort(function(a, b){return b.date-a.date;});
+        $scope.sortByText = "Sort:Date";
+    }
 
+    $scope.sortByHost = function() {
+        $scope.gameNights.sort(function(a, b){ return a.host.localeCompare(b.host); });
+        $scope.sortByText = "Sort:Host";
+    }
+
+    $scope.sortByTotalRating = function() {
+        $scope.gameNights.sort(function(a, b){ return b.sum-a.sum; });
+        $scope.sortByText = "Sort:Total";
+    }
+
+    $scope.sortByOwnRating = function() {
+        $scope.gameNights.sort(function(a, b){
+            if (!a.own_vote)
+                return 1;
+            else if (!b.own_vote)
+                return -1;
+            else
+                return b.own_vote.sum-a.own_vote.sum;
+        });
+        $scope.sortByText = "Sort:Own";
+    }
+
+    // Source: http://stackoverflow.com/questions/11753321/passing-arguments-to-angularjs-filters/
+    $scope.customFilter = function(search) {
+        return function(gameNight) {
+            if (search == "" || search == undefined)
+                return true;
+            if (gameNight.host.indexOf(search) > -1)
+                return true;
+            if (gameNight.description.indexOf(search) > -1)
+                return true;
+            if (gameNight.searchMetaData.indexOf(search) > -1)
+                return true;
+
+            return false;
+        }
+    }
 
     // *************** PRIVATE METHODS ***************
 
@@ -82,15 +124,11 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
                 $scope.gameNights = response.data
                 setGameNightDates($scope.gameNights);
                 setGameNightBackgroundColorClasses($scope.gameNights);
-                sortByDate($scope.gameNights);
+                $scope.sortByDate();
                 addSearchableMetaData($scope.gameNights);
             }, function(response) {
                 alertError(response);
             });
-    }
-
-    function sortByDate(gameNights) {
-        gameNights.sort(function(a, b){return b.date-a.date;});
     }
 
     function findChangedGameNights() {
