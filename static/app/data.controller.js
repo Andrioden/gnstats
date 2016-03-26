@@ -65,12 +65,14 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
     }
 
     $scope.deleteGameNight = function(gameNight) {
-        $http.delete('/api/game_night/' + gameNight.id).
-            then(function(response) {
-                loadGameNightData();
-            }, function(response) {
-                alertError(response);
-            });
+        if (confirm("Do you want to delete: " + gameNight.description)) {
+            $http.delete('/api/game_night/' + gameNight.id).
+                then(function(response) {
+                    loadGameNightData();
+                }, function(response) {
+                    alertError(response);
+                });
+        }
     }
 
     $scope.sortByDate = function() {
