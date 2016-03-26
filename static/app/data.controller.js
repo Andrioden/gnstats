@@ -8,8 +8,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
 
 
     // *************** CONSTRUCTOR ***************
-
-    console.log("DataController loaded")
+    $('[data-toggle="popover"]').popover()
 
     loadGameNightData();
 
@@ -21,6 +20,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
         });
     });
 
+    console.log("DataController loaded")
 
     // *************** PUBLIC METHODS ***************
 
@@ -38,7 +38,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
                 return votes;
             })()
         });
-        sortByDate();
+        sortByDate($scope.gameNights);
     }
 
     $scope.isSaving = false;
@@ -82,14 +82,15 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
                 $scope.gameNights = response.data
                 setGameNightDates($scope.gameNights);
                 setGameNightBackgroundColorClasses($scope.gameNights);
-                sortByDate();
+                sortByDate($scope.gameNights);
+                addSearchableMetaData($scope.gameNights);
             }, function(response) {
                 alertError(response);
             });
     }
 
-    function sortByDate() {
-        $scope.gameNights.sort(function(a, b){return b.date-a.date;});
+    function sortByDate(gameNights) {
+        gameNights.sort(function(a, b){return b.date-a.date;});
     }
 
     function findChangedGameNights() {
@@ -116,6 +117,14 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
     function setGameNightBackgroundColorClasses(gameNights) {
         for(var i=0; i<gameNights.length; i++) {
             gameNights[i].backgroundColorClass = backgroundColorClass(gameNights[i]);
+        }
+    }
+
+    function addSearchableMetaData(gameNights) {
+        for(var i=0; i<gameNights.length; i++) {
+            gameNights[i].searchMetaData = "h:" + gameNights[i].host;
+            if (gameNights[i].date)
+                gameNights[i].searchMetaData += " " + gameNights[i].date.yyyy_mm_dd();
         }
     }
 

@@ -12,14 +12,14 @@ app.controller('LoginController', function($rootScope, $scope, $http, $window){
 
     // *************** CONSTRUCTOR ***************
 
-    console.log("LoginController loaded")
-
     $http.get('/api/users/me/').
         then(function(response) {
             $rootScope.user = response.data;
         }, function(response) {
             alertError(response);
         });
+
+    console.log("LoginController loaded")
 
     // *************** PUBLIC METHODS ***************
 
