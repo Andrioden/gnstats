@@ -37,12 +37,12 @@ def validate_authenticated(response):
     return True
 
 
-# def validate_logged_in_admin(response):
-#     if not users.is_current_user_admin():
-#         forbidden_403(response, "VALIDATION_ERROR_MISSING_ADMIN_PERMISSION", "The browsing user is logged in and authenticated, but does not have admin permissions.")
-#         return False
-#     else:
-#         return True
+def validate_logged_in_admin(response):
+    if not users.is_current_user_admin():
+        forbidden_403(response, "VALIDATION_ERROR_MISSING_ADMIN_PERMISSION", "The browsing user is logged in and authenticated, but does not have admin permissions.")
+        return False
+    else:
+        return True
 
 
 def validate_request_data(response, data_dict, list_of_dict_keys):

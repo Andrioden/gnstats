@@ -15,7 +15,7 @@ class UserHandler(webapp2.RequestHandler):
             person = Person.query(Person.userid == user.user_id()).get()
             verified = True if person else False
             name = person.name if person else None
-            set_json_response(self.response, {'name': name, 'nickname': user.nickname(), 'verified': verified})
+            set_json_response(self.response, {'name': name, 'nickname': user.nickname(), 'verified': verified, 'is_admin': users.is_current_user_admin()})
         else:
             set_json_response(self.response, {})
 

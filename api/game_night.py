@@ -16,6 +16,18 @@ class GameNightsHandler(webapp2.RequestHandler):
         set_json_response(self.response, data)
 
 
+class GameNightHandler(webapp2.RequestHandler):
+    def delete(self, gn_id):
+        if not validate_logged_in_admin(self.response):
+            return
+
+        gn_key = GameNight.get_by_id(int(gn_id)).key
+        ndb.delete_multi(Vote.query(Vote.game_night == gn_key).fetch(keys_only=True))
+        gn_key.delete()
+
+        set_json_response(self.response, {'response': "OK"})
+
+
 class SyncHandler(webapp2.RequestHandler):
     def put(self):
         if not validate_authenticated(self.response):
@@ -84,5 +96,6 @@ class SyncHandler(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
     (r'/api/game_night/', GameNightsHandler),
+    (r'/api/game_night/(\d+)', GameNightHandler),
     (r'/api/game_night/sync', SyncHandler)
 ], debug=True)

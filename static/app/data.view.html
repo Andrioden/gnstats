@@ -60,6 +60,9 @@
             <div ng-show="gameNight.not_voted.length > 0">
                 Not voted: <span ng-repeat="person in gameNight.not_voted">{{person}}, </span>
             </div>
+            <div ng-show="user.is_admin">
+                <button type="button" ng-click="deleteGameNight(gameNight)" class="btn btn-danger btn-sm">Delete game night</button>
+            </div>
         </div>
     </div>
 
