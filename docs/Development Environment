@@ -1,4 +1,4 @@
 1. Download python (https://www.python.org/downloads/release/python-2711/)
-2. Download App Engine SDK for Pytho: https://storage.googleapis.com/appengine-sdks/featured/GoogleAppEngine-1.9.40.msi
+2. Download App Engine SDK for Python, might be newer version available: https://storage.googleapis.com/appengine-sdks/featured/GoogleAppEngine-1.9.40.msi
 3. Git client (Anbefaler GitHub Desktop: https://desktop.github.com/)
 4. PyCharm is recommended if you need to do backend changes, or any IDE to do html/css/js changes.
