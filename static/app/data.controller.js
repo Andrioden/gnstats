@@ -171,7 +171,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
     function backgroundColorClass(gameNight) {
         if (gameNight.own_vote && !gameNight.own_vote.complete_vote && gameNight.host != $rootScope.user.name)
             return "red-background";
-        else if (gameNight.votes.length < 4)
+        else if (gameNight.votes.length < 3)
             return "orange-background";
         else
             return "";
