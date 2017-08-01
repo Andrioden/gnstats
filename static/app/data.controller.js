@@ -2,7 +2,6 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
 
     // *************** PUBLIC VARIABLES ***************
 
-    $scope.personNames = ['Stian', 'André', 'Ole', 'Damian'];
     $scope.gameNights = [];
     $scope.showLandscapeWarning = false;
     $scope.sortByText = "";
@@ -11,7 +10,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
     // *************** CONSTRUCTOR ***************
     $('[data-toggle="popover"]').popover()
 
-    loadGameNightData();
+    loadGameNights();
 
     hideOrShowLandscapeWarning();
 
@@ -31,9 +30,10 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
             sum: "vote",
             votes: (function(){
                 var votes = [];
-                for(var i=0; i<$scope.personNames.length; i++) {
+                for(var i=0; i < $rootScope.persons.length; i++) {
+                    console.log($rootScope.persons[i])
                     votes.push({
-                        voter: $scope.personNames[i],
+                        voter: $rootScope.persons[i].name,
                     });
                 }
                 return votes;
@@ -49,10 +49,10 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
         var changedGameNights = findChangedGameNights();
 
         if (changedGameNights.length > 0) {
-            $http.put('/api/game_night/sync', changedGameNights, {}).
+            $http.put('/api/game_night/sync/', changedGameNights, {}).
                 then(function(response) {
                     $scope.isSaving = false;
-                    loadGameNightData();
+                    loadGameNights();
                 }, function(response) {
                     alertError(response);
                     $scope.isSaving = false;
@@ -66,9 +66,9 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
 
     $scope.deleteGameNight = function(gameNight) {
         if (confirm("Do you want to delete: " + gameNight.description)) {
-            $http.delete('/api/game_night/' + gameNight.id).
+            $http.delete('/api/game_night/' + gameNight.id + "/").
                 then(function(response) {
-                    loadGameNightData();
+                    loadGameNights();
                 }, function(response) {
                     alertError(response);
                 });
@@ -120,7 +120,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
 
     // *************** PRIVATE METHODS ***************
 
-    function loadGameNightData() {
+    function loadGameNights() {
         $http.get('/api/game_night/').
             then(function(response) {
                 $scope.gameNights = response.data
@@ -171,7 +171,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
     function backgroundColorClass(gameNight) {
         if (gameNight.own_vote && !gameNight.own_vote.complete_vote && gameNight.host != $rootScope.user.name)
             return "red-background";
-        else if (gameNight.votes.length != 3)
+        else if (gameNight.votes.length < 4)
             return "orange-background";
         else
             return "";

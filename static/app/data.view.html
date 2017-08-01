@@ -48,7 +48,7 @@
             </div >
             <div class="col-xs-2 col-md-2 nopadding">
                 <select ng-if="!gameNight.id" class="form-control" ng-model="gameNight.host">
-                    <option ng-repeat="personName in personNames" value="{{personName}}">{{personName}}</option>
+                    <option ng-repeat="person in persons | filter:{ activated: true }" value="{{person.name}}">{{person.name}}</option>
                 </select>
                 <span ng-if="gameNight.id" class="label label-default person-label person-label-big">{{gameNight.host}}</span>
             </div >

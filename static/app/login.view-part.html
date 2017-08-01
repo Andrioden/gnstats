@@ -9,6 +9,9 @@
             <li ng-show="!user.verified && user.nickname" class="nav-item">
                 <a class="nav-link" href="#" data-toggle="modal" data-target="#verifyModal">Verify login</a>
             </li>
+            <li ng-show="user.is_admin" class="nav-item">
+                <a class="nav-link" href="#" data-toggle="modal" data-target="#adminUsersModal">Admin</a>
+            </li>
         </ul>
     </nav>
 
@@ -31,19 +34,41 @@
                         <fieldset class="form-group">
                             <label for="password">Who are you?</label>
                             <select class="form-control" ng-model="user.name">
-                                <option ng-repeat="personName in personNames" value="{{personName}}">{{personName}}</option>
+                                <option ng-repeat="name in availablePersonNames" value="{{name}}">{{name}}</option>
                             </select>
                         </fieldset>
                         <fieldset class="form-group">
-                            <label for="password">Site password</label>
-                            <input type="password" class="form-control" id="password" placeholder="Enter site password" ng-model="password">
-                            <small class="text-muted">This is the global site password, not specific for you.</small>
+                            <label for="password">Site entry password</label>
+                            <input type="password" class="form-control" id="password" placeholder="Enter site entry password given by André" ng-model="password">
                         </fieldset>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" ng-click="verify()">Verify</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Modal -->
+    <div id="adminUsersModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="adminUsersModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="adminUsersModalLabel">Administration</h4>
+                </div>
+                <div class="modal-body">
+                    <div ng-repeat="person in persons" class="btn-group" role="group">
+                        <button type="button" class="btn btn-primary btn-sm" ng-click="activate(person)">Activate {{person.name}}</button>
+                        <button type="button" class="btn btn-primary btn-sm" ng-click="deactivate(person)">Deactivate {{person.name}}</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

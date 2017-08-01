@@ -7,18 +7,25 @@ import logging
 from config import *
 
 
-person_names = [u'Stian', u'André', u'Ole', u'Damian']
+person_names_allowed = [u'Stian', u'André', u'Ole', u'Damian', 'Øivind']
 
 
 class Person(ndb.Model):
-    name = ndb.StringProperty(required=True, choices=person_names)
-    userid = ndb.StringProperty(required=True)
-    nickname = ndb.StringProperty(required=True)
+    userid = ndb.StringProperty(required=True) # Google userid
+    nickname = ndb.StringProperty(required=True) # Google nickname
+    name = ndb.StringProperty(required=True, choices=person_names_allowed)
+    activated = ndb.BooleanProperty(required=True, default=True)
+
+    def get_data(self):
+        return {
+            'name': self.name,
+            'activated': self.activated
+        }
 
 
 class GameNight(ndb.Model):
     date = ndb.DateProperty()
-    host = ndb.StringProperty(required=True, choices=person_names)
+    host = ndb.StringProperty(required=True, choices=person_names_allowed)
     description = ndb.StringProperty(required=True)
     sum = ndb.FloatProperty(default=0)
 
@@ -55,7 +62,7 @@ def _validate_dice(prop, value):
 class Vote(ndb.Model):
     game_night = ndb.KeyProperty(GameNight, required=True)
     date = ndb.DateProperty(default=datetime.now())
-    voter = ndb.StringProperty(required=True, choices=person_names)
+    voter = ndb.StringProperty(required=True, choices=person_names_allowed)
     appetizer = ndb.IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
     main_course = ndb.IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
     dessert = ndb.IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
@@ -86,4 +93,4 @@ class Vote(ndb.Model):
 
 
 def _date_to_epoch(date_value):
-    return int((date_value - date(1970,1,1)).total_seconds())
+    return int((date_value - date(1970, 1, 1)).total_seconds())

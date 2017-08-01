@@ -96,6 +96,6 @@ class SyncHandler(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
     (r'/api/game_night/', GameNightsHandler),
-    (r'/api/game_night/(\d+)', GameNightHandler),
-    (r'/api/game_night/sync', SyncHandler)
+    (r'/api/game_night/(\d+)/', GameNightHandler),
+    (r'/api/game_night/sync/', SyncHandler)
 ], debug=True)

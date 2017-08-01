@@ -5,7 +5,7 @@ import csv
 import webapp2
 import json
 from google.appengine.ext import ndb
-from models import GameNight, Vote, person_names
+from models import GameNight, Vote, person_names_allowed
 from api.utils import *
 from datetime import datetime
 import logging
@@ -42,7 +42,7 @@ class ImportDataHandler(webapp2.RequestHandler):
                 )
                 gn.put()
 
-                for person_name in person_names:
+                for person_name in person_names_allowed:
                     if person_name == host:
                         continue
                     elif person_name == u'André':
