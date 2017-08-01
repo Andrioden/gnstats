@@ -39,7 +39,7 @@ class VerifyHandler(webapp2.RequestHandler):
     def post(self):
         request_data = json.loads(self.request.body)
 
-        if not validate_request_data(self.response, request_data, ['name', 'nickname', 'password']):
+        if not validate_request_data(self.response, request_data, ['name', 'password']):
             return
         if not request_data['password'] == SitePassword:
             error_400(self.response, "error_bad_password", "Bad password")
