@@ -7,7 +7,7 @@ import logging
 from config import *
 
 
-person_names_allowed = [u'Stian', u'André', u'Ole', u'Damian', 'Øivind']
+person_names_allowed = [u'Stian', u'André', u'Ole', u'Damian', u'Øivind']
 
 
 class Person(ndb.Model):
