@@ -59,23 +59,29 @@ class SyncHandler(webapp2.RequestHandler):
             # Update votes which was supplied to sync call, should only be the logged in players vote. But keeping code to support multiple update.
             vote_ids = []
             for vote_data in updated_game_night['votes']:
-                if not vote_data['voter'] == updated_game_night['host']:
-                    if vote_data.has_key('id'):
-                        vote_id = int(vote_data['id'])
-                        vote = Vote.get_by_id(vote_id)
-                        vote_ids.append(vote_id)
-                    else:
-                        vote = Vote()
+                if vote_data['voter'] == updated_game_night['host']:
+                    continue
 
-                    vote.game_night = gn.key
-                    vote.voter = vote_data['voter']
-                    vote.appetizer = vote_data.get('appetizer')
-                    vote.main_course = vote_data.get('main_course')
-                    vote.dessert = vote_data.get('dessert')
-                    vote.game = vote_data.get('game')
-                    vote.put()
+                if not Person.query(Person.name == vote_data['voter']).get().activated:
+                    error_400(self.response, "ERROR_INACTIVE_CANT_VOTE", "Deactivated person is not allowed to vote!")
+                    return
 
-                    gn.sum += vote.weighed_sum()
+                if vote_data.has_key('id'):
+                    vote_id = int(vote_data['id'])
+                    vote = Vote.get_by_id(vote_id)
+                    vote_ids.append(vote_id)
+                else:
+                    vote = Vote()
+
+                vote.game_night = gn.key
+                vote.voter = vote_data['voter']
+                vote.appetizer = vote_data.get('appetizer')
+                vote.main_course = vote_data.get('main_course')
+                vote.dessert = vote_data.get('dessert')
+                vote.game = vote_data.get('game')
+                vote.put()
+
+                gn.sum += vote.weighed_sum()
 
             # The game night sum also has to have the sum added from the other votes
             for vote in Vote.query(Vote.game_night == gn.key):

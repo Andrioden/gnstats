@@ -32,9 +32,11 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
                 var votes = [];
                 for(var i=0; i < $rootScope.persons.length; i++) {
                     console.log($rootScope.persons[i])
-                    votes.push({
-                        voter: $rootScope.persons[i].name,
-                    });
+                    if ($rootScope.persons[i].activated) {
+                        votes.push({
+                            voter: $rootScope.persons[i].name,
+                        });
+                    }
                 }
                 return votes;
             })()
