@@ -33,23 +33,17 @@ class GameNight(ndb.Model):
         votes = [vote for vote in Vote.query(Vote.game_night == self.key)]
         completely_voted = len([vote for vote in votes if not vote.complete_vote()]) == 0
 
-        if not completely_voted:
-            votes_shown = [vote for vote in votes if vote.voter == query_person_name]
-        else:
-            votes_shown = votes
-
-        data = {
+        return {
             'id': self.key.id(),
             'host': self.host,
             'date_epoch': _date_to_epoch(self.date) if self.date else None,
             'description': self.description,
-            'sum': round(self.sum, 1),
-            'votes': [vote.get_data() for vote in votes_shown],
+            'sum': round(self.sum, 1) if completely_voted else 0,
+            'votes': [vote.get_data() for vote in votes if (vote.voter == query_person_name or completely_voted)],
             'not_voted': [vote.voter for vote in votes if not vote.complete_vote()],
             'own_vote': next((vote.get_data() for vote in votes if vote.voter == query_person_name), None),
             'completely_voted': completely_voted
         }
-        return data
 
 
 class Vote(ndb.Model):
