@@ -7,8 +7,75 @@ import json
 from google.appengine.ext import ndb
 from models import GameNight, Vote, person_names_allowed
 from api.utils import *
-from datetime import datetime
+from datetime import datetime, date
 import logging
+
+
+class DataImportPythonScript(webapp2.RequestHandler):
+    def get(self):
+
+        if not validate_logged_in_admin(self.response):
+            return
+
+        self.response.out.write("# FULL PYTHON SCRIPT: <br/>")
+        self.response.out.write("<br/>")
+
+        self.response.out.write("# IMPORTS: <br/>")
+        self.response.out.write("from models import * <br/>")
+        self.response.out.write("from datetime import datetime, date <br/>")
+        self.response.out.write("from google.appengine.ext import ndb <br/>")
+        self.response.out.write("<br/>")
+
+        self.response.out.write("# CLEAR DB: <br/>")
+        self.response.out.write("ndb.delete_multi(GameNight.query().fetch(keys_only=True)) <br/>")
+        self.response.out.write("ndb.delete_multi(Vote.query().fetch(keys_only=True)) <br/>")
+
+        self.response.out.write("<br/>")
+        self.response.out.write("# GameNights: <br/>")
+        for player in GameNight.query().fetch():
+            self.response.out.write(self._get_data_dump_string_of_object(player) + "<br><br>")
+
+        self.response.out.write("<br/>")
+        self.response.out.write("# Votes: <br/>")
+        for rule in Vote.query().fetch():
+            self.response.out.write(self._get_data_dump_string_of_object(rule) + "<br><br>")
+
+        # Uncomment below to download as file, not really practical but keeping code
+        #self.response.headers['Content-Type'] = 'text/csv'
+        #self.response.headers['Content-Disposition'] = "attachment; filename=siage_import_script.py"
+
+
+    def _get_data_dump_string_of_object(self, obj):
+        data_string = "%s(id=%s, " % (type(obj).__name__, obj.key.id())
+        for variable_name in obj.__dict__['_values'].keys():  # __dict__['_values'] contains all class object variables
+            variable_value = getattr(obj, variable_name, None)
+            if variable_value is None:
+                data_string += "%s=None, " % variable_name
+            elif type(variable_value) is list:
+                continue
+            elif type(variable_value) in (int, long, bool, float):
+                data_string += "%s=%s, " % (variable_name, variable_value)
+            elif type(variable_value) is unicode:
+                escaped_value = variable_value.replace("\'", "\\'").replace("\"", "\\\"")
+                data_string += "%s=u'%s', " % (variable_name, escaped_value)
+            elif type(variable_value) is date:
+                data_string += "%s=date.fromtimestamp(%s), " % (variable_name, date_to_epoch(variable_value))
+            elif type(variable_value) is datetime:
+                data_string += "%s=datetime.fromtimestamp(%s), " % (variable_name, date_to_epoch(variable_value))
+            elif type(variable_value) is ndb.Key:
+                data_string += "%s=ndb.Key(%s, %s), " % (variable_name, variable_value.kind(), variable_value.id())
+            else:
+                raise Exception("Type not handled: " + type(variable_value).__name__)
+
+        data_string = data_string[:-2]
+        data_string += ").put()"
+        return data_string
+
+
+class RunImportPythonScript(webapp2.RequestHandler):
+    def get(self):
+        # Paste generated script from DataImportPythonScript here and run it in dev
+        pass
 
 
 class ImportDataHandler(webapp2.RequestHandler):
@@ -87,5 +154,7 @@ class ImportDataHandler(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([
+    (r'/api/actions/admin/dataimportpythonscript/', DataImportPythonScript),
+    (r'/api/actions/admin/runimportpythonscript/', RunImportPythonScript),
     (r'/api/actions/admin/importdata/', ImportDataHandler)
 ], debug=True)

@@ -52,13 +52,6 @@ class GameNight(ndb.Model):
         return data
 
 
-def _validate_dice(prop, value):
-    if value not in [1, 2, 3, 4, 5, 6]:
-        raise Exception("Value %s for %s not a dice number." % (value, prop))
-    else:
-        return value
-
-
 class Vote(ndb.Model):
     game_night = ndb.KeyProperty(GameNight, required=True)
     date = ndb.DateProperty(default=datetime.now())

@@ -1,6 +1,6 @@
 import json
 from google.appengine.api import users
-from datetime import datetime
+from datetime import datetime, date
 from models import Person
 
 
@@ -54,7 +54,13 @@ def validate_request_data(response, data_dict, list_of_dict_keys):
 
 
 def date_to_epoch(date_value):
-    return int((date_value - datetime(1970,1,1)).total_seconds())
+    if type(date_value) is date:
+        return int((date_value - date(1970, 1, 1)).total_seconds())
+    elif type(date_value) is datetime:
+        return int((date_value - datetime(1970, 1, 1)).total_seconds())
+    else:
+        raise Exception("Type not handled: " + type(date_value).__name__)
+
 
 
 def set_json_response(response, data):
