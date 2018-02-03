@@ -12,7 +12,7 @@
         <md-input-container class="md-block" flex>
             <label>Search</label>
             <input type="text" ng-model="search" />
-            <md-tooltip>Search host and description, h:[input] to only search host</md-tooltip>
+            <md-tooltip>Use h:[input] to only search host</md-tooltip>
         </md-input-container>
     </div>
 
@@ -25,7 +25,7 @@
         <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{ gameNight.host }}" />
 
         <div class="md-list-item-text" style="padding: 0px 10px">
-            <h3>{{ gameNight.date | date: 'M/d/yyyy' }}</h3>
+            <h3>{{ gameNight.date | date: 'dd/MM/yyyy' }}</h3>
             <h4 ng-show="gameNight.not_voted.length > 0">Not voted: <span ng-repeat="person in gameNight.not_voted">{{person}} </span></h4>
             <p>{{ gameNight.description }}</p>
         </div>

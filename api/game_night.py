@@ -58,7 +58,11 @@ def _create_or_update(request_obj, gn_id = None):
     else:
         game_night = GameNight()
 
-    game_night.date = datetime.strptime(request_data['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
+    # We need to use an dateOnly field because the date field is localized by the client, which works bad when we are only saving date and not time to db
+    # When we are not saving localized time we cant transfer it back to the client with correct localized date
+    # So when you register a game night in Norway (GMT+1) at 0030 it is converted to 2330 previous day.
+    game_night.date = datetime.strptime(request_data['dateOnly'], '%d/%m/%Y')
+
     game_night.host = request_data['host']
     game_night.description = request_data['description']
     game_night.sum = 0

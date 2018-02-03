@@ -14,7 +14,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
     if (typeof host !== "undefined")
         $scope.hostId = host.id;
 
-    //console.log($scope.gameNight);
+    console.log($scope.gameNight);
 
     // *************** PUBLIC METHODS ***************
 
@@ -24,6 +24,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
 
     $scope.create = function() {
         $scope.submitting = true;
+        $scope.gameNight.dateOnly = moment($scope.gameNight.date).format("DD/MM/YYYY");
 
         $http.post('/api/game_night/', $scope.gameNight, {}).
             // Success
@@ -39,6 +40,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
 
     $scope.save = function () {
         $scope.submitting = true;
+        $scope.gameNight.dateOnly = moment($scope.gameNight.date).format("DD/MM/YYYY");
 
         $http.put('/api/game_night/' + $scope.gameNight.id + "/", $scope.gameNight, {}).
             // Success

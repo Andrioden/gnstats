@@ -159,7 +159,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
         for(var i=0; i<gameNights.length; i++) {
             gameNights[i].searchMetaData = "h:" + gameNights[i].host;
             if (gameNights[i].date)
-                gameNights[i].searchMetaData += " " + gameNights[i].date.yyyy_mm_dd();
+                gameNights[i].searchMetaData += " " + moment(gameNights[i].date).format("DD/MM/YYYY");
         }
     }
 
