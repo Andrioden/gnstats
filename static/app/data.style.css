@@ -2,13 +2,11 @@ md-list#dataView {
     padding: 0px;
 }
 
-/*.game-night {
-    border-top: 1px solid #d2cdcd;
-    border-bottom: 1px solid #d2cdcd;
-}*/
+.game-night {
+    border-bottom: 1px solid #c6ceff;
+}
 
 .game-night:nth-last-child(4n) {
-    /*margin-top: 88px;*/
     border-top: 3px solid #7a8dff;
 }
 
