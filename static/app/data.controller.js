@@ -130,7 +130,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
 
     function loadedGameNightsProcessing() {
         setGameNightDates($scope.gameNights);
-        setGameNightBackgroundColorClasses($scope.gameNights);
+        setGameNightVoteStatus($scope.gameNights);
         addSearchableMetaData($scope.gameNights);
         $scope.sortByDate();
     }
@@ -144,14 +144,14 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
         }
     }
 
-    function setGameNightBackgroundColorClasses(gameNights) {
+    function setGameNightVoteStatus(gameNights) {
         for(var i=0; i<gameNights.length; i++) {
             if (gameNights[i].own_vote && !gameNights[i].own_vote.complete_vote && gameNights[i].host != $rootScope.user.name)
-                gameNights[i].backgroundColorClass = "red-background";
+                gameNights[i].voteStatus = "red";
             else if (gameNights[i].votes.length < 3)
-                gameNights[i].backgroundColorClass = "orange-background";
+                gameNights[i].voteStatus = "orange";
             else
-                gameNights[i].backgroundColorClass = "";
+                gameNights[i].voteStatus = "";
         }
     }
 
