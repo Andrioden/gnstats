@@ -92,6 +92,6 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
         };
     }
 
-    console.log("GameNightDialogController loaded for object 0" + $scope.gameNight.id);
+    console.log("GameNightDialogController loaded for object " + $scope.gameNight.id);
 
 }
