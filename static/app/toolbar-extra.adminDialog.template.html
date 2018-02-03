@@ -1,0 +1,28 @@
+<md-dialog id="adminDialog">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Admin</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <i class="material-icons">close</i>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="md-dialog-content">
+
+                <md-list>
+                    <md-list-item ng-repeat="person in $root.persons">
+                        <img ng-src="{{ item.face }}?{{ $index }}" class="md-avatar" alt="{{ person.name }}" />
+                        <md-button class="md-raised md-primary" ng-click="activate(person)" ng-disabled="submitting" ng-hide="person.activated">Activate</md-button>
+                        <md-button class="md-raised md-warn" ng-click="deactivate(person)" ng-disabled="submitting" ng-show="person.activated">Deactivate</md-button>
+                    </md-list-item>
+                </md-list>
+
+            </div>
+        </md-dialog-content>
+
+    </form>
+</md-dialog>

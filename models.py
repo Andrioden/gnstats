@@ -18,6 +18,7 @@ class Person(ndb.Model):
 
     def get_data(self):
         return {
+            'id': self.key.id(),
             'name': self.name,
             'activated': self.activated
         }

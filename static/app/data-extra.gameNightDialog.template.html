@@ -1,0 +1,67 @@
+<md-dialog id="gameNightDialog" flex="auto">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Game Night</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <i class="material-icons">close</i>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="md-dialog-content">
+
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Host</label>
+                    <md-select ng-model="hostId" ng-change="setGameNightHostValue()" required>
+                        <md-option><em>None</em></md-option>
+                        <md-option ng-repeat="person in $root.persons | filter:{ activated: true }" ng-value="person.id">{{person.name}}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <br />
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Date</label>
+                    <md-datepicker ng-model="gameNight.date" md-hide-icons="calendar" required></md-datepicker>
+                </md-input-container>
+
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Description</label>
+                    <textarea ng-model="gameNight.description" required></textarea>
+                </md-input-container>
+
+                <md-list flex>
+                    <md-list-item ng-repeat="vote in gameNight.votes | orderBy:['voter']" ng-show="vote.voter != gameNight.host && (gameNight.id || vote.voter == $root.user.name)">
+                        <span flex="20">{{ vote.voter }}</span>
+                        <md-input-container>
+                            <label>Appetizer</label>
+                            <input type="number" min="1" max="6" ng-model="vote.appetizer" ng-disabled="vote.voter != $root.user.name">
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Main</label>
+                            <input type="number" min="1" max="6" ng-model="vote.main_course" ng-disabled="vote.voter != $root.user.name">
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Dessert</label>
+                            <input type="number" min="1" max="6" ng-model="vote.dessert" ng-disabled="vote.voter != $root.user.name">
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Game</label>
+                            <input type="number" min="1" max="6" ng-model="vote.game" ng-disabled="vote.voter != $root.user.name">
+                        </md-input-container>
+                    </md-list-item>
+                </md-list>
+
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <md-progress-circular class="md-hue-2" md-diameter="20px" ng-show="submitting"></md-progress-circular>
+            <md-button class="md-raised md-warn" ng-click="delete()" ng-disabled="submitting" ng-show="$root.user.is_admin && gameNight.id">Delete</md-button>
+            <md-button class="md-raised md-primary" ng-click="save()" ng-disabled="submitting" ng-show="gameNight.id">Save</md-button>
+            <md-button class="md-raised md-primary" ng-click="create()" ng-disabled="submitting" ng-hide="gameNight.id">Create</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

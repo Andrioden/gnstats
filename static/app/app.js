@@ -1,4 +1,4 @@
-var app = angular.module('gnstats', []);
+var app = angular.module('gnstats', ['ngMaterial']);
 
 function alertError(response) {
     if (response.data) {

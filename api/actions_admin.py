@@ -31,14 +31,19 @@ class DataImportPythonScript(webapp2.RequestHandler):
         self.response.out.write("ndb.delete_multi(Vote.query().fetch(keys_only=True)) <br/>")
 
         self.response.out.write("<br/>")
+        self.response.out.write("# Persons: <br/>")
+        for obj in Person.query().fetch():
+            self.response.out.write(self._get_data_dump_string_of_object(obj) + "<br><br>")
+
+        self.response.out.write("<br/>")
         self.response.out.write("# GameNights: <br/>")
-        for player in GameNight.query().fetch():
-            self.response.out.write(self._get_data_dump_string_of_object(player) + "<br><br>")
+        for obj in GameNight.query().fetch():
+            self.response.out.write(self._get_data_dump_string_of_object(obj) + "<br><br>")
 
         self.response.out.write("<br/>")
         self.response.out.write("# Votes: <br/>")
-        for rule in Vote.query().fetch():
-            self.response.out.write(self._get_data_dump_string_of_object(rule) + "<br><br>")
+        for obj in Vote.query().fetch():
+            self.response.out.write(self._get_data_dump_string_of_object(obj) + "<br><br>")
 
         # Uncomment below to download as file, not really practical but keeping code
         #self.response.headers['Content-Type'] = 'text/csv'

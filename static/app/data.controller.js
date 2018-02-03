@@ -1,28 +1,44 @@
-app.controller('DataController', function($rootScope, $scope, $http, $window){
+app.controller('DataController', function($rootScope, $scope, $http, $window, $mdDialog){
 
     // *************** PUBLIC VARIABLES ***************
 
-    $scope.gameNights = [];
-    $scope.showLandscapeWarning = false;
+    $scope.gameNights;
     $scope.sortByText = "";
+    $scope.showingSearch = false;
+    $scope.search = "";
+
+    $scope.loadingData = false;
 
 
     // *************** CONSTRUCTOR ***************
-    $('[data-toggle="popover"]').popover()
 
-    loadGameNights();
 
-    hideOrShowLandscapeWarning();
 
-    $(window).resize(function(){
-        $scope.$apply(function(){
-            hideOrShowLandscapeWarning();
-        });
-    });
+    // *************** TRIGGER METHODS ***************
 
-    console.log("DataController loaded")
+    $rootScope.$on('openGameNightDialog', function (event, args) { $scope.openGameNightDialog(args.ev, args.gameNight); });
+
 
     // *************** PUBLIC METHODS ***************
+
+    $scope.openGameNightDialog = function (ev, gameNight) {
+        $mdDialog.show({
+            controller: GameNightDialogController,
+            templateUrl: 'static/app/data-extra.gameNightDialog.template.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose: true,
+            fullscreen: $scope.customFullscreen, // Only for -xs, -sm breakpoints.
+            locals: { gameNight: gameNight },
+        })
+        // Hidden with potential return value
+        .then(function(dialogResponse) {
+            if (dialogResponse.reloadGameNights == true)
+                loadGameNights();
+        },
+        // Cancelled
+        function(){});
+    };
 
     $scope.addNewGameNightRow = function() {
         $scope.gameNights.push({
@@ -44,55 +60,26 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
         $scope.sortByDate();
     }
 
-    $scope.isSaving = false;
-
-    $scope.save = function() {
-        $scope.isSaving = true;
-        var changedGameNights = findChangedGameNights();
-
-        if (changedGameNights.length > 0) {
-            $http.put('/api/game_night/sync/', changedGameNights, {}).
-                then(function(response) {
-                    $scope.isSaving = false;
-                    loadGameNights();
-                }, function(response) {
-                    alertError(response);
-                    $scope.isSaving = false;
-                });
-        }
-        else {
-            console.log("No games to save");
-            $scope.isSaving = false;
-        }
-    }
-
-    $scope.deleteGameNight = function(gameNight) {
-        if (confirm("Do you want to delete: " + gameNight.description)) {
-            $http.delete('/api/game_night/' + gameNight.id + "/").
-                then(function(response) {
-                    loadGameNights();
-                }, function(response) {
-                    alertError(response);
-                });
-        }
-    }
-
-    $scope.sortByDate = function() {
+    $scope.sortByDate = function () {
+        $scope.showingSearch = false;
         $scope.gameNights.sort(function(a, b){return b.date-a.date;});
         $scope.sortByText = "Sort:Date";
     }
 
-    $scope.sortByHost = function() {
+    $scope.sortByHost = function () {
+        $scope.showingSearch = false;
         $scope.gameNights.sort(function(a, b){ return a.host.localeCompare(b.host); });
         $scope.sortByText = "Sort:Host";
     }
 
-    $scope.sortByTotalRating = function() {
+    $scope.sortByTotalRating = function () {
+        $scope.showingSearch = false;
         $scope.gameNights.sort(function(a, b){ return b.sum-a.sum; });
         $scope.sortByText = "Sort:Total";
     }
 
-    $scope.sortByOwnRating = function() {
+    $scope.sortByOwnRating = function () {
+        $scope.showingSearch = false;
         $scope.gameNights.sort(function(a, b){
             if (!a.own_vote)
                 return 1;
@@ -104,16 +91,21 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
         $scope.sortByText = "Sort:Own";
     }
 
+    $scope.showSearch = function () {
+        $scope.showingSearch = true;
+    }
+
     // Source: http://stackoverflow.com/questions/11753321/passing-arguments-to-angularjs-filters/
-    $scope.customFilter = function(search) {
-        return function(gameNight) {
+    $scope.customFilter = function (search) {
+        search = search.toLowerCase();
+        return function (gameNight) {
             if (search == "" || search == undefined)
                 return true;
-            if (gameNight.host.indexOf(search) > -1)
+            if (gameNight.host.toLowerCase().indexOf(search) > -1)
                 return true;
-            if (gameNight.description.indexOf(search) > -1)
+            if (gameNight.description.toLowerCase().indexOf(search) > -1)
                 return true;
-            if (gameNight.searchMetaData.indexOf(search) > -1)
+            if (gameNight.searchMetaData.toLowerCase().indexOf(search) > -1)
                 return true;
 
             return false;
@@ -123,28 +115,24 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
     // *************** PRIVATE METHODS ***************
 
     function loadGameNights() {
+        $scope.loadingData = true;
+
         $http.get('/api/game_night/').
             then(function(response) {
-                $scope.gameNights = response.data
-                setGameNightDates($scope.gameNights);
-                setGameNightBackgroundColorClasses($scope.gameNights);
-                $scope.sortByDate();
-                addSearchableMetaData($scope.gameNights);
+                $scope.loadingData = false;
+                $scope.gameNights = response.data;
+                loadedGameNightsProcessing();
             }, function(response) {
+                $scope.loadingData = false;
                 alertError(response);
             });
     }
 
-    function findChangedGameNights() {
-        var changedGameNights = [];
-        $("#dataView").find('.ng-dirty').closest('.game-night').each(function( index ) {
-            var id = $(this).attr('id');
-            var idIndex = parseInt(id.split("_")[1]);
-            var gameNight = $scope.gameNights[idIndex];
-            gameNight.index = idIndex;
-            changedGameNights.push(gameNight);
-        });
-        return changedGameNights;
+    function loadedGameNightsProcessing() {
+        setGameNightDates($scope.gameNights);
+        setGameNightBackgroundColorClasses($scope.gameNights);
+        addSearchableMetaData($scope.gameNights);
+        $scope.sortByDate();
     }
 
     function setGameNightDates(gameNights) {
@@ -158,7 +146,12 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
 
     function setGameNightBackgroundColorClasses(gameNights) {
         for(var i=0; i<gameNights.length; i++) {
-            gameNights[i].backgroundColorClass = backgroundColorClass(gameNights[i]);
+            if (gameNights[i].own_vote && !gameNights[i].own_vote.complete_vote && gameNights[i].host != $rootScope.user.name)
+                gameNights[i].backgroundColorClass = "red-background";
+            else if (gameNights[i].votes.length < 3)
+                gameNights[i].backgroundColorClass = "orange-background";
+            else
+                gameNights[i].backgroundColorClass = "";
         }
     }
 
@@ -170,17 +163,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window){
         }
     }
 
-    function backgroundColorClass(gameNight) {
-        if (gameNight.own_vote && !gameNight.own_vote.complete_vote && gameNight.host != $rootScope.user.name)
-            return "red-background";
-        else if (gameNight.votes.length < 3)
-            return "orange-background";
-        else
-            return "";
-    }
+    loadGameNights();
 
-    function hideOrShowLandscapeWarning() {
-        $scope.showLandscapeWarning = $window.innerHeight > $window.innerWidth;
-    }
-
+    console.log("DataController loaded");
 });

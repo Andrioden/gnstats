@@ -1,26 +1,33 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" ng-app="gnstats">
 <head>
     <meta name="google-site-verification" content="GucXwFn1GbmlQPoIPJQnvBiGXO5-Le-vAP3ebCOzJGY" />
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Game Night Stats</title>
     <base href="/">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <!--AngularJS (1)-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular-messages.min.js"></script>
 
-    <!--<link rel="stylesheet" href="static/app/login.css">-->
+    <!--AngularJS Material-->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.6/angular-material.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.6/angular-material.min.js"></script>
+
+    <!--App-->
     <link rel="stylesheet" href="static/app/data.style.css">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular.min.js"></script>
-    <script src="static/libs/tether.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
-
+    <link rel="stylesheet" href="static/app/toolbar.style.css">
     <script src="static/app/app.js"></script>
-    <script src="static/app/login.controller.js"></script>
+    <script src="static/app/toolbar.controller.js"></script>
     <script src="static/app/data.controller.js"></script>
+    <script src="static/app/data-extra.gameNightDialog.controller.js"></script>
+    <script src="static/app/toolbar-extra.verificationDialog.controller.js"></script>
+    <script src="static/app/toolbar-extra.adminDialog.controller.js"></script>
 
     <style>
         #footer {
@@ -35,11 +42,12 @@
 </head>
 <body>
 
-    <div data-ng-include data-src="'static/app/login.view-part.html'"></div>
+    <div data-ng-include data-src="'static/app/toolbar.view.html'"></div>
     <div data-ng-include data-src="'static/app/data.view.html'"></div>
 
     <footer id="footer">
-        <p>Created by Andr&eacute; S. Hansen</p>
+
+        <p>Created by <a href="https://github.com/Andrioden">André S. Hansen</a></p>
         <a href="https://github.com/Andrioden/gnstats/issues" target="_blank">Suggestions</a> -
         <a href="https://github.com/Andrioden/gnstats/commits/master" target="_blank">Recent changes</a>
     </footer>

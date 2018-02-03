@@ -1,47 +1,23 @@
-.game-night {
-    padding-top: 2px;
-    padding-bottom: 5px;
-    border: 1px solid #EBEBEB;
+md-list#dataView {
+    padding: 0px;
 }
+
+/*.game-night {
+    border-top: 1px solid #d2cdcd;
+    border-bottom: 1px solid #d2cdcd;
+}*/
 
 .game-night:nth-last-child(4n) {
-    margin-top: 30px;
-}
-
-.nopadding-right {
-   padding-right: 0 !important;
-   margin-right: 0 !important;
-}
-
-.nopadding-left {
-   padding-left: 0 !important;
-   margin-left: 0 !important;
-}
-
-.nopadding {
-   padding: 0 !important;
-   margin: 0 !important;
-}
-
-.person-label {
-    width: 100%;
-    font-size: 15px;
-}
-
-.person-label-big {
-    height: 36px;
-}
-
-input.dice {
-    width: 100% !important;
+    /*margin-top: 88px;*/
+    border-top: 3px solid #7a8dff;
 }
 
 .red-background {
-    background-color: #EB4B4B;
+    background-color: #f7b1b1;
 }
 
 .orange-background {
-    background-color: orange;
+    background-color: #fbda9d;
 }
 
 .tiny-text {

@@ -1,92 +1,42 @@
-<style>
-    #dataView .content {
-    background-color: #daeeff;
-    }
-</style>
+<md-list id="dataView" ng-controller="DataController" ng-cloak>
 
-<div id="dataView" class="container-fluid" ng-controller="DataController">
+    <md-tabs md-dynamic-height md-border-bottom>
+        <md-tab label="Date" ng-click="sortByDate()" />
+        <md-tab label="Host" ng-click="sortByHost()" />
+        <md-tab label="Rating" ng-click="sortByTotalRating()" />
+        <md-tab label="Rated" ng-click="sortByOwnRating()" />
+        <md-tab label="Search" ng-click="showSearch()" />
+    </md-tabs>
 
-    <div ng-show="showLandscapeWarning" class="alert alert-warning alert-dismissible fade in" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        Tilt your device, looks better!
+    <div layout="row" ng-show="showingSearch || search.length > 0">
+        <md-input-container class="md-block" flex>
+            <label>Search</label>
+            <input type="text" ng-model="search" />
+            <md-tooltip>Search host and description, h:[input] to only search host</md-tooltip>
+        </md-input-container>
     </div>
 
-    <div ng-show="user.verified" class="row">
-        <div class="input-group">
-            <div class="input-group-btn">
-                <button type="button" ng-click="addNewGameNightRow()" class="btn btn-primary" style="width: 100px;">+</button>
-            </div>
-            <div class="input-group-btn">
-                <button type="button" ng-click="save()" ng-disabled="isSaving" class="btn btn-success" style="width: 100px;">Save</button>
-            </div>
-            <div class="input-group-btn" style="margin-left: 5px;">
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="sortDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{sortByText}}</button>
-                    <div class="dropdown-menu" aria-labelledby="sortDropDown">
-                        <a class="dropdown-item" href="#" ng-click="sortByDate()">Date</a>
-                        <a class="dropdown-item" href="#" ng-click="sortByHost()">Host</a>
-                        <a class="dropdown-item" href="#" ng-click="sortByTotalRating()">Total rating</a>
-                        <a class="dropdown-item" href="#" ng-click="sortByOwnRating()">Own rating</a>
-                    </div>
-                </div>
-            </div>
-            <div class="input-group" style="margin-left: 5px;">
-                <span class="input-group-btn">
-                    <button class="btn btn-secondary" type="button" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="bottom" title="Search tips" data-content="- h:[name] to search for host" data-html="true">?</button>
-                </span>
-                <input type="text" ng-model="search" class="form-control" placeholder="Search..." aria-describedby="basic-addon1">
-            </div>
-        </div>
+    <div layout="row" layout-align="space-around" ng-show="loadingData || $root.persons.length === 0">
+        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </div>
 
-    <div id="gameNightRow_{{$index}}" ng-repeat="gameNight in gameNights | filter:customFilter(search)" class="game-night row" ng-class="gameNight.backgroundColorClass">
-        <div class="col-xs-12">
-            <div class="col-xs-2 col-md-2 nopadding">
-                <input type="date" ng-model="gameNight.date" class="form-control" placeholder="yyyy-mm-dd" />
-            </div >
-            <div class="col-xs-2 col-md-2 nopadding">
-                <select ng-if="!gameNight.id" class="form-control" ng-model="gameNight.host">
-                    <option ng-repeat="person in persons | filter:{ activated: true }" value="{{person.name}}">{{person.name}}</option>
-                </select>
-                <span ng-if="gameNight.id" class="label label-default person-label person-label-big">{{gameNight.host}}</span>
-            </div >
-            <div class="col-xs-7 col-md-7 nopadding">
-                <input type="text" class="form-control" ng-model="gameNight.description"  placeholder="description..." />
-            </div>
-            <div class="col-xs-1 col-md-1 nopadding">
-                <a class="btn btn-primary" data-toggle="collapse" href="#collapseGameNight_{{$index}}" aria-expanded="true" aria-controls="collapseGameNight_{{$index}}">
-                    <span ng-show="{{gameNight.own_vote}}" class="tiny-text">{{gameNight.own_vote.sum.toFixed(1)}} /</span>
-                    {{gameNight.sum.toFixed(1)}}
-                </a>
-            </div>
-        </div>
-        <div id="collapseGameNight_{{$index}}" class="collapse col-xs-12">
-            <div ng-show="vote.voter != gameNight.host" ng-repeat="vote in gameNight.votes | orderBy:['voter']">
-                <div class="col-xs-4 nopadding">
-                    <span class="label label-default person-label">{{vote.voter}}</span>
-                </div>
-                <div class="col-xs-2 nopadding">
-                    <input type="number" class="form-control form-control-sm dice" ng-model="vote.appetizer" ng-disabled="vote.voter != user.name" placeholder="Appetizer" title="Appetizer">
-                </div>
-                <div class="col-xs-2 nopadding">
-                    <input type="number" class="form-control form-control-sm dice" ng-model="vote.main_course" ng-disabled="vote.voter != user.name" placeholder="Main course" title="Main course">
-                </div>
-                <div class="col-xs-2 nopadding">
-                    <input type="number" class="form-control form-control-sm dice" ng-model="vote.dessert" ng-disabled="vote.voter != user.name" placeholder="Dessert" title="Dessert">
-                </div>
-                <div class="col-xs-2 nopadding">
-                    <input type="number" class="form-control form-control-sm dice" ng-model="vote.game" ng-disabled="vote.voter != user.name" placeholder="Game" title="Game">
-                </div>
-            </div>
-            <div ng-show="gameNight.not_voted.length > 0">
-                Not voted: <span ng-repeat="person in gameNight.not_voted">{{person}}, </span>
-            </div>
-            <div ng-show="user.is_admin">
-                <button type="button" ng-click="deleteGameNight(gameNight)" class="btn btn-danger btn-sm">Delete game night</button>
-            </div>
-        </div>
-    </div>
+    <md-list-item class="md-3-line game-night" ng-class="gameNight.backgroundColorClass" ng-repeat="gameNight in gameNights | filter:customFilter(search)" ng-click="openGameNightDialog($event, gameNight)" ng-show="persons.length > 0">
 
-</div>
+        <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{ gameNight.host }}" />
+
+        <div class="md-list-item-text" style="padding: 0px 10px">
+            <h3>{{ gameNight.date | date: 'dd.MM.yyyy' }}</h3>
+            <h4 ng-show="gameNight.not_voted.length > 0">Not voted: <span ng-repeat="person in gameNight.not_voted">{{person}} </span></h4>
+            <p>{{ gameNight.description }}</p>
+        </div>
+
+        <div class="md-list-item-text md-secondary">
+            <p>
+                <span class="tiny-text">{{gameNight.own_vote.sum.toFixed(1)}} /</span>
+                <span>{{ gameNight.sum.toFixed(1) }}</span>
+            </p>
+        </div>
+
+    </md-list-item>
+
+</md-list>

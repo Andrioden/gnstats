@@ -62,7 +62,6 @@ def date_to_epoch(date_value):
         raise Exception("Type not handled: " + type(date_value).__name__)
 
 
-
 def set_json_response(response, data):
     response.headers['Content-Type'] = 'application/json'
     response.out.write(json.dumps(data))
