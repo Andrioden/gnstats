@@ -5,6 +5,13 @@ VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "gnstats", "gnstats.pyproj", "{1C9E9003-AB28-45EE-8B4C-D19C286751FA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8C254567-D244-415D-95CA-447D5E6E9ACD}"
+	ProjectSection(SolutionItems) = preProject
+		docs\AngularJS Material Design = docs\AngularJS Material Design
+		app.yaml = app.yaml
+		docs\Development Environment = docs\Development Environment
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

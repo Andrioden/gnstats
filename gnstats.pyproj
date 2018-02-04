@@ -27,6 +27,8 @@
     <Content Include="static\app\data-extra.gameNightDialog.template.html" />
     <Content Include="static\app\data.style.css" />
     <Content Include="static\app\data.view.html" />
+    <Content Include="static\app\toolbar-extra.avatarDialog.controller.js" />
+    <Content Include="static\app\toolbar-extra.avatarDialog.template.html" />
     <Content Include="static\app\toolbar.controller.js" />
     <Content Include="static\app\toolbar.style.css" />
     <Content Include="static\app\toolbar-extra.adminDialog.controller.js" />

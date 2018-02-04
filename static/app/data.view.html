@@ -22,7 +22,7 @@
 
     <md-list-item ng-repeat="gameNight in gameNights | filter:customFilter(search)" class="md-3-line game-night" ng-class="{'red-background': gameNight.voteStatus == 'red', 'orange-background': gameNight.voteStatus == 'orange', 'date-sort': sortByText == 'Sort:Date' }" ng-click="openGameNightDialog($event, gameNight)" ng-show="persons.length > 0">
 
-        <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{ gameNight.host }}" />
+        <img ng-src="/api/users/{{ personIdFromName(gameNight.host) }}/avatar/" class="md-avatar" alt="{{ gameNight.host }}" />
 
         <div class="md-list-item-text" style="padding: 0px 10px">
             <h3>{{ gameNight.date | date: 'dd/MM/yyyy' }}</h3>

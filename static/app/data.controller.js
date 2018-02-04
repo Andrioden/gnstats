@@ -112,6 +112,12 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
         }
     }
 
+    $scope.personIdFromName = function (name) {
+        var host = $rootScope.persons.find(x => x.name === name && x.id !== 'undefined');
+        if (typeof host !== "undefined")
+            return host.id;
+    }
+
     // *************** PRIVATE METHODS ***************
 
     function loadGameNights() {

@@ -45,6 +45,22 @@ app.controller('ToolbarController', function($rootScope, $scope, $http, $window,
         function () { });
     };
 
+    $scope.openAvatarDialog = function (ev) {
+        $mdDialog.show({
+            controller: AvatarDialogController,
+            templateUrl: 'static/app/toolbar-extra.avatarDialog.template.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose: true,
+            fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+        })
+        // Hidden with potential return value
+        .then(function () {
+        },
+        // Cancelled
+        function () { });
+    };
+
     $scope.openAdminDialog = function (ev) {
         $mdDialog.show({
             controller: AdminDialogController,

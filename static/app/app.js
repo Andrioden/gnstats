@@ -1,4 +1,4 @@
-var app = angular.module('gnstats', ['ngMaterial']);
+var app = angular.module('gnstats', ['ngMaterial', 'angularFileUpload']);
 
 angular.module('gnstats').config(function ($mdDateLocaleProvider) {
     $mdDateLocaleProvider.formatDate = function (date) {
@@ -11,7 +11,9 @@ angular.module('gnstats').config(function ($mdDateLocaleProvider) {
 });
 
 function alertError(response) {
-    if (response.data) {
+    if (response.error_message)
+        alert(response.error_message);
+    else if (response.data) {
         if (response.data.error_message)
             alert(response.data.error_message);
         else

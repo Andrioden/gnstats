@@ -15,6 +15,7 @@ class Person(ndb.Model):
     nickname = ndb.StringProperty(required=True) # Google nickname
     name = ndb.StringProperty(required=True, choices=person_names_allowed)
     activated = ndb.BooleanProperty(required=True, default=True)
+    avatar = ndb.BlobProperty()
 
     def get_data(self):
         return {
