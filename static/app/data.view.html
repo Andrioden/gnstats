@@ -32,7 +32,7 @@
 
         <div class="md-list-item-text md-secondary">
             <p>
-                <span class="tiny-text">{{gameNight.own_vote.sum.toFixed(1)}} /</span>
+                <span class="tiny-text" ng-show="gameNight.own_vote.sum" >{{gameNight.own_vote.sum.toFixed(1)}} /</span>
                 <span>{{ gameNight.sum.toFixed(1) }}</span>
             </p>
         </div>
