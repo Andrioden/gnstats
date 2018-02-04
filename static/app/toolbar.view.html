@@ -30,8 +30,8 @@
                 <md-button ng-show="user.nickname && !user.verified" ng-click="openVerificationDialog($event)">(click to verify)</md-button>
             </h2>
 
-            <md-button class="md-icon-button">
-                <i class="material-icons md-light" ng-click="openCreateNewGameNightDialog($event)" ng-show="user.verified && $root.persons.length > 0">add</i>
+            <md-button class="md-icon-button" ng-click="openCreateNewGameNightDialog($event)" ng-show="user.verified && $root.persons.length > 0">
+                <i class="material-icons md-light">add</i>
             </md-button>
         </div>
     </md-toolbar>
