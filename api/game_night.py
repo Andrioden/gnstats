@@ -76,7 +76,7 @@ def _create_or_update(request_obj, gn_id = None):
             continue
 
         if not Person.query(Person.name == vote_data['voter']).get().activated:
-            error_400(request_obj.response, "ERROR_INACTIVE_CANT_VOTE", "Deactivated person is not allowed to vote!")
+            error(400, request_obj.response, "ERROR_INACTIVE_CANT_VOTE", "Deactivated person is not allowed to vote!")
             return None
 
         if vote_data.has_key('id'):

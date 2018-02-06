@@ -33,9 +33,9 @@ class MyUserAvatarHandler(webapp2.RequestHandler):
                 person.put()
                 set_json_response(self.response, {'response': "OK"})
             except RequestTooLargeError:
-                error_400(self.response, "FILE_TO_LARGE", "The uploaded file was to large")
+                error(400, self.response, "FILE_TO_LARGE", "The uploaded file was to large")
         else:
-            error_400(self.response, "USER_PERSON_NOT_FOUND", "Could not find user person for current request")
+            error(400, self.response, "USER_PERSON_NOT_FOUND", "Could not find user person for current request")
         
 
 class LoginHandler(webapp2.RequestHandler):
@@ -57,7 +57,7 @@ class VerifyHandler(webapp2.RequestHandler):
         if not validate_request_data(self.response, request_data, ['name', 'password']):
             return
         if not request_data['password'] == SitePassword:
-            error_400(self.response, "error_bad_password", "Bad password")
+            error(400, self.response, "error_bad_password", "Bad password")
             return
 
         user = users.get_current_user()
