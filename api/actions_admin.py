@@ -53,7 +53,11 @@ class DataImportPythonScript(webapp2.RequestHandler):
     def _get_data_dump_string_of_object(self, obj):
         data_string = "%s(id=%s, " % (type(obj).__name__, obj.key.id())
         for variable_name in obj.__dict__['_values'].keys():  # __dict__['_values'] contains all class object variables
+            if (variable_name in ['avatar']):
+                continue
+
             variable_value = getattr(obj, variable_name, None)
+
             if variable_value is None:
                 data_string += "%s=None, " % variable_name
             elif type(variable_value) is list:
