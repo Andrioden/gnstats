@@ -47,7 +47,6 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
             votes: (function(){
                 var votes = [];
                 for(var i=0; i < $rootScope.persons.length; i++) {
-                    console.log($rootScope.persons[i])
                     if ($rootScope.persons[i].activated) {
                         votes.push({
                             voter: $rootScope.persons[i].name,
@@ -117,6 +116,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
         if (typeof host !== "undefined")
             return host.id;
     }
+
 
     // *************** PRIVATE METHODS ***************
 
