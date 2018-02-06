@@ -27,6 +27,7 @@ class DataImportPythonScript(webapp2.RequestHandler):
         self.response.out.write("<br/>")
 
         self.response.out.write("# CLEAR DB: <br/>")
+        self.response.out.write("ndb.delete_multi(Person.query().fetch(keys_only=True)) <br/>")
         self.response.out.write("ndb.delete_multi(GameNight.query().fetch(keys_only=True)) <br/>")
         self.response.out.write("ndb.delete_multi(Vote.query().fetch(keys_only=True)) <br/>")
 
@@ -83,9 +84,8 @@ class DataImportPythonScript(webapp2.RequestHandler):
 
 class RunImportPythonScript(webapp2.RequestHandler):
     def get(self):
-        # Paste generated script from DataImportPythonScript here and run it in dev
+        #Paste generated script from DataImportPythonScript here and run it in dev
         pass
-
 
 app = webapp2.WSGIApplication([
     (r'/api/actions/admin/dataimportpythonscript/', DataImportPythonScript),
