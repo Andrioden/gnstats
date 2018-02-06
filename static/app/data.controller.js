@@ -3,7 +3,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
     // *************** PUBLIC VARIABLES ***************
 
     $scope.gameNights;
-    $scope.sortByText = "";
+    $scope.sortingBy = "";
     $scope.showingSearch = false;
     $scope.search = "";
 
@@ -62,19 +62,19 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
     $scope.sortByDate = function () {
         $scope.showingSearch = false;
         $scope.gameNights.sort(function(a, b){return b.date-a.date;});
-        $scope.sortByText = "Sort:Date";
+        $scope.sortingBy = "Sort:Date";
     }
 
     $scope.sortByHost = function () {
         $scope.showingSearch = false;
         $scope.gameNights.sort(function(a, b){ return a.host.localeCompare(b.host); });
-        $scope.sortByText = "Sort:Host";
+        $scope.sortingBy = "Sort:Host";
     }
 
     $scope.sortByTotalRating = function () {
         $scope.showingSearch = false;
         $scope.gameNights.sort(function(a, b){ return b.sum-a.sum; });
-        $scope.sortByText = "Sort:Total";
+        $scope.sortingBy = "Sort:Total";
     }
 
     $scope.sortByOwnRating = function () {
@@ -87,7 +87,13 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
             else
                 return b.own_vote.sum-a.own_vote.sum;
         });
-        $scope.sortByText = "Sort:Own";
+        $scope.sortingBy = "Sort:Own";
+    }
+
+    $scope.sortByTotalVotePartRating = function (part) {
+        $scope.showingSearch = false;
+        $scope.gameNights.sort(function (a, b) { return summarizeVotesRatingPart(b, part) - summarizeVotesRatingPart(a, part); });
+        $scope.sortingBy = "Sort:TotalVotePart";
     }
 
     $scope.showSearch = function () {
@@ -167,6 +173,16 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
             if (gameNights[i].date)
                 gameNights[i].searchMetaData += " " + moment(gameNights[i].date).format("DD/MM/YYYY");
         }
+    }
+
+    function summarizeVotesRatingPart(gameNight, part) {
+        var sum = 0;
+
+        for (var i = 0; i < gameNight.votes.length; i++)
+            if (!isNaN(gameNight.votes[i][part]))
+                sum += gameNight.votes[i][part];
+
+        return sum;
     }
 
     loadGameNights();

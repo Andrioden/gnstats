@@ -1,11 +1,15 @@
 <md-list id="dataView" ng-controller="DataController" ng-cloak>
 
-    <md-tabs md-dynamic-height md-border-bottom >
+    <md-tabs md-dynamic-height md-border-bottom>
         <md-tab label="Date" ng-click="sortByDate()" />
         <md-tab label="Host" ng-click="sortByHost()" />
         <md-tab label="Rating" ng-click="sortByTotalRating()" />
         <md-tab label="Rated" ng-click="sortByOwnRating()" />
         <md-tab label="Search" ng-click="showSearch()" />
+        <md-tab label="Appertizer" ng-click="sortByTotalVotePartRating('appetizer')" />
+        <md-tab label="Main" ng-click="sortByTotalVotePartRating('main_course')" />
+        <md-tab label="Dessert" ng-click="sortByTotalVotePartRating('dessert')" />
+        <md-tab label="Game" ng-click="sortByTotalVotePartRating('game')" />
     </md-tabs>
 
     <div layout="row" ng-show="showingSearch || search.length > 0">
@@ -20,7 +24,7 @@
         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </div>
 
-    <md-list-item ng-repeat="gameNight in gameNights | filter:customFilter(search)" class="md-3-line game-night" ng-class="{'red-background': gameNight.voteStatus == 'red', 'orange-background': gameNight.voteStatus == 'orange', 'date-sort': sortByText == 'Sort:Date' }" ng-click="openGameNightDialog($event, gameNight)" ng-show="$root.persons.length > 0">
+    <md-list-item ng-repeat="gameNight in gameNights | filter:customFilter(search)" class="md-3-line game-night" ng-class="{'red-background': gameNight.voteStatus == 'red', 'orange-background': gameNight.voteStatus == 'orange', 'date-sort': sortingBy == 'Sort:Date' }" ng-click="openGameNightDialog($event, gameNight)" ng-show="$root.persons.length > 0">
 
         <img ng-src="/api/users/{{ personIdFromName(gameNight.host) }}/avatar/" class="md-avatar" alt="{{ gameNight.host }}" />
 
