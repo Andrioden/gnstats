@@ -1,5 +1,5 @@
 <md-list id="dataView" ng-controller="DataController" ng-cloak>
-
+    <!--md-swipe-left="onSwipeLeft()"-->
     <md-tabs md-dynamic-height md-border-bottom>
         <md-tab label="Date" ng-click="sortByDate()" />
         <md-tab label="Host" ng-click="sortByHost()" />
@@ -16,11 +16,11 @@
         </md-input-container>
     </div>
 
-    <div layout="row" layout-align="space-around" ng-show="loadingData || $root.persons.length === 0">
+    <div layout="row" layout-align="space-around" ng-show="loadingData || $root.loadingPersons">
         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </div>
 
-    <md-list-item ng-repeat="gameNight in gameNights | filter:customFilter(search)" class="md-3-line game-night" ng-class="{'red-background': gameNight.voteStatus == 'red', 'orange-background': gameNight.voteStatus == 'orange', 'date-sort': sortByText == 'Sort:Date' }" ng-click="openGameNightDialog($event, gameNight)" ng-show="persons.length > 0">
+    <md-list-item ng-repeat="gameNight in gameNights | filter:customFilter(search)" class="md-3-line game-night" ng-class="{'red-background': gameNight.voteStatus == 'red', 'orange-background': gameNight.voteStatus == 'orange', 'date-sort': sortByText == 'Sort:Date' }" ng-click="openGameNightDialog($event, gameNight)" ng-show="$root.persons.length > 0">
 
         <img ng-src="/api/users/{{ personIdFromName(gameNight.host) }}/avatar/" class="md-avatar" alt="{{ gameNight.host }}" />
 
@@ -32,7 +32,7 @@
 
         <div class="md-list-item-text md-secondary">
             <p>
-                <span class="tiny-text" ng-show="gameNight.own_vote.sum" >{{gameNight.own_vote.sum.toFixed(1)}} /</span>
+                <span class="tiny-text" ng-show="gameNight.own_vote.sum">{{ gameNight.own_vote.sum.toFixed(1) }} /</span>
                 <span>{{ gameNight.sum.toFixed(1) }}</span>
             </p>
         </div>

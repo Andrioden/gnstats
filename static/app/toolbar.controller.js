@@ -3,6 +3,7 @@ app.controller('ToolbarController', function($rootScope, $scope, $http, $window,
 
     // *************** PUBLIC VARIABLES ***************
 
+    $rootScope.loadingPersons = false;
     $rootScope.persons = [];
     $rootScope.user = {
         nickname: "",
@@ -19,10 +20,13 @@ app.controller('ToolbarController', function($rootScope, $scope, $http, $window,
             alertError(response);
         });
 
+    $rootScope.loadingPersons = true;
     $http.get('/api/users/').
         then(function(response) {
             $rootScope.persons = response.data;
-        }, function(response) {
+            $rootScope.loadingPersons = false;
+        }, function (response) {
+            $rootScope.loadingPersons = false;
             alertError(response);
         });
 
