@@ -40,6 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="api\actions_admin.py" />
+    <Compile Include="api\decorators.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="api\game_night.py" />
     <Compile Include="api\users.py" />
     <Compile Include="api\utils.py" />

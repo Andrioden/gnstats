@@ -1,4 +1,5 @@
 import json
+import logging
 from google.appengine.api import users
 from datetime import datetime, date
 from models import Person
@@ -18,33 +19,37 @@ def forbidden_403(response, code, message):
     error(403, response, code, message)
 
 
-def validate_authenticated(response):
+def validate_verified(response):
     user = users.get_current_user()
-    if users.is_current_user_admin():
-        return True
-    elif not user:
+    if not user:
         unauthorized_401(response, "VALIDATION_ERROR_NOT_LOGGED_INN", "The browsing user is not logged in.")
         return False
 
     person = Person.query(Person.userid == user.user_id()).get()
     if not person:
-        unauthorized_401(response, "VALIDATION_ERROR_NOT_CLAIMED", "The browsing user is logged in with a google account, but has not verified it.")
+        unauthorized_401(response, "VALIDATION_ERROR_NOT_VERIFIED", "The browsing user is logged in with a google account, but has not verified it.")
         return False
     return True
 
 
-def validate_logged_in_admin(response):
+def validate_admin(response):
     if not users.is_current_user_admin():
-        forbidden_403(response, "VALIDATION_ERROR_MISSING_ADMIN_PERMISSION", "The browsing user is logged in and authenticated, but does not have admin permissions.")
+        forbidden_403(response, "VALIDATION_ERROR_NOT_ADMIN", "The browsing user is logged in and authenticated, but does not have admin permissions.")
         return False
     else:
         return True
 
 
-def validate_request_data(response, data_dict, list_of_dict_keys):
-    for key in list_of_dict_keys:
-        if data_dict.get(key, None) in [None, '']:
-            error(400, response, "VALIDATION_ERROR_MISSING_DATA", "The request data is missing the input value '%s'" % key)
+def validate_request_data(request_handler, required_data):
+    try:
+        request_data = json.loads(request_handler.request.body)
+    except ValueError:
+        error(400, request_handler.response, "VALIDATION_ERROR_MISSING_DATA", "The request has no request body when required data is: " + ', '.join(required_data))
+        return False
+
+    for key in required_data:
+        if request_data.get(key, None) in [None, '']:
+            error(400, request_handler.response, "VALIDATION_ERROR_MISSING_DATA", "The request body is missing the data value '%s'" % key)
             return False
     return True
 

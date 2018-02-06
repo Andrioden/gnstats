@@ -8,6 +8,7 @@ from datetime import datetime
 from models import *
 from google.appengine.api import users
 from utils import *
+from decorators import *
 
 
 class GameNightsHandler(webapp2.RequestHandler):
@@ -15,6 +16,8 @@ class GameNightsHandler(webapp2.RequestHandler):
         data = [game_night.get_data(current_user_person_name()) for game_night in GameNight.query()]
         set_json_response(self.response, data)
 
+    @require_verified
+    @require_request_data(['host', 'date', 'description'])
     def post(self):
         game_night = _create_or_update(self)
         if game_night is None:
@@ -24,6 +27,8 @@ class GameNightsHandler(webapp2.RequestHandler):
 
 
 class GameNightHandler(webapp2.RequestHandler):
+    @require_verified
+    @require_request_data(['host', 'date', 'description'])
     def put(self, gn_id):
         game_night = _create_or_update(self, gn_id)
         if game_night is None:
@@ -31,10 +36,8 @@ class GameNightHandler(webapp2.RequestHandler):
         else:
             set_json_response(self.response, {'response': "OK"})
 
+    @require_admin
     def delete(self, gn_id):
-        if not validate_logged_in_admin(self.response):
-            return
-
         gn_key = GameNight.get_by_id(int(gn_id)).key
         ndb.delete_multi(Vote.query(Vote.game_night == gn_key).fetch(keys_only=True))
         gn_key.delete()
@@ -42,15 +45,8 @@ class GameNightHandler(webapp2.RequestHandler):
         set_json_response(self.response, {'response': "OK"})
 
 
-def _create_or_update(request_obj, gn_id = None):
-    if not validate_authenticated(request_obj.response):
-        return None
-
-    request_data = json.loads(request_obj.request.body)
-    logging.info(request_data)
-
-    if not validate_request_data(request_obj.response, request_data, ['host', 'date', 'description']):
-        return None
+def _create_or_update(request_handler, gn_id = None):
+    request_data = json.loads(request_handler.request.body)
 
     # Create/Update GameNight
     if gn_id is not None:
@@ -76,7 +72,7 @@ def _create_or_update(request_obj, gn_id = None):
             continue
 
         if not Person.query(Person.name == vote_data['voter']).get().activated:
-            error(400, request_obj.response, "ERROR_INACTIVE_CANT_VOTE", "Deactivated person is not allowed to vote!")
+            error(400, request_handler.response, "ERROR_INACTIVE_CANT_VOTE", "Deactivated person is not allowed to vote!")
             return None
 
         if vote_data.has_key('id'):

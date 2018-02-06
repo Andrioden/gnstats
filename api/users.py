@@ -8,6 +8,7 @@ from models import *
 from google.appengine.api import users
 from google.appengine.runtime.apiproxy_errors import RequestTooLargeError
 from utils import *
+from decorators import *
 from config_hidden import SitePassword
 
 
@@ -25,17 +26,15 @@ class MyUserHandler(webapp2.RequestHandler):
 
 
 class MyUserAvatarHandler(webapp2.RequestHandler):
+    @require_verified
     def post(self):
         person = current_user_person()
-        if person:
-            try:
-                person.avatar = self.request.get('file')
-                person.put()
-                set_json_response(self.response, {'response': "OK"})
-            except RequestTooLargeError:
-                error(400, self.response, "FILE_TO_LARGE", "The uploaded file was to large")
-        else:
-            error(400, self.response, "USER_PERSON_NOT_FOUND", "Could not find user person for current request")
+        try:
+            person.avatar = self.request.get('file')
+            person.put()
+            set_json_response(self.response, {'response': "OK"})
+        except RequestTooLargeError:
+            error(400, self.response, "FILE_TO_LARGE", "The uploaded file was to large")
         
 
 class LoginHandler(webapp2.RequestHandler):
@@ -51,11 +50,10 @@ class LogoutHandler(webapp2.RequestHandler):
 
 
 class VerifyHandler(webapp2.RequestHandler):
+    @require_request_data(['name', 'password'])
     def post(self):
         request_data = json.loads(self.request.body)
 
-        if not validate_request_data(self.response, request_data, ['name', 'password']):
-            return
         if not request_data['password'] == SitePassword:
             error(400, self.response, "error_bad_password", "Bad password")
             return
@@ -78,20 +76,16 @@ class AvailableNamesHandler(webapp2.RequestHandler):
 
 
 class ActivateUserHandler(webapp2.RequestHandler):
+    @require_admin
     def post(self):
-        if not users.is_current_user_admin():
-            unauthorized_401(self.response, "HACKERALARM", "NSA, FBI and NWA has been warned about you!")
-
         request_data = json.loads(self.request.body)
         _updateActivated(request_data['name'], True)
         set_json_response(self.response, {'response': "OK"})
 
 
 class DeactivateUserHandler(webapp2.RequestHandler):
+    @require_admin
     def post(self):
-        if not users.is_current_user_admin():
-            unauthorized_401(self.response, "HACKERALARM", "NSA, FBI and NWA has been warned about you!")
-
         request_data = json.loads(self.request.body)
         _updateActivated(request_data['name'], False)
         set_json_response(self.response, {'response': "OK"})

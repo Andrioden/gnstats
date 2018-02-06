@@ -6,17 +6,15 @@ import webapp2
 import json
 from google.appengine.ext import ndb
 from models import GameNight, Vote, person_names_allowed
-from api.utils import *
+from utils import *
+from decorators import *
 from datetime import datetime, date
 import logging
 
 
 class DataImportPythonScript(webapp2.RequestHandler):
+    @require_admin
     def get(self):
-
-        if not validate_logged_in_admin(self.response):
-            return
-
         self.response.out.write("# FULL PYTHON SCRIPT: <br/>")
         self.response.out.write("<br/>")
 
@@ -86,6 +84,7 @@ class RunImportPythonScript(webapp2.RequestHandler):
     def get(self):
         #Paste generated script from DataImportPythonScript here and run it in dev
         pass
+
 
 app = webapp2.WSGIApplication([
     (r'/api/actions/admin/dataimportpythonscript/', DataImportPythonScript),
