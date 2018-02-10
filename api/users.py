@@ -87,7 +87,7 @@ class UpdateUserHandler(webapp2.RequestHandler):
         person = Person.get_by_id(int(person_id))
 
         if 'activated' in request_data:
-            person.activated = (request_data['activated'] == 'true')
+            person.activated = request_data['activated']
 
         person.put()
 
