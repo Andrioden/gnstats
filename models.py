@@ -47,6 +47,13 @@ class GameNight(ndb.Model):
             'completely_voted': completely_voted
         }
 
+    def completely_voted(self):
+        votes = [vote for vote in Vote.query(Vote.game_night == self.key)]
+        if len(votes) == 0: # Just created
+            return False
+        else:
+            return len([vote for vote in votes if not vote.complete_vote()]) == 0
+
     def calculate_and_save_sum(self):
         self.sum = sum([vote.weighed_sum() for vote in Vote.query(Vote.game_night == self.key)])
         self.put()

@@ -37,19 +37,19 @@
                     <div layout="row">
                         <md-input-container>
                             <label>Appetizer</label>
-                            <input type="number" min="1" max="6" ng-model="vote.appetizer" ng-disabled="vote.voter != $root.user.name">
+                            <input type="number" min="1" max="6" ng-model="vote.appetizer" ng-disabled="gameNight.completely_voted || vote.voter != $root.user.name">
                         </md-input-container>
                         <md-input-container>
                             <label>Main</label>
-                            <input type="number" min="1" max="6" ng-model="vote.main_course" ng-disabled="vote.voter != $root.user.name">
+                            <input type="number" min="1" max="6" ng-model="vote.main_course" ng-disabled="gameNight.completely_voted || vote.voter != $root.user.name">
                         </md-input-container>
                         <md-input-container>
                             <label>Dessert</label>
-                            <input type="number" min="1" max="6" ng-model="vote.dessert" ng-disabled="vote.voter != $root.user.name">
+                            <input type="number" min="1" max="6" ng-model="vote.dessert" ng-disabled="gameNight.completely_voted || vote.voter != $root.user.name">
                         </md-input-container>
                         <md-input-container>
                             <label>Game</label>
-                            <input type="number" min="1" max="6" ng-model="vote.game" ng-disabled="vote.voter != $root.user.name">
+                            <input type="number" min="1" max="6" ng-model="vote.game" ng-disabled="gameNight.completely_voted || vote.voter != $root.user.name">
                         </md-input-container>
                     </div>
                 </div>

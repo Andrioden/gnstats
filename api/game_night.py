@@ -65,31 +65,30 @@ def _create_or_update(request_handler, gn_id = None):
     if gn_id is None: # To get an ID for vote(s)
         game_night.put()
 
-    vote_ids = []
-    for vote_data in request_data['votes']:
-        if vote_data['voter'] == request_data['host']:
-            continue
+    if not game_night.completely_voted():
+        for vote_data in request_data['votes']:
+            if vote_data['voter'] == request_data['host']:
+                continue
 
-        if not Person.query(Person.name == vote_data['voter']).get().activated:
-            error(400, request_handler.response, "ERROR_INACTIVE_CANT_VOTE", "Deactivated person is not allowed to vote!")
-            return None
+            if not Person.query(Person.name == vote_data['voter']).get().activated:
+                error(400, request_handler.response, "ERROR_INACTIVE_CANT_VOTE", "Deactivated person is not allowed to vote!")
+                return None
 
-        if vote_data.has_key('id'):
-            vote_id = int(vote_data['id'])
-            vote = Vote.get_by_id(vote_id)
-            vote_ids.append(vote_id)
-        else:
-            vote = Vote()
+            if vote_data.has_key('id'):
+                vote_id = int(vote_data['id'])
+                vote = Vote.get_by_id(vote_id)
+            else:
+                vote = Vote()
 
-        requesting_name = current_user_person_name()
-        vote.game_night = game_night.key
-        vote.voter = vote_data['voter']
-        if vote_data['voter'] == current_user_person_name(): # Only allow person to vote for himself
-            vote.appetizer = vote_data.get('appetizer')
-            vote.main_course = vote_data.get('main_course')
-            vote.dessert = vote_data.get('dessert')
-            vote.game = vote_data.get('game')
-        vote.put()
+            requesting_name = current_user_person_name()
+            vote.game_night = game_night.key
+            vote.voter = vote_data['voter']
+            if vote_data['voter'] == current_user_person_name(): # Only allow person to vote for himself
+                vote.appetizer = vote_data.get('appetizer')
+                vote.main_course = vote_data.get('main_course')
+                vote.dessert = vote_data.get('dessert')
+                vote.game = vote_data.get('game')
+            vote.put()
 
     game_night.put()
     game_night.calculate_and_save_sum()
