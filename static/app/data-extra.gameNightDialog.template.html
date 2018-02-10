@@ -32,29 +32,27 @@
                     <textarea ng-model="gameNight.description" required></textarea>
                 </md-input-container>
 
-                <md-list flex>
-                    <md-list-item layout="column" ng-repeat="vote in gameNight.votes | orderBy:['voter']" ng-show="vote.voter != gameNight.host && (gameNight.id || vote.voter == $root.user.name)">
-                        <h3>{{ vote.voter }}</h3>
-                        <div layout="row">
-                            <md-input-container>
-                                <label>Appetizer</label>
-                                <input type="number" min="1" max="6" ng-model="vote.appetizer" ng-disabled="vote.voter != $root.user.name">
-                            </md-input-container>
-                            <md-input-container>
-                                <label>Main</label>
-                                <input type="number" min="1" max="6" ng-model="vote.main_course" ng-disabled="vote.voter != $root.user.name">
-                            </md-input-container>
-                            <md-input-container>
-                                <label>Dessert</label>
-                                <input type="number" min="1" max="6" ng-model="vote.dessert" ng-disabled="vote.voter != $root.user.name">
-                            </md-input-container>
-                            <md-input-container>
-                                <label>Game</label>
-                                <input type="number" min="1" max="6" ng-model="vote.game" ng-disabled="vote.voter != $root.user.name">
-                            </md-input-container>
-                        </div>
-                    </md-list-item>
-                </md-list>
+                <div layout="column" ng-repeat="vote in gameNight.votes | orderBy:['voter']" ng-show="vote.voter != gameNight.host && (gameNight.id || vote.voter == $root.user.name)">
+                    <h4>{{ vote.voter }}</h4>
+                    <div layout="row">
+                        <md-input-container>
+                            <label>Appetizer</label>
+                            <input type="number" min="1" max="6" ng-model="vote.appetizer" ng-disabled="vote.voter != $root.user.name">
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Main</label>
+                            <input type="number" min="1" max="6" ng-model="vote.main_course" ng-disabled="vote.voter != $root.user.name">
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Dessert</label>
+                            <input type="number" min="1" max="6" ng-model="vote.dessert" ng-disabled="vote.voter != $root.user.name">
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Game</label>
+                            <input type="number" min="1" max="6" ng-model="vote.game" ng-disabled="vote.voter != $root.user.name">
+                        </md-input-container>
+                    </div>
+                </div>
 
             </div>
         </md-dialog-content>
