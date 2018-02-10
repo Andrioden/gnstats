@@ -26,8 +26,20 @@ function AdminDialogController($rootScope, $scope, $mdDialog, $http) {
             });
     };
 
-    // *************** PRIVATE METHODS ***************
+    $scope.recalcGameNightSums = function () {
+        $scope.submitting = true;
 
+        $http.post('/api/actions/admin/recalculategnsums/', {}).
+            then(function (response) {
+                $scope.submitting = false;
+                $rootScope.$emit('loadGameNights');
+            }, function (response) {
+                $scope.submitting = false;
+                alertError(response);
+            });
+    };
+
+    // *************** PRIVATE METHODS ***************
 
 
     console.log("AdminDialogController loaded");

@@ -12,7 +12,7 @@ from datetime import datetime, date
 import logging
 
 
-class DataImportPythonScript(webapp2.RequestHandler):
+class DataImportPythonScriptHandler(webapp2.RequestHandler):
     @require_admin
     def get(self):
         self.response.out.write("# FULL PYTHON SCRIPT: <br/>")
@@ -80,13 +80,21 @@ class DataImportPythonScript(webapp2.RequestHandler):
         return data_string
 
 
-class RunImportPythonScript(webapp2.RequestHandler):
+class RunImportPythonScriptHandler(webapp2.RequestHandler):
     def get(self):
         #Paste generated script from DataImportPythonScript here and run it in dev
         pass
 
 
+class RecalcluateGameNightSumsHandler(webapp2.RequestHandler):
+    @require_admin
+    def post(self):
+        [gn.calculate_and_save_sum() for gn in GameNight.query()]
+        set_json_response(self.response, {'response': "OK"})
+
+
 app = webapp2.WSGIApplication([
-    (r'/api/actions/admin/dataimportpythonscript/', DataImportPythonScript),
-    (r'/api/actions/admin/runimportpythonscript/', RunImportPythonScript),
+    (r'/api/actions/admin/dataimportpythonscript/', DataImportPythonScriptHandler),
+    (r'/api/actions/admin/runimportpythonscript/', RunImportPythonScriptHandler),
+    (r'/api/actions/admin/recalculategnsums/', RecalcluateGameNightSumsHandler),
 ], debug=True)

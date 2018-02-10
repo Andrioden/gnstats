@@ -17,6 +17,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
     // *************** TRIGGER METHODS ***************
 
     $rootScope.$on('openGameNightDialog', function (event, args) { $scope.openGameNightDialog(args.ev, args.gameNight); });
+    $rootScope.$on('loadGameNights', function (event, args) { loadGameNights(); });
 
 
     // *************** PUBLIC METHODS ***************

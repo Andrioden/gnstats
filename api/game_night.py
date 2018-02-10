@@ -13,7 +13,7 @@ from decorators import *
 
 class GameNightsHandler(webapp2.RequestHandler):
     def get(self):
-        data = [game_night.get_data(current_user_person_name()) for game_night in GameNight.query()]
+        data = [gn.get_data(current_user_person_name()) for gn in GameNight.query()]
         set_json_response(self.response, data)
 
     @require_verified
@@ -61,7 +61,6 @@ def _create_or_update(request_handler, gn_id = None):
 
     game_night.host = request_data['host']
     game_night.description = request_data['description']
-    game_night.sum = 0
 
     if gn_id is None: # To get an ID for vote(s)
         game_night.put()
@@ -92,15 +91,8 @@ def _create_or_update(request_handler, gn_id = None):
             vote.game = vote_data.get('game')
         vote.put()
 
-        game_night.sum += vote.weighed_sum()
-
-    # The game night sum also has to have the sum added from the other votes
-    for vote in Vote.query(Vote.game_night == game_night.key):
-        if vote.key.id() not in vote_ids:
-            game_night.sum += vote.weighed_sum()
-
     game_night.put()
-
+    game_night.calculate_and_save_sum()
     return game_night
 
 

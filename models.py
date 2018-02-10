@@ -47,6 +47,10 @@ class GameNight(ndb.Model):
             'completely_voted': completely_voted
         }
 
+    def calculate_and_save_sum(self):
+        self.sum = sum([vote.weighed_sum() for vote in Vote.query(Vote.game_night == self.key)])
+        self.put()
+
 
 class Vote(ndb.Model):
     game_night = ndb.KeyProperty(GameNight, required=True)

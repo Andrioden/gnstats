@@ -13,6 +13,7 @@
         <md-dialog-content>
             <div class="md-dialog-content">
 
+                <h3>Users</h3>
                 <md-list>
                     <md-list-item ng-repeat="person in $root.persons">
                         <img ng-src="{{ item.face }}?{{ $index }}" class="md-avatar" alt="{{ person.name }}" />
@@ -20,6 +21,9 @@
                         <md-button class="md-raised md-warn" ng-click="updateActivated(person, false)" ng-disabled="submitting" ng-show="person.activated">Deactivate</md-button>
                     </md-list-item>
                 </md-list>
+
+                <h3>Actions</h3>
+                <md-button class="md-raised md-primary" ng-click="recalcGameNightSums()" ng-disabled="submitting">Recalculate game night sums</md-button>
 
             </div>
         </md-dialog-content>
