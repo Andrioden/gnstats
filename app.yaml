@@ -5,23 +5,29 @@ threadsafe: yes
 handlers:
 - url: /static
   static_dir: static
+  secure: always
 
 - url: /favicon\.ico
   static_files: favicon.ico
   upload: favicon\.ico
+  secure: always
 
 - url: /api/game_night/.*
   script: api.game_night.app
+  secure: always
 
 - url: /api/users/.*
   script: api.users.app
+  secure: always
 
 - url: /api/actions/admin/.*
   script: api.actions_admin.app
   login: admin
+  secure: always
 
 - url: /.*
   script: main.app
+  secure: always
 
 libraries:
 - name: webapp2
