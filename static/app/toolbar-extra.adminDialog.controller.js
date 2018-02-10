@@ -13,26 +13,13 @@ function AdminDialogController($rootScope, $scope, $mdDialog, $http) {
         $mdDialog.cancel();
     };
 
-    $scope.activate = function (person) {
+    $scope.updateActivated = function (person, newActivated) {
         $scope.submitting = true;
 
-        $http.post('/api/users/activate/', { name: person.name }, {}).
+        $http.put('/api/users/' + person.id + '/', { activated: newActivated}, {}).
             then(function (response) {
                 $scope.submitting = false;
-                person.activated = true;
-            }, function (response) {
-                $scope.submitting = false;
-                alertError(response);
-            });
-    };
-
-    $scope.deactivate = function (person) {
-        $scope.submitting = true;
-
-        $http.post('/api/users/deactivate/', { name: person.name }, {}).
-            then(function (response) {
-                $scope.submitting = false;
-                person.activated = false;
+                person.activated = newActivated;
             }, function (response) {
                 $scope.submitting = false;
                 alertError(response);

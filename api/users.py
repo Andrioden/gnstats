@@ -12,6 +12,18 @@ from decorators import *
 from config_hidden import SitePassword
 
 
+class UsersHandler(webapp2.RequestHandler):
+    def get(self):
+        set_json_response(self.response, [person.get_data() for person in Person.query()])
+
+
+class AvailableNamesHandler(webapp2.RequestHandler):
+    def get(self):
+        person_names_taken = [person.name for person in Person.query()]
+        available_names = [name for name in person_names_allowed if name not in person_names_taken]
+        set_json_response(self.response, available_names)
+
+
 class MyUserHandler(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'application/json'
@@ -37,19 +49,19 @@ class MyUserAvatarHandler(webapp2.RequestHandler):
             error(400, self.response, "FILE_TO_LARGE", "The uploaded file was to large")
         
 
-class LoginHandler(webapp2.RequestHandler):
+class MyLoginHandler(webapp2.RequestHandler):
     def get(self):
         redirect = self.request.get('redirect', "/")
         return webapp2.redirect(users.create_login_url(redirect))
 
 
-class LogoutHandler(webapp2.RequestHandler):
+class MyLogoutHandler(webapp2.RequestHandler):
     def get(self):
         redirect = self.request.get('redirect', "/")
         return webapp2.redirect(users.create_logout_url(redirect))
 
 
-class VerifyHandler(webapp2.RequestHandler):
+class MyVerifyHandler(webapp2.RequestHandler):
     @require_request_data(['name', 'password'])
     def post(self):
         request_data = json.loads(self.request.body)
@@ -68,38 +80,16 @@ class VerifyHandler(webapp2.RequestHandler):
         set_json_response(self.response, {'response': "OK"})
 
 
-class AvailableNamesHandler(webapp2.RequestHandler):
-    def get(self):
-        person_names_taken = [person.name for person in Person.query()]
-        available_names = [name for name in person_names_allowed if name not in person_names_taken]
-        set_json_response(self.response, available_names)
-
-
-class ActivateUserHandler(webapp2.RequestHandler):
+class UpdateUserHandler(webapp2.RequestHandler):
     @require_admin
-    def post(self):
+    def put(self, person_id):
         request_data = json.loads(self.request.body)
-        _updateActivated(request_data['name'], True)
-        set_json_response(self.response, {'response': "OK"})
+        person = Person.get_by_id(int(person_id))
 
+        if 'activated' in request_data:
+            person.activated = (request_data['activated'] == 'true')
 
-class DeactivateUserHandler(webapp2.RequestHandler):
-    @require_admin
-    def post(self):
-        request_data = json.loads(self.request.body)
-        _updateActivated(request_data['name'], False)
-        set_json_response(self.response, {'response': "OK"})
-
-
-def _updateActivated(name, activatedValue):
-    person = Person.query(Person.name == name).get()
-    person.activated = activatedValue
-    person.put()
-
-
-class UsersHandler(webapp2.RequestHandler):
-    def get(self):
-        set_json_response(self.response, [person.get_data() for person in Person.query()])
+        person.put()
 
 
 class UserAvatarHandler(webapp2.RequestHandler):
@@ -113,14 +103,13 @@ class UserAvatarHandler(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([
-    (r'/api/users/my/', MyUserHandler),
-    (r'/api/users/my/avatar/', MyUserAvatarHandler),
-    (r'/api/users/login/', LoginHandler),
-    (r'/api/users/logout/', LogoutHandler),
-    (r'/api/users/verify/', VerifyHandler),
-    (r'/api/users/available-names/', AvailableNamesHandler),
-    (r'/api/users/activate/', ActivateUserHandler),
-    (r'/api/users/deactivate/', DeactivateUserHandler),
     (r'/api/users/', UsersHandler),
+    (r'/api/users/available-names/', AvailableNamesHandler),
+    (r'/api/users/me/', MyUserHandler),
+    (r'/api/users/me/avatar/', MyUserAvatarHandler),
+    (r'/api/users/me/login/', MyLoginHandler),
+    (r'/api/users/me/logout/', MyLogoutHandler),
+    (r'/api/users/me/verify/', MyVerifyHandler),
+    (r'/api/users/(\d+)/', UpdateUserHandler),
     (r'/api/users/(\d+)/avatar/', UserAvatarHandler),
 ], debug=True)

@@ -13,7 +13,7 @@ app.controller('ToolbarController', function($rootScope, $scope, $http, $window,
 
     // *************** CONSTRUCTOR ***************
 
-    $http.get('/api/users/my/').
+    $http.get('/api/users/me/').
         then(function(response) {
             $rootScope.user = response.data;
         }, function(response) {

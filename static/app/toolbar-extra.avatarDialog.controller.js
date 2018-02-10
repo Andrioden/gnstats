@@ -7,7 +7,7 @@ function AvatarDialogController($rootScope, $scope, $mdDialog, $http, $window, F
     $scope.uploader = new FileUploader({
         removeAfterUpload: true,
         onAfterAddingFile: function (item) {
-            item.url = "/api/users/my/avatar/";
+            item.url = "/api/users/me/avatar/";
         },
         onSuccessItem: function (item, response, status, headers) {
             $window.location.reload();

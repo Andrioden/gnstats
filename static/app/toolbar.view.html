@@ -9,8 +9,8 @@
                 </md-button>
                 <md-menu-content>
                     <md-menu-item>
-                        <md-button ng-href="/api/users/login/" ng-hide="user.nickname">Login</md-button>
-                        <md-button ng-href="/api/users/logout/" ng-show="user.nickname">Logout</md-button>
+                        <md-button ng-href="/api/users/me/login/" ng-hide="user.nickname">Login</md-button>
+                        <md-button ng-href="/api/users/me/logout/" ng-show="user.nickname">Logout</md-button>
                     </md-menu-item>
                     <md-menu-item ng-show="!user.verified && user.nickname">
                         <md-button ng-click="openVerificationDialog($event)">Verify</md-button>
