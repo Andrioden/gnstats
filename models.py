@@ -31,8 +31,11 @@ class GameNight(ndb.Model):
     description = ndb.StringProperty(required=True)
     sum = ndb.FloatProperty(default=0)
 
-    def get_data(self, query_person_name=None):
-        votes = [vote for vote in Vote.query(Vote.game_night == self.key)]
+    def get_data(self, query_person_name=None, _cached_votes=None):
+        if _cached_votes is None:
+            votes = [vote for vote in Vote.query(Vote.game_night == self.key)]
+        else:
+            votes = [vote for vote in _cached_votes if vote.game_night == self.key]
         completely_voted = len([vote for vote in votes if not vote.complete_vote()]) == 0
 
         return {

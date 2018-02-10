@@ -13,7 +13,8 @@ from decorators import *
 
 class GameNightsHandler(webapp2.RequestHandler):
     def get(self):
-        data = [gn.get_data(current_user_person_name()) for gn in GameNight.query()]
+        _cached_votes = [vote for vote in Vote.query()]
+        data = [gn.get_data(current_user_person_name(), _cached_votes) for gn in GameNight.query()]
         set_json_response(self.response, data)
 
     @require_verified
