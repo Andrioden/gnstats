@@ -17,12 +17,14 @@
                     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                 </div>
 
-                <h2>Vote Behavior</h2>
+                <h2>Voting Behavior</h2>
+                <p>Difference between average vote and persons vote within each game night. Higher number means the person tends to vote higher than the average.</p>
 
-                <table ng-table="stats.behaviors">
+                <table ng-table="stats.behaviors" class="zui-table">
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>GNs</th>
                             <th>
                                 <a href="#" ng-click="statsBehaviorOrderByField='appetizer'; statsBehaviorReverseSort = !statsBehaviorReverseSort">
                                     Appe <span ng-show="statsBehaviorOrderByField == 'appetizer'"><span ng-show="!statsBehaviorReverseSort">^</span><span ng-show="statsBehaviorReverseSort">v</span></span>
@@ -53,11 +55,12 @@
                     <tbody>
                         <tr ng-repeat="behavior in stats.behaviors | orderBy:statsBehaviorOrderByField:statsBehaviorReverseSort">
                             <td>{{ behavior.person }}</td>
-                            <td>{{ behavior.appetizer.toFixed(1) }}</td>
-                            <td>{{ behavior.main_course.toFixed(1) }}</td>
-                            <td>{{ behavior.dessert.toFixed(1) }}</td>
-                            <td>{{ behavior.game.toFixed(1) }}</td>
-                            <td>{{ behavior.sum.toFixed(1) }}</td>
+                            <td>{{ behavior.count }}</td>
+                            <td>{{ behavior.appetizer.toFixed(2) }}</td>
+                            <td>{{ behavior.main_course.toFixed(2) }}</td>
+                            <td>{{ behavior.dessert.toFixed(2) }}</td>
+                            <td>{{ behavior.game.toFixed(2) }}</td>
+                            <td>{{ behavior.sum.toFixed(2) }}</td>
                         </tr>
                     </tbody>
                 </table>
