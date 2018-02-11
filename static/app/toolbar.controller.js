@@ -80,6 +80,21 @@ app.controller('ToolbarController', function($rootScope, $scope, $http, $window,
         function () { });
     };
 
+    $scope.openStatsDialog = function (ev) {
+        $mdDialog.show({
+            controller: StatsDialogController,
+            templateUrl: 'static/app/toolbar-extra.statsDialog.template.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose: true,
+            fullscreen: true // Only for -xs, -sm breakpoints.
+        })
+        // Hidden with potential return value
+        .then(function () { },
+        // Cancelled
+        function () { });
+    };
+
     $scope.openCreateNewGameNightDialog = function (ev) {
         $rootScope.$emit('openGameNightDialog', {ev: ev, gameNight: null});
     };

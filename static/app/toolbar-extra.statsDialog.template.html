@@ -1,0 +1,69 @@
+<md-dialog id="statsDialog">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Stats</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <i class="material-icons">close</i>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="md-dialog-content">
+
+                <div layout="row" layout-align="space-around" ng-show="loadingData">
+                    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                </div>
+
+                <h2>Vote Behavior</h2>
+
+                <table ng-table="stats.behaviors">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>
+                                <a href="#" ng-click="statsBehaviorOrderByField='appetizer'; statsBehaviorReverseSort = !statsBehaviorReverseSort">
+                                    Appe <span ng-show="statsBehaviorOrderByField == 'appetizer'"><span ng-show="!statsBehaviorReverseSort">^</span><span ng-show="statsBehaviorReverseSort">v</span></span>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="#" ng-click="statsBehaviorOrderByField='main_course'; statsBehaviorReverseSort = !statsBehaviorReverseSort">
+                                    Main <span ng-show="statsBehaviorOrderByField == 'main_course'"><span ng-show="!statsBehaviorReverseSort">^</span><span ng-show="statsBehaviorReverseSort">v</span></span>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="#" ng-click="statsBehaviorOrderByField='dessert'; statsBehaviorReverseSort = !statsBehaviorReverseSort">
+                                    Dess <span ng-show="statsBehaviorOrderByField == 'dessert'"><span ng-show="!statsBehaviorReverseSort">^</span><span ng-show="statsBehaviorReverseSort">v</span></span>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="#" ng-click="statsBehaviorOrderByField='game'; statsBehaviorReverseSort = !statsBehaviorReverseSort">
+                                    Game <span ng-show="statsBehaviorOrderByField == 'game'"><span ng-show="!statsBehaviorReverseSort">^</span><span ng-show="statsBehaviorReverseSort">v</span></span>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="#" ng-click="statsBehaviorOrderByField='sum'; statsBehaviorReverseSort = !statsBehaviorReverseSort">
+                                    Sum <span ng-show="statsBehaviorOrderByField == 'sum'"><span ng-show="!statsBehaviorReverseSort">^</span><span ng-show="statsBehaviorReverseSort">v</span></span>
+                                </a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="behavior in stats.behaviors | orderBy:statsBehaviorOrderByField:statsBehaviorReverseSort">
+                            <td>{{ behavior.person }}</td>
+                            <td>{{ behavior.appetizer.toFixed(1) }}</td>
+                            <td>{{ behavior.main_course.toFixed(1) }}</td>
+                            <td>{{ behavior.dessert.toFixed(1) }}</td>
+                            <td>{{ behavior.game.toFixed(1) }}</td>
+                            <td>{{ behavior.sum.toFixed(1) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </md-dialog-content>
+
+    </form>
+</md-dialog>

@@ -25,6 +25,10 @@ handlers:
   login: admin
   secure: always
 
+- url: /api/actions/.*
+  script: api.actions.app
+  secure: always
+
 - url: /.*
   script: main.app
   secure: always

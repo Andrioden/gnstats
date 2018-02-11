@@ -83,13 +83,28 @@ class Vote(ndb.Model):
             'complete_vote': self.complete_vote()
         }
 
+    def appertizer_int(self):
+        return self.appetizer if self.appetizer else 0
+
+    def main_course_int(self):
+        return self.main_course if self.main_course else 0
+
+    def dessert_int(self):
+        return self.dessert if self.dessert else 0
+
+    def game_int(self):
+        return self.game if self.game else 0
+
     def weighed_sum(self):
-        weighed_sum = 0
-        weighed_sum += self.appetizer * Weight_Appetizer if self.appetizer else 0
-        weighed_sum += self.main_course * Weight_MainCourse if self.main_course else 0
-        weighed_sum += self.dessert * Weight_Dessert if self.dessert else 0
-        weighed_sum += self.game * Weight_Game if self.game else 0
-        return weighed_sum
+        sum = 0
+        sum += self.appertizer_int() * Weight_Appetizer
+        sum += self.main_course_int() * Weight_MainCourse
+        sum += self.dessert_int() * Weight_Dessert
+        sum += self.game_int() * Weight_Game
+        return sum
+
+    def nonweighed_sum(self):
+        return self.appertizer_int() + self.main_course_int() + self.dessert_int() + self.game_int()
 
     def complete_vote(self):
         return None not in [self.appetizer, self.main_course, self.dessert, self.game]
