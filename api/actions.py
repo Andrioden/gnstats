@@ -13,7 +13,7 @@ from pprint import pprint, pformat
 class StatsHandler(webapp2.RequestHandler):
     def get(self):
 
-        # First we cache a hierarky of the games and votes in a fast-accessing games id dict
+        # First we cache a hierarchy of the games and votes in a fast-accessing games id dict
         gn_votes = {}
 
         for gn in GameNight.query():
@@ -27,11 +27,24 @@ class StatsHandler(webapp2.RequestHandler):
             else:
                 logging.info("Game night %s not found", gn_id)
 
+        # Convert dict to array for easier further processing:
+        gn_votes_arr = []
+        for gn_id, gn in gn_votes.iteritems():
+            gn_votes_arr.append(gn)
+
+        stats_data = {
+            'behaviors': self._behaviors(gn_votes_arr), 
+            'host_performances': self._host_performances(gn_votes_arr)
+        }
+
+        set_json_response(self.response, stats_data)
+
+    def _behaviors(self, gn_votes):
+
         behaviors = {}
 
-        for gn_id, gn in gn_votes.iteritems():
+        for gn in gn_votes:
 
-            # Stats - Vote Behavior
             vote_count = len(gn._votes) * 1.0
             avg_vote = {
                 'appetizer': sum([vote.appertizer_int() for vote in gn._votes]) / vote_count, 
@@ -63,7 +76,74 @@ class StatsHandler(webapp2.RequestHandler):
             behavior['sum'] = behavior['sum'] / behavior['count']
             behaviors_arr.append(behavior)
 
-        set_json_response(self.response, {'behaviors': behaviors_arr})
+        return behaviors_arr
+
+    def _host_performances(self, gn_votes):
+
+        host_performances = {
+            'total': {},    
+        }
+
+        current_round_hosts_left = 0
+        current_round_year = None
+        current_round_best_sum = None
+        current_round_best_host = None
+        current_round_worst_sum = None
+        current_round_worst_host = None
+
+        for gn in sorted(gn_votes, key=lambda gn: gn.date):
+
+            # Initiate data structures if they are missing for new persons and new years
+            if not gn.host in host_performances['total']:
+                host_performances['total'][gn.host] = { 'hosted': 0, 'best': 0, 'worst': 0, 'total_sum': 0, 'avg': None }
+
+            if not gn.date.year in host_performances:
+                host_performances[gn.date.year] = {}
+
+            if not gn.host in host_performances[gn.date.year]:
+                logging.info("Adding %s to year %s" % (gn.host, gn.date.year))
+                host_performances[gn.date.year][gn.host] = { 'hosted': 0, 'best': 0, 'worst': 0, 'total_sum': 0, 'avg': None }
+
+            # Store general stats
+            gn_sum = sum([vote.weighed_sum() for vote in gn._votes])
+
+            host_performances['total'][gn.host]['hosted'] += 1
+            host_performances['total'][gn.host]['total_sum'] += gn_sum
+            host_performances[gn.date.year][gn.host]['hosted'] += 1
+            host_performances[gn.date.year][gn.host]['total_sum'] += gn_sum
+
+            # Store and calculate best/worst stats
+            if current_round_hosts_left == 0: 
+                # New round started, add previous round data to dataset if not first round
+                if current_round_best_host is not None:
+                    host_performances['total'][current_round_best_host]['best'] += 1
+                    host_performances['total'][current_round_worst_host]['worst'] += 1
+                    host_performances[current_round_year][current_round_best_host]['best'] += 1
+                    host_performances[current_round_year][current_round_worst_host]['worst'] += 1
+                # Reset best/worst tracking variables
+                current_round_hosts_left = len(gn._votes) + 1
+                current_round_year = gn.date.year
+                current_round_best_sum = -9999
+                current_round_best_host = None
+                current_round_worst_sum = 9999
+                current_round_worst_host = None
+
+            if gn_sum > current_round_best_sum:
+                current_round_best_sum = gn_sum
+                current_round_best_host = gn.host
+
+            if gn_sum < current_round_worst_sum:
+                current_round_worst_sum = gn_sum
+                current_round_worst_host = gn.host
+
+            current_round_hosts_left -= 1
+
+        # Final data manupulation
+        for year_or_tot, performances in host_performances.iteritems():
+            for name, performance in performances.iteritems():
+                performance['avg'] = performance['total_sum'] / performance['hosted']
+
+        return host_performances
 
 
 app = webapp2.WSGIApplication([

@@ -22,7 +22,7 @@
                         <md-button ng-click="openAdminDialog($event)">Admin</md-button>
                     </md-menu-item>
                     <md-divider></md-divider>
-                    <md-menu-item>
+                    <md-menu-item ng-show="$root.persons.length > 0">
                         <md-button ng-click="openStatsDialog($event)">Stats</md-button>
                     </md-menu-item>
                 </md-menu-content>
