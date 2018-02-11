@@ -27,7 +27,9 @@
     <Content Include="static\app\data-extra.gameNightDialog.template.html" />
     <Content Include="static\app\data.style.css" />
     <Content Include="static\app\data.view.html" />
+    <Content Include="static\app\toolbar-extra.statsDialog.controller.js" />
     <Content Include="static\app\toolbar-extra.avatarDialog.controller.js" />
+    <Content Include="static\app\toolbar-extra.statsDialog.template.html" />
     <Content Include="static\app\toolbar-extra.avatarDialog.template.html" />
     <Content Include="static\app\toolbar.controller.js" />
     <Content Include="static\app\toolbar.style.css" />
@@ -44,6 +46,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="api\game_night.py" />
+    <Compile Include="api\actions.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="api\users.py" />
     <Compile Include="api\utils.py" />
     <Compile Include="api\__init__.py" />
