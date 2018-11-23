@@ -1,5 +1,11 @@
+Setting up
 1. Download newest python 2.7.x (https://www.python.org/downloads/release/python-2711/)
-2. Download newest version of App Engine SDK for Python: https://storage.googleapis.com/appengine-sdks/featured/GoogleAppEngine-1.9.40.msi
-3. Git client (Anbefaler GitHub Desktop: https://desktop.github.com/)
+2. Download newest version of App Engine SDK for Python: https://cloud.google.com/appengine/docs/standard/python/download
+3. Git client (GitHub Desktop: https://desktop.github.com/)
 4. PyCharm is recommended if you need to do backend changes, or any IDE to do html/css/js changes.
 5. Rename config_hidden_example.py to config_hidden.py
+
+Downloading prod data
+1. Run PRODURL/api/actions/admin/dataimportpythonscript/
+2. Copy paste data into actions_admin > RunImportPythonScriptHandler
+3. Run DEVURL/api/actions/admin/runimportpythonscript/
