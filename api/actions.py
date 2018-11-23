@@ -32,11 +32,13 @@ class StatsHandler(webapp2.RequestHandler):
         for gn_id, gn in gn_votes.iteritems():
             gn_votes_arr.append(gn)
 
+        # Calculate stats
         stats_data = {
             'behaviors': self._behaviors(gn_votes_arr), 
             'host_performances': self._host_performances(gn_votes_arr)
         }
 
+        # Response
         set_json_response(self.response, stats_data)
 
     def _behaviors(self, gn_votes):
@@ -105,12 +107,10 @@ class StatsHandler(webapp2.RequestHandler):
                 host_performances[gn.date.year][gn.host] = { 'hosted': 0, 'best': 0, 'worst': 0, 'total_sum': 0, 'avg': None }
 
             # Store general stats
-            gn_sum = sum([vote.weighed_sum() for vote in gn._votes])
-
             host_performances['total'][gn.host]['hosted'] += 1
-            host_performances['total'][gn.host]['total_sum'] += gn_sum
+            host_performances['total'][gn.host]['total_sum'] += gn.sum
             host_performances[gn.date.year][gn.host]['hosted'] += 1
-            host_performances[gn.date.year][gn.host]['total_sum'] += gn_sum
+            host_performances[gn.date.year][gn.host]['total_sum'] += gn.sum
 
             # Store and calculate best/worst stats
             if current_round_hosts_left == 0: 
@@ -128,17 +128,17 @@ class StatsHandler(webapp2.RequestHandler):
                 current_round_worst_sum = 9999
                 current_round_worst_host = None
 
-            if gn_sum > current_round_best_sum:
-                current_round_best_sum = gn_sum
+            if gn.sum > current_round_best_sum:
+                current_round_best_sum = gn.sum
                 current_round_best_host = gn.host
 
-            if gn_sum < current_round_worst_sum:
-                current_round_worst_sum = gn_sum
+            if gn.sum < current_round_worst_sum:
+                current_round_worst_sum = gn.sum
                 current_round_worst_host = gn.host
 
             current_round_hosts_left -= 1
 
-        # Final data manupulation
+        # Calculate averages
         for year_or_tot, performances in host_performances.iteritems():
             for name, performance in performances.iteritems():
                 performance['avg'] = performance['total_sum'] / performance['hosted']

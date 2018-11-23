@@ -98,7 +98,7 @@
                         <tr ng-repeat="(category, performances) in stats.host_performances">
                             <td>{{ category }}</td>
                             <td ng-repeat="person in $root.persons">
-                                <span ng-show="performances[person.name]">{{ performances[person.name].avg.toFixed(1) }}</span>
+                                <span ng-show="performances[person.name]">{{ performances[person.name].avg.toFixed(2) }}</span>
                             </td>
                         </tr>
                     </tbody>
