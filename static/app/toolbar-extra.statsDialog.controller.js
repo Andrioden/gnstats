@@ -4,7 +4,7 @@ function StatsDialogController($rootScope, $scope, $mdDialog, $http, $window) {
 
     $scope.loadingData = false;
     $scope.stats;
-    $scope.statsBehaviorOrderByField = 'sum';
+    $scope.statsBehaviorOrderByField = 'sum_weighed';
     $scope.statsBehaviorReverseSort = true;
 
 

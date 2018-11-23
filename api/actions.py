@@ -54,11 +54,12 @@ class StatsHandler(webapp2.RequestHandler):
                 'dessert': sum([vote.dessert_int() for vote in gn._votes]) / vote_count,  
                 'game': sum([vote.game_int() for vote in gn._votes]) / vote_count, 
                 'sum': sum([vote.nonweighed_sum() for vote in gn._votes]) / vote_count,
+                'sum_weighed': sum([vote.weighed_sum() for vote in gn._votes]) / vote_count,
             }
 
             for vote in gn._votes:
                 if vote.voter not in behaviors:
-                    behaviors[vote.voter] = { 'count': 0, 'sum': 0, 'appetizer': 0, 'main_course': 0, 'dessert': 0, 'game': 0 }
+                    behaviors[vote.voter] = { 'count': 0, 'appetizer': 0, 'main_course': 0, 'dessert': 0, 'game': 0, 'sum': 0, 'sum_weighed': 0 }
                 
                 behaviors[vote.voter]['count'] += 1
                 behaviors[vote.voter]['appetizer'] += vote.appertizer_int() - avg_vote['appetizer']
@@ -66,6 +67,7 @@ class StatsHandler(webapp2.RequestHandler):
                 behaviors[vote.voter]['dessert'] += vote.dessert_int() - avg_vote['dessert']
                 behaviors[vote.voter]['game'] += vote.game_int() - avg_vote['game']
                 behaviors[vote.voter]['sum'] += vote.nonweighed_sum() - avg_vote['sum']
+                behaviors[vote.voter]['sum_weighed'] += vote.weighed_sum() - avg_vote['sum_weighed']
         
         # Convert to array as its better for the client
         behaviors_arr = []
@@ -76,6 +78,7 @@ class StatsHandler(webapp2.RequestHandler):
             behavior['dessert'] = behavior['dessert'] / behavior['count']
             behavior['game'] = behavior['game'] / behavior['count']
             behavior['sum'] = behavior['sum'] / behavior['count']
+            behavior['sum_weighed'] = behavior['sum_weighed'] / behavior['count']
             behaviors_arr.append(behavior)
 
         return behaviors_arr
