@@ -144,6 +144,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
     function loadedGameNightsProcessing() {
         setGameNightDates($scope.gameNights);
         setGameNightVoteStatus($scope.gameNights);
+        setGameNightLastOfRounds($scope.gameNights);
         addSearchableMetaData($scope.gameNights);
         $scope.sortByDate();
     }
@@ -165,6 +166,24 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
                 gameNights[i].voteStatus = "orange";
             else
                 gameNights[i].voteStatus = "";
+        }
+    }
+
+    function setGameNightLastOfRounds(gameNights) {
+        // Ascending sort
+        gameNights.sort(function(a, b){return a.date-b.date;});
+
+        // Offset by 1 since we have to pretend the game night before first game night was the previous one, for this algorithm to work.
+        var previousIsLastOfRoundIndex = -1;
+
+        for(var i=0; i<gameNights.length; i++) {
+            var gameNightsSinceLastFirstOfRoundCount = i - previousIsLastOfRoundIndex;
+            var peoplePartOfRound = gameNights[i].votes.length + 1; // +1 because host do not vote
+
+            if (gameNightsSinceLastFirstOfRoundCount == peoplePartOfRound) {
+                gameNights[i].isLastOfRound = true;
+                previousIsLastOfRoundIndex = i;
+            }
         }
     }
 

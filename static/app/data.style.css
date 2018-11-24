@@ -6,7 +6,7 @@ md-list#dataView {
     border-bottom: 1px solid #c6ceff;
 }
 
-.game-night.date-sort:nth-last-child(4n) {
+.game-night.round-separator {
     border-top: 3px solid #7a8dff;
 }
 

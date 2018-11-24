@@ -24,7 +24,7 @@
         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </div>
 
-    <md-list-item ng-repeat="gameNight in gameNights | filter:customFilter(search)" class="md-3-line game-night" ng-class="{'red-background': gameNight.voteStatus == 'red', 'orange-background': gameNight.voteStatus == 'orange', 'date-sort': sortingBy == 'Sort:Date' }" ng-click="openGameNightDialog($event, gameNight)" ng-show="$root.persons.length > 0">
+    <md-list-item ng-repeat="gameNight in gameNights | filter:customFilter(search)" class="md-3-line game-night" ng-class="{'red-background': (gameNight.voteStatus == 'red'), 'orange-background': (gameNight.voteStatus == 'orange'), 'round-separator': (sortingBy == 'Sort:Date' && gameNight.isLastOfRound) }" ng-click="openGameNightDialog($event, gameNight)" ng-show="$root.persons.length > 0">
 
         <img ng-src="/api/users/{{ personIdFromName(gameNight.host) }}/avatar/" class="md-avatar" alt="{{ gameNight.host }}" />
 
