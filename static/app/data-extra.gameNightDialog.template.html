@@ -64,7 +64,7 @@
         <md-dialog-actions layout="row">
             <md-progress-circular class="md-hue-2" md-diameter="20px" ng-show="submitting"></md-progress-circular>
             <md-button class="md-raised md-warn" ng-click="delete()" ng-disabled="submitting" ng-show="$root.user.is_admin && gameNight.id">Delete</md-button>
-            <md-button class="md-raised md-primary" ng-click="save()" ng-disabled="submitting" ng-show="gameNight.id">Save</md-button>
+            <md-button class="md-raised md-primary" ng-click="save()" ng-disabled="submitting" ng-show="$root.user.verified && gameNight.id">Save</md-button>
             <md-button class="md-raised md-primary" ng-click="create()" ng-disabled="submitting" ng-hide="gameNight.id">Create</md-button>
         </md-dialog-actions>
     </form>
