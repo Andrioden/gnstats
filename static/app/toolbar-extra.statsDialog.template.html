@@ -60,13 +60,13 @@
                     <tbody>
                         <tr ng-repeat="behavior in stats.behaviors | orderBy:statsBehaviorOrderByField:statsBehaviorReverseSort">
                             <td>{{ behavior.person }}</td>
-                            <td>{{ behavior.count }}</td>
-                            <td>{{ behavior.appetizer.toFixed(2) }}</td>
-                            <td>{{ behavior.main_course.toFixed(2) }}</td>
-                            <td>{{ behavior.dessert.toFixed(2) }}</td>
-                            <td>{{ behavior.game.toFixed(2) }}</td>
-                            <td>{{ behavior.sum.toFixed(2) }}</td>
-                            <td>{{ behavior.sum_weighed.toFixed(2) }}</td>
+                            <td class="right">{{ behavior.count }}</td>
+                            <td class="right">{{ behavior.appetizer.toFixed(2) }}</td>
+                            <td class="right">{{ behavior.main_course.toFixed(2) }}</td>
+                            <td class="right">{{ behavior.dessert.toFixed(2) }}</td>
+                            <td class="right">{{ behavior.game.toFixed(2) }}</td>
+                            <td class="right">{{ behavior.sum.toFixed(2) }}</td>
+                            <td class="right">{{ behavior.sum_weighed.toFixed(2) }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -103,7 +103,7 @@
                     <tbody>
                         <tr ng-repeat="(category, performances) in stats.host_performances">
                             <td>{{ category }}</td>
-                            <td ng-repeat="person in $root.persons">
+                            <td ng-repeat="person in $root.persons" class="right">
                                 <span ng-show="performances[person.name]">{{ performances[person.name].avg.toFixed(2) }}</span>
                             </td>
                         </tr>

@@ -28,3 +28,8 @@
     padding: 5px;
     text-shadow: 1px 1px 1px #fff;
 }
+
+.zui-table .right
+{
+    text-align: right;
+}
