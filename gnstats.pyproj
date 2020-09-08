@@ -40,6 +40,7 @@
     <Content Include="static\app\toolbar-extra.verificationDialog.template.html" />
     <Content Include="static\app\toolbar.view.html" />
     <Content Include="static\libs\tether.min.js" />
+    <Content Include="static\protocol.txt" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="api\actions_admin.py" />
