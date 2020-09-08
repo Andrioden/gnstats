@@ -21,6 +21,7 @@
   <ItemGroup>
     <Content Include="index.html" />
     <Content Include="favicon.ico" />
+    <Content Include="readme.md" />
     <Content Include="static\app\app.js" />
     <Content Include="static\app\data.controller.js" />
     <Content Include="static\app\data-extra.gameNightDialog.controller.js" />
