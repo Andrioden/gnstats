@@ -80,7 +80,7 @@ class MyVerifyHandler(webapp2.RequestHandler):
         set_json_response(self.response, {'response': "OK"})
 
 
-class UpdateUserHandler(webapp2.RequestHandler):
+class UserHandler(webapp2.RequestHandler):
     @require_admin
     def put(self, person_id):
         request_data = json.loads(self.request.body)
@@ -110,6 +110,6 @@ app = webapp2.WSGIApplication([
     (r'/api/users/me/login/', MyLoginHandler),
     (r'/api/users/me/logout/', MyLogoutHandler),
     (r'/api/users/me/verify/', MyVerifyHandler),
-    (r'/api/users/(\d+)/', UpdateUserHandler),
+    (r'/api/users/(\d+)/', UserHandler),
     (r'/api/users/(\d+)/avatar/', UserAvatarHandler),
 ], debug=True)
