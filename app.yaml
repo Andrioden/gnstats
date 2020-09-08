@@ -14,8 +14,8 @@ handlers:
   upload: favicon\.ico
   secure: always
 
-- url: /api/game_night/.*
-  script: api.game_night.app
+- url: /api/gamenights/.*
+  script: api.gamenights.app
   secure: always
 
 - url: /api/users/.*

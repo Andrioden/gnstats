@@ -46,7 +46,7 @@
     <Compile Include="api\decorators.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="api\game_night.py" />
+    <Compile Include="api\gamenights.py" />
     <Compile Include="api\actions.py">
       <SubType>Code</SubType>
     </Compile>

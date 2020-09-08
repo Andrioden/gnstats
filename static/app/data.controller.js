@@ -2,7 +2,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
 
     // *************** PUBLIC VARIABLES ***************
 
-    $scope.gameNights;
+    $scope.gameNights = [];
     $scope.sortingBy = "";
     $scope.showingSearch = false;
     $scope.search = "";
@@ -34,8 +34,10 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
         })
         // Hidden with potential return value
         .then(function(dialogResponse) {
-            if (dialogResponse.reloadGameNights == true)
-                loadGameNights();
+            if (dialogResponse.load)
+                loadGameNight(dialogResponse.load);
+            if (dialogResponse.delete)
+                deleteLocalGameNight(dialogResponse.delete);
         },
         // Cancelled
         function(){});
@@ -127,18 +129,57 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
 
     // *************** PRIVATE METHODS ***************
 
-    function loadGameNights() {
+    function loadGameNights(limit = null, loadFullAfterwards = false) {
+        console.log("Loading game nights with limit=" + limit);
         $scope.loadingData = true;
 
-        $http.get('/api/game_night/').
+        var limitStr = limit === null ? "" : "?limit=" + limit;
+
+        $http.get('/api/gamenights/' + limitStr).
             then(function(response) {
                 $scope.loadingData = false;
                 $scope.gameNights = response.data;
                 loadedGameNightsProcessing();
+
+                if (loadFullAfterwards)
+                    loadGameNights(null);
             }, function(response) {
                 $scope.loadingData = false;
                 alertError(response);
             });
+    }
+
+    function loadGameNight(id) {
+        console.log("Loading game night " + id);
+        $scope.loadingData = true;
+
+        $http.get('/api/gamenights/' + id + "/").
+            then(function (response) {
+                $scope.loadingData = false;
+                addOrUpdateLocalGameNight(response.data);
+            }, function (response) {
+                $scope.loadingData = false;
+                alertError(response);
+            });
+    }
+
+    function addOrUpdateLocalGameNight(gameNight) {
+        for (var i = 0; i < $scope.gameNights.length; i++) {
+            if ($scope.gameNights[i].id === gameNight.id) {
+                $scope.gameNights[i] = gameNight;
+                loadedGameNightsProcessing();
+                return;
+            }
+        }
+
+        $scope.gameNights.push(gameNight);
+        loadedGameNightsProcessing();
+    }
+
+    function deleteLocalGameNight(gameNightId) {
+        var index = $scope.gameNights.findIndex(x => x.id === gameNightId);
+        $scope.gameNights.splice(index, 1);
+        loadedGameNightsProcessing();
     }
 
     function loadedGameNightsProcessing() {
@@ -205,7 +246,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
         return sum;
     }
 
-    loadGameNights();
+    loadGameNights(20, true);
 
     console.log("DataController loaded");
 });

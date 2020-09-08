@@ -14,7 +14,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
     if (typeof host !== "undefined")
         $scope.hostId = host.id;
 
-    console.log($scope.gameNight);
+    //console.log($scope.gameNight);
 
     // *************** PUBLIC METHODS ***************
 
@@ -26,11 +26,11 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
         $scope.submitting = true;
         $scope.gameNight.dateOnly = moment($scope.gameNight.date).format("DD/MM/YYYY");
 
-        $http.post('/api/game_night/', $scope.gameNight, {}).
+        $http.post('/api/gamenights/', $scope.gameNight, {}).
             // Success
             then(function(response) {
                 $scope.submitting = false;
-                $mdDialog.hide({ reloadGameNights: true });
+                $mdDialog.hide({ load: response.data.id });
             // Error
             }, function(response) {
                 $scope.submitting = false;
@@ -42,11 +42,11 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
         $scope.submitting = true;
         $scope.gameNight.dateOnly = moment($scope.gameNight.date).format("DD/MM/YYYY");
 
-        $http.put('/api/game_night/' + $scope.gameNight.id + "/", $scope.gameNight, {}).
+        $http.put('/api/gamenights/' + $scope.gameNight.id + "/", $scope.gameNight, {}).
             // Success
             then(function (response) {
                 $scope.submitting = false;
-                $mdDialog.hide({ reloadGameNights: true });
+                $mdDialog.hide({ load: $scope.gameNight.id });
                 // Error
             }, function (response) {
                 $scope.submitting = false;
@@ -56,10 +56,10 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
 
     $scope.delete = function() {
         if (confirm("Do you want to delete: " + $scope.gameNight.description)) {
-            $http.delete('/api/game_night/' + $scope.gameNight.id + "/").
+            $http.delete('/api/gamenights/' + $scope.gameNight.id + "/").
                 // Success
                 then(function (response) {
-                    $mdDialog.hide({ reloadGameNights: true });
+                    $mdDialog.hide({ delete: $scope.gameNight.id });
                 // Error
                 }, function(response) {
                     alertError(response);
