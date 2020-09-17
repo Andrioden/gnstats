@@ -101,6 +101,7 @@ def _create_or_update(request_handler, gn_id = None):
             vote.game_night = game_night.key
             vote.voter = vote_data['voter']
             if vote_data['voter'] == current_user_person_name(): # Only allow person to vote for himself
+                vote.present = vote_data.get('present')
                 vote.appetizer = vote_data.get('appetizer')
                 vote.main_course = vote_data.get('main_course')
                 vote.dessert = vote_data.get('dessert')

@@ -20,7 +20,7 @@ class StatsHandler(webapp2.RequestHandler):
             gn._votes = []
             gn_votes[gn.key.id()] = gn
 
-        for vote in Vote.query():
+        for vote in Vote.query(Vote.present == True):
             gn_id = vote.game_night.id()
             if gn_id in gn_votes:
                 gn_votes[gn_id]._votes.append(vote)
@@ -86,7 +86,8 @@ class StatsHandler(webapp2.RequestHandler):
     def _host_performances(self, gn_votes):
 
         host_performances = {
-            'total': {},    
+            'total': {},
+            # In addition to one dict entry for each year
         }
 
         current_round_hosts_left = 0
@@ -106,7 +107,6 @@ class StatsHandler(webapp2.RequestHandler):
                 host_performances[gn.date.year] = {}
 
             if not gn.host in host_performances[gn.date.year]:
-                logging.info("Adding %s to year %s" % (gn.host, gn.date.year))
                 host_performances[gn.date.year][gn.host] = { 'hosted': 0, 'best': 0, 'worst': 0, 'total_sum': 0, 'avg': None }
 
             # Store general stats

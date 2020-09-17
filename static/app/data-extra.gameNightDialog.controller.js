@@ -86,6 +86,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
                     if ($rootScope.persons[i].activated) {
                         votes.push({
                             voter: $rootScope.persons[i].name,
+                            present: true
                         });
                     }
                 }
@@ -95,5 +96,4 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
     }
 
     console.log("GameNightDialogController loaded for object " + $scope.gameNight.id);
-
 }

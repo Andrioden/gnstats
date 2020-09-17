@@ -58,7 +58,7 @@ class GameNight(ndb.Model):
             return len([vote for vote in votes if not vote.complete_vote()]) == 0
 
     def calculate_and_save_sum(self):
-        weighed_votes = [vote.weighed_sum() for vote in Vote.query(Vote.game_night == self.key)]
+        weighed_votes = [vote.weighed_sum() for vote in Vote.query(Vote.game_night == self.key, Vote.present == True)]
         self.sum = sum(weighed_votes) / len(weighed_votes)
         self.put()
 
@@ -67,6 +67,7 @@ class Vote(ndb.Model):
     game_night = ndb.KeyProperty(GameNight, required=True)
     date = ndb.DateProperty(default=datetime.now())
     voter = ndb.StringProperty(required=True, choices=person_names_allowed)
+    present = ndb.BooleanProperty(default=True)
     appetizer = ndb.IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
     main_course = ndb.IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
     dessert = ndb.IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
@@ -76,11 +77,12 @@ class Vote(ndb.Model):
         return {
             'id': self.key.id(),
             'voter': self.voter,
+            'present': self.present,
             'appetizer': self.appetizer,
             'main_course': self.main_course,
             'dessert': self.dessert,
             'game': self.game,
-            'sum': self.weighed_sum(),
+            'sum': self.weighed_sum() if self.present else 0,
             'complete_vote': self.complete_vote()
         }
 
@@ -108,7 +110,10 @@ class Vote(ndb.Model):
         return self.appertizer_int() + self.main_course_int() + self.dessert_int() + self.game_int()
 
     def complete_vote(self):
-        return None not in [self.appetizer, self.main_course, self.dessert, self.game]
+        if self.present:
+            return None not in [self.appetizer, self.main_course, self.dessert, self.game]
+        else:
+            return True
 
 
 def _date_to_epoch(date_value):

@@ -33,8 +33,16 @@
                 </md-input-container>
 
                 <div layout="column" ng-repeat="vote in gameNight.votes | orderBy:['voter']" ng-show="vote.voter != gameNight.host && (gameNight.id || vote.voter == $root.user.name)">
-                    <h4><span>{{ vote.voter }}</span> <span class="sum-badge">{{ vote.sum.toFixed(2) }}</span></h4>
                     <div layout="row">
+                        <div flex="nogrow">
+                            <md-switch ng-model="vote.present" ng-disabled="gameNight.completely_voted || vote.voter != $root.user.name"></md-switch>
+                        </div>
+                        <div flex="grow">
+                            <h4><span>{{ vote.voter }}</span> <span ng-show="vote.present" class="sum-badge">{{ vote.sum.toFixed(2) }}</span></h4>
+                        </div>
+                    </div>
+
+                    <div layout="row" ng-show="vote.present">
                         <md-input-container>
                             <label>Appetizer</label>
                             <input type="number" min="1" max="6" ng-model="vote.appetizer" ng-disabled="gameNight.completely_voted || vote.voter != $root.user.name">
@@ -51,6 +59,9 @@
                             <label>Game</label>
                             <input type="number" min="1" max="6" ng-model="vote.game" ng-disabled="gameNight.completely_voted || vote.voter != $root.user.name">
                         </md-input-container>
+                    </div>
+                    <div layout="row" ng-show="!vote.present">
+                        Not present
                     </div>
                 </div>
 
