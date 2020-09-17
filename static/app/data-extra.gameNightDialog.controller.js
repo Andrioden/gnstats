@@ -14,7 +14,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
     if (typeof host !== "undefined")
         $scope.hostId = host.id;
 
-    //console.log($scope.gameNight);
+    console.log($scope.gameNight);
 
     // *************** PUBLIC METHODS ***************
 
