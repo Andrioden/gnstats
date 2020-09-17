@@ -97,7 +97,6 @@ def _create_or_update(request_handler, gn_id = None):
             else:
                 vote = Vote()
 
-            requesting_name = current_user_person_name()
             vote.game_night = game_night.key
             vote.voter = vote_data['voter']
             if vote_data['voter'] == current_user_person_name(): # Only allow person to vote for himself
