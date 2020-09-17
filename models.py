@@ -65,7 +65,6 @@ class GameNight(ndb.Model):
 
 class Vote(ndb.Model):
     game_night = ndb.KeyProperty(GameNight, required=True)
-    date = ndb.DateProperty(default=datetime.now())
     voter = ndb.StringProperty(required=True, choices=person_names_allowed)
     present = ndb.BooleanProperty(default=True)
     appetizer = ndb.IntegerProperty(choices=[1, 2, 3, 4, 5, 6])

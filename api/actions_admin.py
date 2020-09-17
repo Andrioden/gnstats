@@ -94,18 +94,28 @@ class RecalcluateGameNightSumsHandler(webapp2.RequestHandler):
         set_json_response(self.response, {'response': "OK"})
 
 
-class Migrate1Handler(webapp2.RequestHandler):
-    @require_admin
-    def get(self):
-        for vote in Vote.query():
-            vote.present = True
-            vote.put()
-        set_json_response(self.response, {'response': "OK"})
+#class Migrate1Handler(webapp2.RequestHandler):
+#    @require_admin
+#    def get(self):
+#        for vote in Vote.query():
+#            vote.present = True
+#            vote.put()
+#        set_json_response(self.response, {'response': "OK"})
+
+#class Migrate2Handler(webapp2.RequestHandler):
+#    @require_admin
+#    def get(self):
+#        for vote in Vote.query():
+#            if 'date' in vote._properties:
+#                del vote._properties['date']
+#                vote.put()
+#        set_json_response(self.response, {'response': "OK"})
 
 
 app = webapp2.WSGIApplication([
     (r'/api/actions/admin/dataimportpythonscript/', DataImportPythonScriptHandler),
     (r'/api/actions/admin/runimportpythonscript/', RunImportPythonScriptHandler),
     (r'/api/actions/admin/recalculategnsums/', RecalcluateGameNightSumsHandler),
-    (r'/api/actions/admin/migrate/1', Migrate1Handler),
+    #(r'/api/actions/admin/migrate/1', Migrate1Handler),
+    #(r'/api/actions/admin/migrate/2', Migrate2Handler),
 ], debug=True)
