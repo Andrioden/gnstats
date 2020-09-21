@@ -21,7 +21,8 @@ class Person(ndb.Model):
         return {
             'id': self.key.id(),
             'name': self.name,
-            'activated': self.activated
+            'activated': self.activated,
+            'avatar': self.avatar is not None
         }
 
 
