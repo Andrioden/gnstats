@@ -5,6 +5,15 @@ from datetime import datetime, date
 from models import Person
 
 
+def ok_200(response, data):
+    response.headers['Content-Type'] = 'application/json'
+    response.out.write(json.dumps(data))
+
+
+def ok_204(response):
+    response.set_status(204)
+
+
 def error(status, response, code, message):
     response.headers['Content-Type'] = 'application/json'
     response.set_status(status)
@@ -61,11 +70,6 @@ def date_to_epoch(date_value):
         return int((date_value - datetime(1970, 1, 1)).total_seconds())
     else:
         raise Exception("Type not handled: " + type(date_value).__name__)
-
-
-def set_json_response(response, data):
-    response.headers['Content-Type'] = 'application/json'
-    response.out.write(json.dumps(data))
 
 
 def current_user_person():

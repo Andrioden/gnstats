@@ -91,7 +91,7 @@ class RecalcluateGameNightSumsHandler(webapp2.RequestHandler):
     @require_admin
     def post(self):
         [gn.calculate_and_save_sum() for gn in GameNight.query()]
-        set_json_response(self.response, {'response': "OK"})
+        ok_204(self.response)
 
 
 #class Migrate1Handler(webapp2.RequestHandler):
@@ -100,7 +100,7 @@ class RecalcluateGameNightSumsHandler(webapp2.RequestHandler):
 #        for vote in Vote.query():
 #            vote.present = True
 #            vote.put()
-#        set_json_response(self.response, {'response': "OK"})
+#        ok_204(self.response)
 
 #class Migrate2Handler(webapp2.RequestHandler):
 #    @require_admin
@@ -109,7 +109,7 @@ class RecalcluateGameNightSumsHandler(webapp2.RequestHandler):
 #            if 'date' in vote._properties:
 #                del vote._properties['date']
 #                vote.put()
-#        set_json_response(self.response, {'response': "OK"})
+#        ok_204(self.response)
 
 
 app = webapp2.WSGIApplication([

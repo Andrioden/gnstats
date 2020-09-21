@@ -22,7 +22,7 @@ class GameNightsHandler(webapp2.RequestHandler):
             gamenight_keys = [gn.key for gn in gamenights]
             all_votes = [vote for vote in Vote.query(Vote.game_night.IN(gamenight_keys))]
         data = [gn.get_data(current_user_person_name(), all_votes) for gn in gamenights]
-        set_json_response(self.response, data)
+        ok_200(self.response, data)
 
     @require_verified
     @require_request_data(['host', 'date', 'description'])
@@ -31,7 +31,7 @@ class GameNightsHandler(webapp2.RequestHandler):
         if game_night is None:
             return
         else:
-            set_json_response(self.response, {'id': game_night.key.id()})
+            ok_200(self.response, {'id': game_night.key.id()})
 
 
 class GameNightHandler(webapp2.RequestHandler):
@@ -42,7 +42,7 @@ class GameNightHandler(webapp2.RequestHandler):
         else:
             votes = [vote for vote in Vote.query(Vote.game_night == gn.key)]
             data = gn.get_data(current_user_person_name(), votes)
-            set_json_response(self.response, data)
+            ok_200(self.response, data)
 
     @require_verified
     @require_request_data(['host', 'date', 'description'])
@@ -51,15 +51,14 @@ class GameNightHandler(webapp2.RequestHandler):
         if game_night is None:
             return
         else:
-            set_json_response(self.response, {'response': "OK"})
+            ok_204(self.response)
 
     @require_admin
     def delete(self, gn_id):
         gn_key = GameNight.get_by_id(int(gn_id)).key
         ndb.delete_multi(Vote.query(Vote.game_night == gn_key).fetch(keys_only=True))
         gn_key.delete()
-
-        set_json_response(self.response, {'response': "OK"})
+        ok_204(self.response)
 
 
 def _create_or_update(request_handler, gn_id = None):

@@ -39,7 +39,7 @@ class StatsHandler(webapp2.RequestHandler):
         }
 
         # Response
-        set_json_response(self.response, stats_data)
+        ok_200(self.response, stats_data)
 
     def _behaviors(self, gn_votes):
 

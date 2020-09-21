@@ -14,14 +14,14 @@ from config_hidden import SitePassword
 
 class UsersHandler(webapp2.RequestHandler):
     def get(self):
-        set_json_response(self.response, [person.get_data() for person in Person.query()])
+        ok_200(self.response, [person.get_data() for person in Person.query()])
 
 
 class AvailableNamesHandler(webapp2.RequestHandler):
     def get(self):
         person_names_taken = [person.name for person in Person.query()]
         available_names = [name for name in person_names_allowed if name not in person_names_taken]
-        set_json_response(self.response, available_names)
+        ok_200(self.response, available_names)
 
 
 class MyUserHandler(webapp2.RequestHandler):
@@ -32,9 +32,9 @@ class MyUserHandler(webapp2.RequestHandler):
             person = Person.query(Person.userid == user.user_id()).get()
             verified = True if person else False
             name = person.name if person else None
-            set_json_response(self.response, {'name': name, 'nickname': user.nickname(), 'verified': verified, 'is_admin': users.is_current_user_admin()})
+            ok_200(self.response, {'name': name, 'nickname': user.nickname(), 'verified': verified, 'is_admin': users.is_current_user_admin()})
         else:
-            set_json_response(self.response, {})
+            ok_200(self.response, {})
 
 
 class MyUserAvatarHandler(webapp2.RequestHandler):
@@ -44,7 +44,7 @@ class MyUserAvatarHandler(webapp2.RequestHandler):
         try:
             person.avatar = self.request.get('file')
             person.put()
-            set_json_response(self.response, {'response': "OK"})
+            ok_204(self.response)
         except RequestTooLargeError:
             error(400, self.response, "FILE_TO_LARGE", "The uploaded file was to large")
         
@@ -77,7 +77,7 @@ class MyVerifyHandler(webapp2.RequestHandler):
             nickname=user.nickname()
         ).put()
 
-        set_json_response(self.response, {'response': "OK"})
+        ok_204(self.response)
 
 
 class UserHandler(webapp2.RequestHandler):
@@ -97,9 +97,11 @@ class UserAvatarHandler(webapp2.RequestHandler):
         person = Person.get_by_id(int(person_id))
         if person and person.avatar:
             self.response.headers['Content-Type'] = 'image/jpeg'
+            self.response.cache_control = 'public'
+            self.response.cache_control.max_age = 300
             self.response.out.write(person.avatar)
         else:
-            self.response.out.write('No image')
+            self.abort(404)
 
 
 app = webapp2.WSGIApplication([
