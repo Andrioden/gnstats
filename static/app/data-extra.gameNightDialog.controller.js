@@ -30,7 +30,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
             // Success
             then(function(response) {
                 $scope.submitting = false;
-                $mdDialog.hide({ load: response.data.id });
+                $mdDialog.hide({ created: response.data });
             // Error
             }, function(response) {
                 $scope.submitting = false;
@@ -46,7 +46,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
             // Success
             then(function (response) {
                 $scope.submitting = false;
-                $mdDialog.hide({ load: $scope.gameNight.id });
+                $mdDialog.hide({ updated: response.data });
                 // Error
             }, function (response) {
                 $scope.submitting = false;
@@ -59,7 +59,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
             $http.delete('/api/gamenights/' + $scope.gameNight.id + "/").
                 // Success
                 then(function (response) {
-                    $mdDialog.hide({ delete: $scope.gameNight.id });
+                    $mdDialog.hide({ deleted: $scope.gameNight.id });
                 // Error
                 }, function(response) {
                     alertError(response);

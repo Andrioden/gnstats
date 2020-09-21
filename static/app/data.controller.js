@@ -34,10 +34,12 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
         })
         // Hidden with potential return value
         .then(function(dialogResponse) {
-            if (dialogResponse.load)
-                loadGameNight(dialogResponse.load);
-            if (dialogResponse.delete)
-                deleteLocalGameNight(dialogResponse.delete);
+            if (dialogResponse.created)
+                addLocalGameNight(dialogResponse.created);
+            if (dialogResponse.updated)
+                updateLocalGameNight(dialogResponse.updated)
+            if (dialogResponse.deleted)
+                deleteLocalGameNight(dialogResponse.deleted);
         },
         // Cancelled
         function(){});
@@ -149,21 +151,12 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
             });
     }
 
-    function loadGameNight(id) {
-        console.log("Loading game night " + id);
-        $scope.loadingData = true;
-
-        $http.get('/api/gamenights/' + id + "/").
-            then(function (response) {
-                $scope.loadingData = false;
-                addOrUpdateLocalGameNight(response.data);
-            }, function (response) {
-                $scope.loadingData = false;
-                alertError(response);
-            });
+    function addLocalGameNight(gameNight) {
+        $scope.gameNights.push(gameNight);
+        loadedGameNightsProcessing();
     }
 
-    function addOrUpdateLocalGameNight(gameNight) {
+    function updateLocalGameNight(gameNight) {
         for (var i = 0; i < $scope.gameNights.length; i++) {
             if ($scope.gameNights[i].id === gameNight.id) {
                 $scope.gameNights[i] = gameNight;
@@ -172,8 +165,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
             }
         }
 
-        $scope.gameNights.push(gameNight);
-        loadedGameNightsProcessing();
+        throw "Local game night '" + gameNight.id + "' does not exist";
     }
 
     function deleteLocalGameNight(gameNightId) {

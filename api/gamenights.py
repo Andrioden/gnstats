@@ -21,7 +21,8 @@ class GameNightsHandler(webapp2.RequestHandler):
             gamenights = [gn for gn in GameNight.query().order(-GameNight.date).fetch(int(limit))]
             gamenight_keys = [gn.key for gn in gamenights]
             all_votes = [vote for vote in Vote.query(Vote.game_night.IN(gamenight_keys))]
-        data = [gn.get_data(current_user_person_name(), all_votes) for gn in gamenights]
+        current_user_person_name_val = current_user_person_name()
+        data = [gn.get_data(current_user_person_name_val, all_votes) for gn in gamenights]
         ok_200(self.response, data)
 
     @require_verified
@@ -31,18 +32,12 @@ class GameNightsHandler(webapp2.RequestHandler):
         if game_night is None:
             return
         else:
-            ok_200(self.response, {'id': game_night.key.id()})
+            _ok_200_game_night_data(self, game_night.key.id())
 
 
 class GameNightHandler(webapp2.RequestHandler):
     def get(self, gn_id):
-        gn = GameNight.get_by_id(int(gn_id))
-        if gn is None:
-            self.abort(404)
-        else:
-            votes = [vote for vote in Vote.query(Vote.game_night == gn.key)]
-            data = gn.get_data(current_user_person_name(), votes)
-            ok_200(self.response, data)
+        _ok_200_game_night_data(self, gn_id)
 
     @require_verified
     @require_request_data(['host', 'date', 'description'])
@@ -51,7 +46,7 @@ class GameNightHandler(webapp2.RequestHandler):
         if game_night is None:
             return
         else:
-            ok_204(self.response)
+            _ok_200_game_night_data(self, game_night.key.id())
 
     @require_admin
     def delete(self, gn_id):
@@ -109,6 +104,16 @@ def _create_or_update(request_handler, gn_id = None):
     game_night.put()
     game_night.calculate_and_save_sum()
     return game_night
+
+
+def _ok_200_game_night_data(request, gn_id):
+    gn = GameNight.get_by_id(int(gn_id))
+    if gn is None:
+        request.abort(404)
+    else:
+        votes = [vote for vote in Vote.query(Vote.game_night == gn.key)]
+        data = gn.get_data(current_user_person_name(), votes)
+        ok_200(request.response, data)
 
 
 app = webapp2.WSGIApplication([
