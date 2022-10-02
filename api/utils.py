@@ -2,7 +2,8 @@ import json
 import logging
 from google.appengine.api import users
 from datetime import datetime, date
-from models import Person
+
+from models.db.person import Person
 
 
 def ok_200(response, data):
@@ -78,6 +79,7 @@ def current_user_person():
 
 
 def current_user_person_name():
+    return "André"
     user = users.get_current_user()
     if not user:
         return None
