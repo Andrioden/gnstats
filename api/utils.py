@@ -1,7 +1,11 @@
 import json
 import logging
+from typing import Optional
+
 from google.appengine.api import users
 from datetime import datetime, date
+
+from google.appengine.api.users import User
 
 from models.db.person import Person
 
@@ -74,6 +78,7 @@ def date_to_epoch(date_value):
 
 
 def current_user_person():
+    # users.
     user = users.get_current_user()
     return Person.query(Person.userid == user.user_id()).get()
 
@@ -89,3 +94,13 @@ def current_user_person_name():
             return person.name
         else:
             return None
+
+
+def me_person() -> Optional[Person]:
+    # Hardcode, remove!!!
+    return Person.query(Person.name == "André").get()
+    # Keep
+    if user := users.get_current_user():
+        return Person.query(Person.userid == user.user_id()).get()
+    else:
+        return None

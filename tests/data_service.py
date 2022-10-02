@@ -20,6 +20,11 @@ class DataService:
             return person
 
     @staticmethod
+    def ensure_person_deleted(name: str) -> None:
+        if person := Person.query(Person.name == name).get():
+            person.key.delete()
+
+    @staticmethod
     def create_game_night() -> GameNight:
         game_night = GameNight(host="Stian", description="test")
         game_night.put()

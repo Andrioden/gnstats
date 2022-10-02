@@ -9,6 +9,10 @@ uvicorn = {extras = ["standard"], version = "*"}
 appengine-python-standard = "*"
 google-cloud-ndb = "*"
 pydantic = "*"
+python-multipart = "*"
+authlib = "*"
+itsdangerous = "*"
+httpx = "*"
 
 [dev-packages]
 pytest = "*"

@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from fastapi.testclient import TestClient
 
 from api.app import app
@@ -25,7 +27,7 @@ def test_gamenights_api_post():
             ]
         }
     )
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     data = response.json()
     assert data["host"] == "Stian"
 
@@ -57,7 +59,7 @@ def test_gamenights_api_put():
             ]
         }
     )
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     data = response.json()
     assert data["votes"][0]["voter"] == "André"
     assert data["votes"][0]["appetizer"] == 2
@@ -71,7 +73,7 @@ def test_gamenights_api_delete():
 
     # Test
     response = client.delete(f"/api/gamenights/{game_night.key.id()}/")
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert GameNight.get_by_id(game_night.key.id()) is None
     assert Vote.get_by_id(vote.key.id()) is None
 
@@ -81,7 +83,7 @@ def test_gamenights_api_get_many():
     DataService.create_game_night()
 
     response = client.get("/api/gamenights/")
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert len(response.json()) > 0
 
 
@@ -90,5 +92,5 @@ def test_gamenights_api_get_one():
     game_night = DataService.create_game_night()
 
     response = client.get(f"/api/gamenights/{game_night.key.id()}/")
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert response.json()["id"] == game_night.key.id()

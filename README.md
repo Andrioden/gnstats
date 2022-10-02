@@ -9,7 +9,9 @@
 3. (Optional) Run local db admin
    1. Run db admin `docker run --name datastore-admin -p 8002:8080 ghcr.io/remko/dsadmin:latest --project=gnstats-dev --datastore-emulator-host=host.docker.internal:8001`
    2. [Open db admin](http://localhost:8002)
-4. Copy and rename config_hidden_example.py to config_hidden.py
+4. Add secrets 
+   1. Copy and rename`.\scripts\secrets_example.ps1` to `secrets.ps1`
+   2. Set values
 5. Run `.\scripts\run_dev.ps1`
 6. (Verify) [Open page](http://127.0.0.1:8000/static/index.html)
 7. (Verify) [Open api](http://127.0.0.1:8000/docs)
