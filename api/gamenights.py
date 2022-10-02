@@ -1,59 +1,78 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-import webapp2
+import functools
 import json
 import logging
 from datetime import datetime
+from typing import Optional, List
+
+from fastapi import APIRouter, Depends
+
 from models import *
 from google.appengine.api import users
+# from google.cloud import ndb
 from .utils import *
 from .decorators import *
+from google.cloud import ndb
+
+router = APIRouter()
+
+@router.get("/yo")
+def read_item(item_id: int):
+    return {"item_id": item_id}
 
 
-class GameNightsHandler(webapp2.RequestHandler):
-    def get(self):
-        limit = self.request.get("limit", None)
-        if limit is None:
-            gamenights = [gn for gn in GameNight.query()]
-            all_votes = [vote for vote in Vote.query()]
-        else:
-            gamenights = [gn for gn in GameNight.query().order(-GameNight.date).fetch(int(limit))]
-            gamenight_keys = [gn.key for gn in gamenights]
+@router.get("/simple", response_model=List[dict])
+@ensure_db_context
+def simple_query() -> List[dict]:
+    return [gn for gn in GameNight.query()]
+
+
+@router.get("/", response_model=List[dict])
+@ensure_db_context
+def get(limit: Optional[int] = None) -> List[dict]:
+    if limit is None:
+        gamenights = [gn for gn in GameNight.query()]
+        all_votes = [vote for vote in Vote.query()]
+    else:
+        gamenights = [gn for gn in GameNight.query().order(-GameNight.date).fetch(int(limit))]
+        gamenight_keys = [gn.key for gn in gamenights]
+        if gamenight_keys:
             all_votes = [vote for vote in Vote.query(Vote.game_night.IN(gamenight_keys))]
-        current_user_person_name_val = current_user_person_name()
-        data = [gn.get_data(current_user_person_name_val, all_votes) for gn in gamenights]
-        ok_200(self.response, data)
-
-    @require_verified
-    @require_request_data(['host', 'date', 'description'])
-    def post(self):
-        game_night = _create_or_update(self)
-        if game_night is None:
-            return
         else:
-            _ok_200_game_night_data(self, game_night.key.id())
+            all_votes = []
+    return [gn.get_data(current_user_person_name(), all_votes) for gn in gamenights]
 
 
-class GameNightHandler(webapp2.RequestHandler):
-    def get(self, gn_id):
-        _ok_200_game_night_data(self, gn_id)
+@require_verified
+@require_request_data(['host', 'date', 'description'])
+def post(self):
+    game_night = _create_or_update(self)
+    if game_night is None:
+        return
+    else:
+        _ok_200_game_night_data(self, game_night.key.id())
 
-    @require_verified
-    @require_request_data(['host', 'date', 'description'])
-    def put(self, gn_id):
-        game_night = _create_or_update(self, gn_id)
-        if game_night is None:
-            return
-        else:
-            _ok_200_game_night_data(self, game_night.key.id())
 
-    @require_admin
-    def delete(self, gn_id):
-        gn_key = GameNight.get_by_id(int(gn_id)).key
-        ndb.delete_multi(Vote.query(Vote.game_night == gn_key).fetch(keys_only=True))
-        gn_key.delete()
-        ok_204(self.response)
+# class GameNightHandler(webapp2.RequestHandler):
+#     def get(self, gn_id):
+#         _ok_200_game_night_data(self, gn_id)
+#
+#     @require_verified
+#     @require_request_data(['host', 'date', 'description'])
+#     def put(self, gn_id):
+#         game_night = _create_or_update(self, gn_id)
+#         if game_night is None:
+#             return
+#         else:
+#             _ok_200_game_night_data(self, game_night.key.id())
+#
+#     @require_admin
+#     def delete(self, gn_id):
+#         gn_key = GameNight.get_by_id(int(gn_id)).key
+#         ndb.delete_multi(Vote.query(Vote.game_night == gn_key).fetch(keys_only=True))
+#         gn_key.delete()
+#         ok_204(self.response)
 
 
 def _create_or_update(request_handler, gn_id = None):
@@ -116,7 +135,7 @@ def _ok_200_game_night_data(request, gn_id):
         ok_200(request.response, data)
 
 
-app = webapp2.WSGIApplication([
-    (r'/api/gamenights/', GameNightsHandler),
-    (r'/api/gamenights/(\d+)/', GameNightHandler)
-], debug=True)
+# app = webapp2.WSGIApplication([
+#     (r'/api/gamenights/', GameNightsHandler),
+#     (r'/api/gamenights/(\d+)/', GameNightHandler)
+# ], debug=True)

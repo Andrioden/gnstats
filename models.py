@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from google.appengine.ext import ndb
+from google.cloud import ndb
 from datetime import datetime, date, timedelta
 import logging
 from config import *

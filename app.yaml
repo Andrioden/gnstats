@@ -1,5 +1,4 @@
-runtime: python27
-api_version: 1
+runtime: python39
 threadsafe: yes
 
 handlers:
