@@ -1,5 +1,5 @@
 from functools import wraps
-from utils import *
+from .utils import *
 import logging
 
 DECORATOR_NO_REQUEST_ATTRIBUTE_HELP_TEXT = "You have used the decorator on something that does not have a request attribute. Have you used it on the class instead of the class get/post function?"

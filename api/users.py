@@ -7,8 +7,8 @@ import logging
 from models import *
 from google.appengine.api import users
 from google.appengine.runtime.apiproxy_errors import RequestTooLargeError
-from utils import *
-from decorators import *
+from .utils import *
+from .decorators import *
 from config_hidden import SitePassword
 
 

@@ -7,8 +7,8 @@ import logging
 from datetime import datetime
 from models import *
 from google.appengine.api import users
-from utils import *
-from decorators import *
+from .utils import *
+from .decorators import *
 
 
 class GameNightsHandler(webapp2.RequestHandler):
@@ -85,7 +85,7 @@ def _create_or_update(request_handler, gn_id = None):
                 error(400, request_handler.response, "ERROR_INACTIVE_CANT_VOTE", "Deactivated person is not allowed to vote!")
                 return None
 
-            if vote_data.has_key('id'):
+            if 'id' in vote_data:
                 vote_id = int(vote_data['id'])
                 vote = Vote.get_by_id(vote_id)
             else:

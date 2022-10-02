@@ -5,8 +5,8 @@ import webapp2
 import json
 from google.appengine.ext import ndb
 from models import *
-from utils import *
-from decorators import *
+from .utils import *
+from .decorators import *
 from pprint import pprint, pformat
 
 
@@ -29,7 +29,7 @@ class StatsHandler(webapp2.RequestHandler):
 
         # Convert dict to array for easier further processing:
         gn_votes_arr = []
-        for gn_id, gn in gn_votes.iteritems():
+        for gn_id, gn in gn_votes.items():
             gn_votes_arr.append(gn)
 
         # Calculate stats
@@ -71,7 +71,7 @@ class StatsHandler(webapp2.RequestHandler):
         
         # Convert to array as its better for the client
         behaviors_arr = []
-        for person, behavior in behaviors.iteritems():
+        for person, behavior in behaviors.items():
             behavior['person'] = person
             behavior['appetizer'] = behavior['appetizer'] / behavior['count']
             behavior['main_course'] = behavior['main_course'] / behavior['count']
@@ -142,8 +142,8 @@ class StatsHandler(webapp2.RequestHandler):
             current_round_hosts_left -= 1
 
         # Calculate averages
-        for year_or_tot, performances in host_performances.iteritems():
-            for name, performance in performances.iteritems():
+        for year_or_tot, performances in host_performances.items():
+            for name, performance in performances.items():
                 performance['avg'] = performance['total_sum'] / performance['hosted']
 
         return host_performances
