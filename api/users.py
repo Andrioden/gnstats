@@ -19,12 +19,6 @@ from .decorators import *
 
 
 router = APIRouter()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-
-@router.get("/oauth/")
-async def read_items(token: str = Depends(oauth2_scheme)):
-    return {"token": token}
 
 
 @router.get("/", response_model=List[dict])
