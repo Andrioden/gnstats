@@ -33,17 +33,17 @@ def forbidden_403(response, code, message):
     error(403, response, code, message)
 
 
-def validate_verified(response):
-    user = users.get_current_user()
-    if not user:
-        unauthorized_401(response, "VALIDATION_ERROR_NOT_LOGGED_INN", "The browsing user is not logged in.")
-        return False
-
-    person = Person.query(Person.userid == user.user_id()).get()
-    if not person:
-        unauthorized_401(response, "VALIDATION_ERROR_NOT_VERIFIED", "The browsing user is logged in with a google account, but has not verified it.")
-        return False
-    return True
+# def validate_verified(response):
+#     user = users.get_current_user()
+#     if not user:
+#         unauthorized_401(response, "VALIDATION_ERROR_NOT_LOGGED_INN", "The browsing user is not logged in.")
+#         return False
+#
+#     person = Person.query(Person.userid == user.user_id()).get()
+#     if not person:
+#         unauthorized_401(response, "VALIDATION_ERROR_NOT_VERIFIED", "The browsing user is logged in with a google account, but has not verified it.")
+#         return False
+#     return True
 
 
 def validate_admin(response):

@@ -20,17 +20,17 @@ def ensure_db_context(func):
     return wrapper_do_twice
 
 
-def require_verified(func):
-    @wraps(func)
-    def wrapper(request_handler, *args):
-        if not hasattr(request_handler, 'request'):
-            raise Exception(DECORATOR_NO_REQUEST_ATTRIBUTE_HELP_TEXT)
-
-        if not validate_verified(request_handler.response):
-            return None
-        else:
-            return func(request_handler, *args)
-    return wrapper
+# def require_verified(func):
+#     @wraps(func)
+#     def wrapper(request_handler, *args):
+#         if not hasattr(request_handler, 'request'):
+#             raise Exception(DECORATOR_NO_REQUEST_ATTRIBUTE_HELP_TEXT)
+#
+#         if not validate_verified(request_handler.response):
+#             return None
+#         else:
+#             return func(request_handler, *args)
+#     return wrapper
 
 
 def require_admin(func):

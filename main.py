@@ -5,9 +5,9 @@ from api.app import app
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# @app.get("/")
-# def index():
-#     return FileResponse('index.html')
+@app.get("/")
+def index():
+    return FileResponse('index.html')
 
 
 @app.get("/favicon.ico")

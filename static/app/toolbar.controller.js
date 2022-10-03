@@ -6,8 +6,8 @@ app.controller('ToolbarController', function($rootScope, $scope, $http, $window,
     $rootScope.loadingPersons = false;
     $rootScope.persons = [];
     $rootScope.user = {
-        nickname: "",
-        verified: false
+        google_email: "",
+        person: false
     };
 
 

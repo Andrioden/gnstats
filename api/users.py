@@ -5,15 +5,18 @@ import json
 import logging
 from typing import Optional, List
 
-from fastapi import APIRouter, HTTPException, UploadFile, Depends
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import APIRouter, HTTPException, UploadFile, Depends, Body
+from pydantic import BaseModel
 from starlette.responses import RedirectResponse
 
 from models import *
 from google.appengine.api import users
 from google.appengine.runtime.apiproxy_errors import RequestTooLargeError
 
+from models.api.user import ClaimUserData
 from models.db.person import person_names_allowed
+from models.external.google import GoogleUser
+from .auth import me_google_user_or_401, me_google_user
 from .utils import *
 from .decorators import *
 
@@ -30,21 +33,19 @@ def get_many() -> List[dict]:
 @router.get("/available-names/", response_model=List[str])
 @ensure_db_context
 def get_available_names() -> List[str]:
-    person_names_taken = [person.name for person in Person.query()]
-    return [name for name in person_names_allowed if name not in person_names_taken]
+    return Person.api_get_available_names()
 
 
 @router.get("/me/", response_model=dict)
 @ensure_db_context
-def get_me() -> dict:
-    user = users.get_current_user()
+def get_me(user: Optional[GoogleUser] = Depends(me_google_user)) -> dict:
     if user:
-        person = Person.query(Person.userid == user.user_id()).get()
+        person = Person.query(Person.google_account_id == user.sub).get()
         return {
+            "google_email": user.email,
             'name': person.name if person else None,
-            'nickname': user.nickname(),
-            'verified': True if person else False,
-            'is_admin': users.is_current_user_admin()
+            'person': True if person else False,
+            'admin': person.admin if person else False
         }
     else:
         return {}
@@ -61,41 +62,21 @@ def post_me_avatar(file: UploadFile) -> None:
         raise HTTPException(status_code=404, detail="File to large")
 
 
-@router.get("/me/login/")
-def get_me_login() -> RedirectResponse:
-    return RedirectResponse(users.create_login_url("/", "gmail.com"))
+@router.post("/me/claim/")
+@ensure_db_context
+def post_me_claim(data: ClaimUserData, user: GoogleUser = Depends(me_google_user_or_401)) -> None:
+    if data.name not in Person.api_get_available_names():
+        raise Exception("Name not available")
 
-# class MyLoginHandler(webapp2.RequestHandler):
-#     def get(self):
-#         redirect = self.request.get('redirect', "/")
-#         return webapp2.redirect(users.create_login_url(redirect))
-#
-#
-# class MyLogoutHandler(webapp2.RequestHandler):
-#     def get(self):
-#         redirect = self.request.get('redirect', "/")
-#         return webapp2.redirect(users.create_logout_url(redirect))
-#
-#
-# class MyVerifyHandler(webapp2.RequestHandler):
-#     @require_request_data(['name', 'password'])
-#     def post(self):
-#         request_data = json.loads(self.request.body)
-#
-#         if not request_data['password'] == SitePassword:
-#             error(400, self.response, "error_bad_password", "Bad password")
-#             return
-#
-#         user = users.get_current_user()
-#         Person(
-#             name=request_data['name'],
-#             userid=user.user_id(),
-#             nickname=user.nickname()
-#         ).put()
-#
-#         ok_204(self.response)
-#
-#
+    Person(
+        google_account_id = user.sub,
+        google_email = user.email,
+        google_picture_url = user.picture,
+        name=data.name,
+    ).put()
+
+
+
 # class UserHandler(webapp2.RequestHandler):
 #     @require_admin
 #     def put(self, person_id):
@@ -121,9 +102,6 @@ def get_me_login() -> RedirectResponse:
 #
 #
 # app = webapp2.WSGIApplication([
-#     (r'/api/users/me/login/', MyLoginHandler),
-#     (r'/api/users/me/logout/', MyLogoutHandler),
-#     (r'/api/users/me/verify/', MyVerifyHandler),
 #     (r'/api/users/(\d+)/', UserHandler),
 #     (r'/api/users/(\d+)/avatar/', UserAvatarHandler),
 # ], debug=True)

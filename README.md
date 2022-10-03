@@ -5,16 +5,16 @@
    3. `pipenv install --dev`
 2. Run local db
    1. Install Docker Desktop med WSL2
-   2. Run db `docker run --name datastore-db --rm -p 8001:8001 google/cloud-sdk:emulators gcloud --project=gnstats-dev beta emulators datastore start --host-port 0.0.0.0:8001 --no-store-on-disk`
+   2. Run db `.\scripts\run_db.ps1`
 3. (Optional) Run local db admin
-   1. Run db admin `docker run --name datastore-admin -p 8002:8080 ghcr.io/remko/dsadmin:latest --project=gnstats-dev --datastore-emulator-host=host.docker.internal:8001`
+   1. Run db admin `.\scripts\run_db_admin.ps1`
    2. [Open db admin](http://localhost:8002)
 4. Add secrets 
    1. Copy and rename`.\scripts\secrets_example.ps1` to `secrets.ps1`
    2. Set values
 5. Run `.\scripts\run_dev.ps1`
-6. (Verify) [Open page](http://127.0.0.1:8000/static/index.html)
-7. (Verify) [Open api](http://127.0.0.1:8000/docs)
+6. (Verify) [Open page](http://localhost:8000/)
+7. (Verify) [Open api](http://localhost:8000/docs)
 8. (Verify) Run tests `pytest .`
 
 
@@ -25,8 +25,9 @@
 4. To verify delete an existing Person entity and reverify in the menu
 
 
-## Libs
+## Relevant links
 - Backend
+  - [Google OAuth Credentials](https://console.cloud.google.com/apis/credentials?project=game-night-stats)
   - Web framework: https://fastapi.tiangolo.com/
   - Database framework: https://googleapis.dev/python/python-ndb/latest/index.html
 - Frontend

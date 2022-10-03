@@ -12,8 +12,9 @@ class DataService:
             return person
         else:
             person = Person(
-                userid="test",
-                nickname="nick",
+                google_account_id="fake",
+                google_email = "fake@fake.no",
+                google_picture_url = "http://www.fake.no/img/1",
                 name=name,
             )
             person.put()

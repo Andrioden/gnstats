@@ -21,7 +21,7 @@
     <!--Other libs-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-file-upload/2.6.1/angular-file-upload.min.js"></script>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="static/libs/angular-cache-buster.js"></script>
 
     <!--App-->
     <link rel="stylesheet" href="static/app/data.style.css">
@@ -47,21 +47,6 @@
 
 </head>
 <body>
-
-      <div id="g_id_onload"
-         data-client_id="1033422528296-oup6mbd62ghk8u1k4p7oju09e5njeq80.apps.googleusercontent.com"
-         data-login_uri="http://localhost:8000/"
-         data-auto_prompt="false">
-      </div>
-      <div class="g_id_signin"
-         data-type="standard"
-         data-size="large"
-         data-theme="outline"
-         data-text="sign_in_with"
-         data-shape="rectangular"
-         data-logo_alignment="left">
-      </div>
-
 
     <div data-ng-include data-src="'static/app/toolbar.view.html'"></div>
     <div data-ng-include data-src="'static/app/data.view.html'"></div>
