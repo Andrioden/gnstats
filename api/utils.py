@@ -5,8 +5,6 @@ from typing import Optional
 from google.appengine.api import users
 from datetime import datetime, date
 
-from google.appengine.api.users import User
-
 from models.db.person import Person
 
 
@@ -85,22 +83,22 @@ def current_user_person():
 
 def current_user_person_name():
     return "André"
-    user = users.get_current_user()
-    if not user:
-        return None
-    else:
-        person = Person.query(Person.userid == user.user_id()).get()
-        if person:
-            return person.name
-        else:
-            return None
+    # user = users.get_current_user()
+    # if not user:
+    #     return None
+    # else:
+    #     person = Person.query(Person.userid == user.user_id()).get()
+    #     if person:
+    #         return person.name
+    #     else:
+    #         return None
 
 
 def me_person() -> Optional[Person]:
     # Hardcode, remove!!!
     return Person.query(Person.name == "André").get()
     # Keep
-    if user := users.get_current_user():
-        return Person.query(Person.userid == user.user_id()).get()
-    else:
-        return None
+    # if user := users.get_current_user():
+    #     return Person.query(Person.userid == user.user_id()).get()
+    # else:
+    #     return None

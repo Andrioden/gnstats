@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-import csv
-import json
-from google.cloud import ndb
-from models import GameNight, Vote, person_names_allowed
-from .utils import *
-from .decorators import *
-from datetime import datetime, date
-import logging
+#
+# import csv
+# import json
+# from google.cloud import ndb
+# from models import GameNight, Vote, person_names_allowed
+# from .utils import *
+# from .decorators import *
+# from datetime import datetime, date
+# import logging
 
 
 # class DataImportPythonScriptHandler(webapp2.RequestHandler):

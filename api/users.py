@@ -5,7 +5,7 @@ import json
 import logging
 from typing import Optional, List
 
-from fastapi import APIRouter, HTTPException, UploadFile, Depends, Body
+from fastapi import APIRouter, HTTPException, UploadFile, Depends
 from pydantic import BaseModel
 from starlette.responses import RedirectResponse
 

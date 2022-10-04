@@ -15,8 +15,6 @@ import os
 from starlette.config import Config
 from authlib.integrations.starlette_client import OAuth
 from starlette.middleware.sessions import SessionMiddleware
-from starlette.responses import HTMLResponse
-from authlib.integrations.starlette_client import OAuthError
 
 # App init
 app = FastAPI(title="GN Stats Api")
