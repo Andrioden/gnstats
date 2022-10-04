@@ -27,7 +27,7 @@ def test_users_api_get_available_names() -> None:
     assert "Ole" in response.json()
 
 
-def test_users_api_get_me() -> None:
+def test_users_api_get_me_empty() -> None:
     response = client.get("/api/users/me/")
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {}
