@@ -1,9 +1,9 @@
 import json
 import logging
+from datetime import date, datetime
 from typing import Optional
 
 from google.appengine.api import users
-from datetime import datetime, date
 
 from models.db.person import Person
 

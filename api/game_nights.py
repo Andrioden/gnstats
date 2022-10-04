@@ -1,13 +1,14 @@
-from typing import Optional, List, Union
+from typing import List, Optional, Union
 
 from fastapi import APIRouter, HTTPException
+from google.cloud import ndb
 
 from models.api.game_night import GameNightCreate, GameNightUpdate
 from models.api.vote import VoteCreate, VoteUpdate
 from models.db.game_night import GameNight
 from models.db.vote import Vote
+
 from .decorators import *
-from google.cloud import ndb
 
 router = APIRouter()
 

@@ -1,19 +1,17 @@
+import os
 from typing import Optional
-from fastapi import APIRouter, Depends, HTTPException
+
+from authlib.integrations.starlette_client import OAuth, StarletteOAuth2App
+from fastapi import APIRouter, Depends, HTTPException, Request
 from google.cloud import ndb
 from starlette import status
-
-from fastapi import Request
+from starlette.config import Config
 from starlette.responses import RedirectResponse
 
-import os
-from starlette.config import Config
-from authlib.integrations.starlette_client import OAuth, StarletteOAuth2App
-
 from api.decorators import ensure_db_context
+from clients.oauth import google_oauth_client
 from models.db.person import Person
 from models.external.google import GoogleUser
-from clients.oauth import google_oauth_client
 
 router = APIRouter()
 

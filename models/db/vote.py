@@ -1,6 +1,6 @@
 from google.cloud import ndb
 
-from config import Weight_Appetizer, Weight_MainCourse, Weight_Dessert, Weight_Game
+from config import Weight_Appetizer, Weight_Dessert, Weight_Game, Weight_MainCourse
 from models.db.person import person_names_allowed
 
 

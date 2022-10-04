@@ -1,20 +1,16 @@
 import os
 from typing import Union
-from fastapi import FastAPI
+
+from authlib.integrations.starlette_client import OAuth
+from fastapi import FastAPI, Request
+from starlette.config import Config
+from starlette.middleware.sessions import SessionMiddleware
+from starlette.responses import RedirectResponse
 from starlette.staticfiles import StaticFiles
 
+from api.auth import router as auth_router
 from api.game_nights import router as game_nights_router
 from api.users import router as users_router
-from api.auth import router as auth_router
-
-from fastapi import FastAPI
-from fastapi import Request
-from starlette.responses import RedirectResponse
-
-import os
-from starlette.config import Config
-from authlib.integrations.starlette_client import OAuth
-from starlette.middleware.sessions import SessionMiddleware
 
 # App init
 app = FastAPI(title="GN Stats Api")
