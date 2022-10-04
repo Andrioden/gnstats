@@ -35,9 +35,9 @@ def test_users_api_get_me_empty() -> None:
 
 def test_users_api_post_me_avatar() -> None:
     # _test_upload_file = Path('/usr/src/app/tests/files', 'new-index.json')
-    _files = {'file': "./test_users.py"}
+    _files = {"file": "./test_users.py"}
     with TestClient(app) as client_:
-        response = client_.post('/api/users/me/avatar/', files=_files)
+        response = client_.post("/api/users/me/avatar/", files=_files)
         assert response.status_code == HTTPStatus.OK
 
     # # remove the test file from the config directory

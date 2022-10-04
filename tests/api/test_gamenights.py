@@ -19,13 +19,8 @@ def test_gamenights_api_post():
             "host": "Stian",
             "date": "2020-01-01",
             "description": "test",
-            "votes": [
-                {
-                    "voter": DataService.ensure_person("Ole").name,
-                    "present": True
-                }
-            ]
-        }
+            "votes": [{"voter": DataService.ensure_person("Ole").name, "present": True}],
+        },
     )
     assert response.status_code == HTTPStatus.OK
     data = response.json()
@@ -36,11 +31,7 @@ def test_gamenights_api_post():
 def test_gamenights_api_put():
     # Setup
     game_night = DataService.create_game_night()
-    vote = DataService.create_vote(
-        game_night=game_night,
-        voter="André",
-        appetizer=1
-    )
+    vote = DataService.create_vote(game_night=game_night, voter="André", appetizer=1)
 
     # Test
     response = client.put(
@@ -54,10 +45,10 @@ def test_gamenights_api_put():
                     "id": vote.key.id(),
                     "voter": DataService.ensure_person("André").name,
                     "present": True,
-                    "appetizer": 2
+                    "appetizer": 2,
                 }
-            ]
-        }
+            ],
+        },
     )
     assert response.status_code == HTTPStatus.OK
     data = response.json()

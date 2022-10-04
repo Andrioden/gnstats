@@ -52,23 +52,26 @@ def me_person_or_401(request: Request) -> Person:
         )
 
 
-@router.get('/login/')
+@router.get("/login/")
 async def login(request: Request, oauth_client: StarletteOAuth2App = Depends(google_oauth_client)):
-    redirect_uri = request.url_for('callback')
+    redirect_uri = request.url_for("callback")
     return await oauth_client.authorize_redirect(request, redirect_uri)
 
 
-@router.get('/callback/')
-async def callback(request: Request, oauth_client: StarletteOAuth2App = Depends(google_oauth_client)):
+@router.get("/callback/")
+async def callback(
+    request: Request,
+    oauth_client: StarletteOAuth2App = Depends(google_oauth_client),
+):
     token = await oauth_client.authorize_access_token(request)
     request.session[SESSION_VAR_GOOGLE_USER] = GoogleUser.parse_obj(token["userinfo"]).dict()
-    return RedirectResponse(url='/')
+    return RedirectResponse(url="/")
 
 
-@router.get('/logout/')
+@router.get("/logout/")
 async def logout(request: Request):
     request.session.pop(SESSION_VAR_GOOGLE_USER, None)
-    return RedirectResponse(url='/')
+    return RedirectResponse(url="/")
 
 
 # @router.get('/test/person/', response_model=dict)

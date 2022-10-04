@@ -9,7 +9,7 @@ from models.db.person import Person
 
 
 def ok_200(response, data):
-    response.headers['Content-Type'] = 'application/json'
+    response.headers["Content-Type"] = "application/json"
     response.out.write(json.dumps(data))
 
 
@@ -18,9 +18,9 @@ def ok_204(response):
 
 
 def error(status, response, code, message):
-    response.headers['Content-Type'] = 'application/json'
+    response.headers["Content-Type"] = "application/json"
     response.set_status(status)
-    response.out.write(json.dumps({'error_code': code, 'error_message': message}))
+    response.out.write(json.dumps({"error_code": code, "error_message": message}))
 
 
 def unauthorized_401(response, code, message):
@@ -46,7 +46,11 @@ def forbidden_403(response, code, message):
 
 def validate_admin(response):
     if not users.is_current_user_admin():
-        forbidden_403(response, "VALIDATION_ERROR_NOT_ADMIN", "The browsing user is logged in and authenticated, but does not have admin permissions.")
+        forbidden_403(
+            response,
+            "VALIDATION_ERROR_NOT_ADMIN",
+            "The browsing user is logged in and authenticated, but does not have admin permissions.",
+        )
         return False
     else:
         return True
@@ -56,12 +60,22 @@ def validate_request_data(request_handler, required_data):
     try:
         request_data = json.loads(request_handler.request.body)
     except ValueError:
-        error(400, request_handler.response, "VALIDATION_ERROR_MISSING_DATA", "The request has no request body when required data is: " + ', '.join(required_data))
+        error(
+            400,
+            request_handler.response,
+            "VALIDATION_ERROR_MISSING_DATA",
+            "The request has no request body when required data is: " + ", ".join(required_data),
+        )
         return False
 
     for key in required_data:
-        if request_data.get(key, None) in [None, '']:
-            error(400, request_handler.response, "VALIDATION_ERROR_MISSING_DATA", "The request body is missing the data value '%s'" % key)
+        if request_data.get(key, None) in [None, ""]:
+            error(
+                400,
+                request_handler.response,
+                "VALIDATION_ERROR_MISSING_DATA",
+                "The request body is missing the data value '%s'" % key,
+            )
             return False
     return True
 

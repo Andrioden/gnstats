@@ -18,6 +18,7 @@ router = APIRouter()
 def post(create: GameNightCreate) -> dict:
     return _create_or_update(create).get_data(current_user_person_name())
 
+
 # @require_verified
 @router.put("/{id_}/", response_model=dict)
 def put(id_: int, update: GameNightUpdate) -> dict:
@@ -57,7 +58,10 @@ def get_one(id_: int) -> dict:
         raise HTTPException(status_code=404)
 
 
-def _create_or_update(input_: Union[GameNightCreate, GameNightUpdate], id_: Optional[int] = None) -> GameNight:
+def _create_or_update(
+    input_: Union[GameNightCreate, GameNightUpdate],
+    id_: Optional[int] = None,
+) -> GameNight:
     # Create/Load GameNight
     if isinstance(input_, GameNightCreate):
         game_night = GameNight()

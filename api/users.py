@@ -42,9 +42,9 @@ def get_me(user: Optional[GoogleUser] = Depends(me_google_user)) -> dict:
         person = Person.query(Person.google_account_id == user.sub).get()
         return {
             "google_email": user.email,
-            'name': person.name if person else None,
-            'person': True if person else False,
-            'admin': person.admin if person else False
+            "name": person.name if person else None,
+            "person": True if person else False,
+            "admin": person.admin if person else False,
         }
     else:
         return {}
@@ -68,12 +68,11 @@ def post_me_claim(data: ClaimUserData, user: GoogleUser = Depends(me_google_user
         raise Exception("Name not available")
 
     Person(
-        google_account_id = user.sub,
-        google_email = user.email,
-        google_picture_url = user.picture,
+        google_account_id=user.sub,
+        google_email=user.email,
+        google_picture_url=user.picture,
         name=data.name,
     ).put()
-
 
 
 # class UserHandler(webapp2.RequestHandler):

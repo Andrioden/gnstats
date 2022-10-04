@@ -1,6 +1,6 @@
 from google.cloud import ndb
 
-person_names_allowed = ['Stian', 'André', 'Ole', 'Damian', 'Øivind']
+person_names_allowed = ["Stian", "André", "Ole", "Damian", "Øivind"]
 
 
 class Person(ndb.Model):
@@ -19,8 +19,8 @@ class Person(ndb.Model):
 
     def get_data(self):
         return {
-            'id': self.key.id(),
-            'name': self.name,
-            'activated': self.activated,
-            'avatar': self.avatar is not None
+            "id": self.key.id(),
+            "name": self.name,
+            "activated": self.activated,
+            "avatar": self.avatar is not None,
         }

@@ -5,7 +5,7 @@ from models.db.person import person_names_allowed
 
 
 class Vote(ndb.Model):
-    game_night = ndb.KeyProperty('GameNight', required=True)
+    game_night = ndb.KeyProperty("GameNight", required=True)
     voter = ndb.StringProperty(required=True, choices=person_names_allowed)
     present = ndb.BooleanProperty(default=True)
     appetizer = ndb.IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
@@ -15,15 +15,15 @@ class Vote(ndb.Model):
 
     def get_data(self):
         return {
-            'id': self.key.id(),
-            'voter': self.voter,
-            'present': self.present,
-            'appetizer': self.appetizer,
-            'main_course': self.main_course,
-            'dessert': self.dessert,
-            'game': self.game,
-            'sum': self.weighed_sum() if self.present else 0,
-            'complete_vote': self.complete_vote()
+            "id": self.key.id(),
+            "voter": self.voter,
+            "present": self.present,
+            "appetizer": self.appetizer,
+            "main_course": self.main_course,
+            "dessert": self.dessert,
+            "game": self.game,
+            "sum": self.weighed_sum() if self.present else 0,
+            "complete_vote": self.complete_vote(),
         }
 
     def appertizer_int(self):

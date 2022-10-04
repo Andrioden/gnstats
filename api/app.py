@@ -17,7 +17,7 @@ app = FastAPI(title="GN Stats Api")
 app.include_router(game_nights_router, tags=["Game Nights"], prefix="/api/gamenights")
 app.include_router(auth_router, tags=["Auth"], prefix="/api/auth")
 app.include_router(users_router, tags=["Users"], prefix="/api/users")
-app.add_middleware(SessionMiddleware, secret_key=os.environ['SECRET_KEY'])
+app.add_middleware(SessionMiddleware, secret_key=os.environ["SECRET_KEY"])
 
 
 # @app.get('/')

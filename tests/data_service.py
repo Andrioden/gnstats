@@ -13,8 +13,8 @@ class DataService:
         else:
             person = Person(
                 google_account_id="fake",
-                google_email = "fake@fake.no",
-                google_picture_url = "http://www.fake.no/img/1",
+                google_email="fake@fake.no",
+                google_picture_url="http://www.fake.no/img/1",
                 name=name,
             )
             person.put()
@@ -32,11 +32,15 @@ class DataService:
         return game_night
 
     @staticmethod
-    def create_vote(game_night: GameNight, voter: str = "André", appetizer: Optional[int] = None) -> Vote:
+    def create_vote(
+        game_night: GameNight,
+        voter: str = "André",
+        appetizer: Optional[int] = None,
+    ) -> Vote:
         vote = Vote(
             game_night=game_night.key,
             voter=DataService.ensure_person(voter).name,
-            appetizer=appetizer
+            appetizer=appetizer,
         )
         vote.put()
         return vote
