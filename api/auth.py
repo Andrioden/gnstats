@@ -50,7 +50,10 @@ def me_person_or_401(request: Request) -> Person:
 
 
 @router.get("/login/")
-async def login(request: Request, oauth_client: StarletteOAuth2App = Depends(google_oauth_client)) -> RedirectResponse:
+async def login(
+    request: Request,
+    oauth_client: StarletteOAuth2App = Depends(google_oauth_client),
+) -> RedirectResponse:
     redirect_uri = request.url_for("callback")
     return await oauth_client.authorize_redirect(request, redirect_uri)
 

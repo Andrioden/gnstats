@@ -1,6 +1,6 @@
 from typing import List
 
-from google.cloud.ndb import StringProperty, BooleanProperty, BlobProperty
+from google.cloud.ndb import BlobProperty, BooleanProperty, StringProperty
 
 from models.db.base import DbModelBase
 

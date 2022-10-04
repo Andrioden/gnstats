@@ -81,8 +81,8 @@ def _create_or_update(
     if not game_night.completely_voted():
         for vote_input in input_.votes:
             if not Person.query(
-                Person.name == vote_input.voter, Person.activated == True
-            ).get():  # noqa
+                Person.name == vote_input.voter, Person.activated == True  # noqa
+            ).get():
                 raise HTTPException(status_code=400, detail="Deactivated person")
             if vote_input.voter == input_.host:
                 continue

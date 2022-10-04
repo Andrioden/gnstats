@@ -1,4 +1,4 @@
-from google.cloud.ndb import DateProperty, StringProperty, FloatProperty
+from google.cloud.ndb import DateProperty, FloatProperty, StringProperty
 
 from models.db.base import DbModelBase
 from models.db.person import person_names_allowed

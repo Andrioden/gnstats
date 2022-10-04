@@ -1,4 +1,4 @@
-from google.cloud.ndb import KeyProperty, StringProperty, BooleanProperty, IntegerProperty
+from google.cloud.ndb import BooleanProperty, IntegerProperty, KeyProperty, StringProperty
 
 from config import Weight_Appetizer, Weight_Dessert, Weight_Game, Weight_MainCourse
 from models.db.base import DbModelBase
