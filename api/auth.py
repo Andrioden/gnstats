@@ -1,11 +1,8 @@
-import os
 from typing import Optional
 
-from authlib.integrations.starlette_client import OAuth, StarletteOAuth2App
+from authlib.integrations.starlette_client import StarletteOAuth2App
 from fastapi import APIRouter, Depends, HTTPException, Request
-from google.cloud import ndb
 from starlette import status
-from starlette.config import Config
 from starlette.responses import RedirectResponse
 
 from api.decorators import ensure_db_context

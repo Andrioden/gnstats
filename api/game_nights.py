@@ -3,12 +3,13 @@ from typing import List, Optional, Union
 from fastapi import APIRouter, HTTPException
 from google.cloud import ndb
 
+from api.decorators import ensure_db_context
+from api.utils import current_user_person_name
 from models.api.game_night import GameNightCreate, GameNightUpdate
 from models.api.vote import VoteCreate, VoteUpdate
 from models.db.game_night import GameNight
+from models.db.person import Person
 from models.db.vote import Vote
-
-from .decorators import *
 
 router = APIRouter()
 
@@ -79,7 +80,9 @@ def _create_or_update(
     # Create/Update Votes
     if not game_night.completely_voted():
         for vote_input in input_.votes:
-            if not Person.query(Person.name == vote_input.voter, Person.activated == True).get():
+            if not Person.query(
+                Person.name == vote_input.voter, Person.activated == True
+            ).get():  # noqa
                 raise HTTPException(status_code=400, detail="Deactivated person")
             if vote_input.voter == input_.host:
                 continue

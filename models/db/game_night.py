@@ -46,7 +46,7 @@ class GameNight(ndb.Model):
     def calculate_and_save_sum(self):
         if weighed_votes := [
             vote.weighed_sum()
-            for vote in Vote.query(Vote.game_night == self.key, Vote.present == True)
+            for vote in Vote.query(Vote.game_night == self.key, Vote.present == True)  # noqa
         ]:
             self.sum = sum(weighed_votes) / len(weighed_votes)
             self.put()

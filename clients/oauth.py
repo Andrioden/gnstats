@@ -1,11 +1,8 @@
 import os
 from functools import lru_cache
-from typing import Optional
 
 from authlib.integrations.starlette_client import OAuth, StarletteOAuth2App
-from fastapi import Request
 from starlette.config import Config
-from starlette.responses import RedirectResponse
 
 
 @lru_cache

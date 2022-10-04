@@ -1,5 +1,4 @@
 import json
-import logging
 from datetime import date, datetime
 from typing import Optional
 
@@ -39,7 +38,8 @@ def forbidden_403(response, code, message):
 #
 #     person = Person.query(Person.userid == user.user_id()).get()
 #     if not person:
-#         unauthorized_401(response, "VALIDATION_ERROR_NOT_VERIFIED", "The browsing user is logged in with a google account, but has not verified it.")
+#         unauthorized_401(response, "VALIDATION_ERROR_NOT_VERIFIED",
+#         "The browsing user is logged in with a google account, but has not verified it.")
 #         return False
 #     return True
 

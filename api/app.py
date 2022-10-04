@@ -1,12 +1,7 @@
 import os
-from typing import Union
 
-from authlib.integrations.starlette_client import OAuth
-from fastapi import FastAPI, Request
-from starlette.config import Config
+from fastapi import FastAPI
 from starlette.middleware.sessions import SessionMiddleware
-from starlette.responses import RedirectResponse
-from starlette.staticfiles import StaticFiles
 
 from api.auth import router as auth_router
 from api.game_nights import router as game_nights_router

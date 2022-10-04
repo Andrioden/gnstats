@@ -58,11 +58,12 @@
 #
 #             for vote in gn._votes:
 #                 if vote.voter not in behaviors:
-#                     behaviors[vote.voter] = { 'count': 0, 'appetizer': 0, 'main_course': 0, 'dessert': 0, 'game': 0, 'sum': 0, 'sum_weighed': 0 }
+#                     behaviors[vote.voter] = { 'count': 0, 'appetizer': 0, 'main_course': 0,
+#                       'dessert': 0, 'game': 0, 'sum': 0, 'sum_weighed': 0 }
 #
 #                 behaviors[vote.voter]['count'] += 1
-#                 behaviors[vote.voter]['appetizer'] += vote.appertizer_int() - avg_vote['appetizer']
-#                 behaviors[vote.voter]['main_course'] += vote.main_course_int() - avg_vote['main_course']
+#                 behaviors[vote.voter]['appetizer'] += vote.appertizer_int() -avg_vote['appetizer']
+#                 behaviors[vote.voter]['main_course']+=vote.main_course_int()-avg_vote['main_course']
 #                 behaviors[vote.voter]['dessert'] += vote.dessert_int() - avg_vote['dessert']
 #                 behaviors[vote.voter]['game'] += vote.game_int() - avg_vote['game']
 #                 behaviors[vote.voter]['sum'] += vote.nonweighed_sum() - avg_vote['sum']
@@ -100,13 +101,15 @@
 #
 #             # Initiate data structures if they are missing for new persons and new years
 #             if not gn.host in host_performances['total']:
-#                 host_performances['total'][gn.host] = { 'hosted': 0, 'best': 0, 'worst': 0, 'total_sum': 0, 'avg': None }
+#                 host_performances['total'][gn.host] = { 'hosted': 0, 'best': 0,
+#                 'worst': 0, 'total_sum': 0, 'avg': None }
 #
 #             if not gn.date.year in host_performances:
 #                 host_performances[gn.date.year] = {}
 #
 #             if not gn.host in host_performances[gn.date.year]:
-#                 host_performances[gn.date.year][gn.host] = { 'hosted': 0, 'best': 0, 'worst': 0, 'total_sum': 0, 'avg': None }
+#                 host_performances[gn.date.year][gn.host] = { 'hosted': 0, 'best': 0,
+#                 'worst': 0, 'total_sum': 0, 'avg': None }
 #
 #             # Store general stats
 #             host_performances['total'][gn.host]['hosted'] += 1

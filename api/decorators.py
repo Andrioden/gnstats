@@ -1,12 +1,10 @@
-import logging
 from functools import wraps
 
 from google.cloud import ndb
 from google.cloud.ndb import get_context
 
-from .utils import *
-
-# DECORATOR_NO_REQUEST_ATTRIBUTE_HELP_TEXT = "You have used the decorator on something that does not have a request attribute. Have you used it on the class instead of the class get/post function?"
+# DECORATOR_NO_REQUEST_ATTRIBUTE_HELP_TEXT = "You have used the decorator on something that does
+# not have a request attribute. Have you used it on the class instead of the class get/post function?"
 
 
 def ensure_db_context(func):

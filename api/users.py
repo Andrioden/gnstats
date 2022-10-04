@@ -1,24 +1,15 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-import json
-import logging
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile
-from google.appengine.api import users
 from google.appengine.runtime.apiproxy_errors import RequestTooLargeError
-from pydantic import BaseModel
-from starlette.responses import RedirectResponse
 
-from models import *
 from models.api.user import ClaimUserData
-from models.db.person import person_names_allowed
+from models.db.person import Person
 from models.external.google import GoogleUser
 
 from .auth import me_google_user, me_google_user_or_401
-from .decorators import *
-from .utils import *
+from .decorators import ensure_db_context
+from .utils import me_person
 
 router = APIRouter()
 
