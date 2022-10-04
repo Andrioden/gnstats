@@ -12,7 +12,7 @@ client = TestClient(app)
 
 
 @ensure_db_context
-def test_gamenights_api_post():
+def test_gamenights_api_post() -> None:
     response = client.post(
         url="/api/gamenights/",
         json={
@@ -28,21 +28,21 @@ def test_gamenights_api_post():
 
 
 @ensure_db_context
-def test_gamenights_api_put():
+def test_gamenights_api_put() -> None:
     # Setup
     game_night = DataService.create_game_night()
     vote = DataService.create_vote(game_night=game_night, voter="André", appetizer=1)
 
     # Test
     response = client.put(
-        url=f"/api/gamenights/{game_night.key.id()}/",
+        url=f"/api/gamenights/{game_night.id}/",
         json={
             "host": "Stian",
             "date": "2020-01-01",
             "description": "test",
             "votes": [
                 {
-                    "id": vote.key.id(),
+                    "id": vote.id,
                     "voter": DataService.ensure_person("André").name,
                     "present": True,
                     "appetizer": 2,
@@ -57,20 +57,20 @@ def test_gamenights_api_put():
 
 
 @ensure_db_context
-def test_gamenights_api_delete():
+def test_gamenights_api_delete() -> None:
     # Setup
     game_night = DataService.create_game_night()
     vote = DataService.create_vote(game_night)
 
     # Test
-    response = client.delete(f"/api/gamenights/{game_night.key.id()}/")
+    response = client.delete(f"/api/gamenights/{game_night.id}/")
     assert response.status_code == HTTPStatus.OK
-    assert GameNight.get_by_id(game_night.key.id()) is None
-    assert Vote.get_by_id(vote.key.id()) is None
+    assert GameNight.get_by_id(game_night.id) is None
+    assert Vote.get_by_id(vote.id) is None
 
 
 @ensure_db_context
-def test_gamenights_api_get_many():
+def test_gamenights_api_get_many() -> None:
     DataService.create_game_night()
 
     response = client.get("/api/gamenights/")
@@ -79,9 +79,9 @@ def test_gamenights_api_get_many():
 
 
 @ensure_db_context
-def test_gamenights_api_get_one():
+def test_gamenights_api_get_one() -> None:
     game_night = DataService.create_game_night()
 
-    response = client.get(f"/api/gamenights/{game_night.key.id()}/")
+    response = client.get(f"/api/gamenights/{game_night.id}/")
     assert response.status_code == HTTPStatus.OK
-    assert response.json()["id"] == game_night.key.id()
+    assert response.json()["id"] == game_night.id

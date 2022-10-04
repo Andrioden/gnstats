@@ -1,7 +1,6 @@
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile
-from google.appengine.runtime.apiproxy_errors import RequestTooLargeError
+from fastapi import APIRouter, Depends
 
 from models.api.user import ClaimUserData
 from models.db.person import Person
@@ -9,7 +8,6 @@ from models.external.google import GoogleUser
 
 from .auth import me_google_user, me_google_user_or_401
 from .decorators import ensure_db_context
-from .utils import me_person
 
 router = APIRouter()
 
@@ -41,15 +39,15 @@ def get_me(user: Optional[GoogleUser] = Depends(me_google_user)) -> dict:
         return {}
 
 
-@router.post("/me/avatar/")
-@ensure_db_context
-def post_me_avatar(file: UploadFile) -> None:
-    try:
-        person = me_person()
-        person.avatar = file.file.read()
-        person.put()
-    except RequestTooLargeError:
-        raise HTTPException(status_code=404, detail="File to large")
+# @router.post("/me/avatar/")
+# @ensure_db_context
+# def post_me_avatar(file: UploadFile) -> None:
+#     try:
+#         person = me_person()
+#         person.avatar = file.file.read()  # type: ignore
+#         person.put()  # type: ignore
+#     except RequestTooLargeError:
+#         raise HTTPException(status_code=404, detail="File to large")
 
 
 @router.post("/me/claim/")

@@ -1,15 +1,16 @@
-from google.cloud import ndb
+from google.cloud.ndb import DateProperty, StringProperty, FloatProperty
 
+from models.db.base import DbModelBase
 from models.db.person import person_names_allowed
 from models.db.vote import Vote
 from utils.date import date_to_epoch
 
 
-class GameNight(ndb.Model):
-    date = ndb.DateProperty()
-    host = ndb.StringProperty(required=True, choices=person_names_allowed)
-    description = ndb.StringProperty(required=True)
-    sum = ndb.FloatProperty(default=0)
+class GameNight(DbModelBase):
+    date = DateProperty()
+    host = StringProperty(required=True, choices=person_names_allowed)
+    description = StringProperty(required=True)
+    sum = FloatProperty(default=0)
 
     def get_data(self, query_person_name=None, votes=None) -> dict:
         if votes is None:
@@ -36,14 +37,14 @@ class GameNight(ndb.Model):
             "completely_voted": completely_voted,
         }
 
-    def completely_voted(self):
+    def completely_voted(self) -> bool:
         votes = [vote for vote in Vote.query(Vote.game_night == self.key)]
         if len(votes) == 0:  # Just created
             return False
         else:
             return len([vote for vote in votes if not vote.complete_vote()]) == 0
 
-    def calculate_and_save_sum(self):
+    def calculate_and_save_sum(self) -> None:
         if weighed_votes := [
             vote.weighed_sum()
             for vote in Vote.query(Vote.game_night == self.key, Vote.present == True)  # noqa

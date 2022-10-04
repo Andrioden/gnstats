@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 fastapi = "*"
 uvicorn = {extras = ["standard"], version = "*"}
-appengine-python-standard = "*"
 google-cloud-ndb = "*"
 pydantic = "*"
 python-multipart = "*"
@@ -21,6 +20,7 @@ black = "*"
 flake8 = "*"
 mypy = "*"
 pytest = "*"
+types-google-cloud-ndb = "*"
 
 [requires]
 python_version = "3.9"

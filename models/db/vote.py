@@ -1,17 +1,18 @@
-from google.cloud import ndb
+from google.cloud.ndb import KeyProperty, StringProperty, BooleanProperty, IntegerProperty
 
 from config import Weight_Appetizer, Weight_Dessert, Weight_Game, Weight_MainCourse
+from models.db.base import DbModelBase
 from models.db.person import person_names_allowed
 
 
-class Vote(ndb.Model):
-    game_night = ndb.KeyProperty("GameNight", required=True)
-    voter = ndb.StringProperty(required=True, choices=person_names_allowed)
-    present = ndb.BooleanProperty(default=True)
-    appetizer = ndb.IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
-    main_course = ndb.IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
-    dessert = ndb.IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
-    game = ndb.IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
+class Vote(DbModelBase):
+    game_night = KeyProperty("GameNight", required=True)
+    voter = StringProperty(required=True, choices=person_names_allowed)
+    present = BooleanProperty(default=True)
+    appetizer = IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
+    main_course = IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
+    dessert = IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
+    game = IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
 
     def get_data(self):
         return {

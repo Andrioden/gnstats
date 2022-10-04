@@ -7,10 +7,10 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 @app.get("/")
-def index():
+def index() -> FileResponse:
     return FileResponse("index.html")
 
 
 @app.get("/favicon.ico")
-def favicon():
+def favicon() -> FileResponse:
     return FileResponse("favicon.ico")
