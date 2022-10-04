@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-#
 # import csv
 # import json
 # from google.cloud import ndb
@@ -9,8 +6,8 @@
 # from .decorators import *
 # from datetime import datetime, date
 # import logging
-
-
+#
+#
 # class DataImportPythonScriptHandler(webapp2.RequestHandler):
 #     @require_admin
 #     def get(self):
@@ -44,14 +41,14 @@
 #             self.response.out.write(self._get_data_dump_string_of_object(obj) + "<br><br>")
 #
 #         # Uncomment below to download as file, not really practical but keeping code
-#         #self.response.headers['Content-Type'] = 'text/csv'
-#         #self.response.headers['Content-Disposition'] = "attachment; filename=siage_import_script.py"
-#
+#         # self.response.headers['Content-Type'] = 'text/csv'
+#         # self.response.headers['Content-Disposition'] = "attachment; filename=siage_import_script.py"
 #
 #     def _get_data_dump_string_of_object(self, obj):
 #         data_string = "%s(id=%s, " % (type(obj).__name__, obj.key.id())
-#         for variable_name in list(obj.__dict__['_values'].keys()):  # __dict__['_values'] contains all class object variables
-#             if (variable_name in ['avatar']):
+#         # __dict__['_values'] contains all class object variables
+#         for variable_name in list(obj.__dict__["_values"].keys()):
+#             if variable_name in ["avatar"]:
 #                 continue
 #
 #             variable_value = getattr(obj, variable_name, None)
@@ -63,14 +60,24 @@
 #             elif type(variable_value) in (int, bool, float):
 #                 data_string += "%s=%s, " % (variable_name, variable_value)
 #             elif type(variable_value) is str:
-#                 escaped_value = variable_value.replace("\'", "\\'").replace("\"", "\\\"")
+#                 escaped_value = variable_value.replace("'", "\\'").replace('"', '\\"')
 #                 data_string += "%s=u'%s', " % (variable_name, escaped_value)
 #             elif type(variable_value) is date:
-#                 data_string += "%s=date.fromtimestamp(%s), " % (variable_name, date_to_epoch(variable_value))
+#                 data_string += "%s=date.fromtimestamp(%s), " % (
+#                     variable_name,
+#                     date_to_epoch(variable_value),
+#                 )
 #             elif type(variable_value) is datetime:
-#                 data_string += "%s=datetime.fromtimestamp(%s), " % (variable_name, date_to_epoch(variable_value))
+#                 data_string += "%s=datetime.fromtimestamp(%s), " % (
+#                     variable_name,
+#                     date_to_epoch(variable_value),
+#                 )
 #             elif type(variable_value) is ndb.Key:
-#                 data_string += "%s=ndb.Key(%s, %s), " % (variable_name, variable_value.kind(), variable_value.id())
+#                 data_string += "%s=ndb.Key(%s, %s), " % (
+#                     variable_name,
+#                     variable_value.kind(),
+#                     variable_value.id(),
+#                 )
 #             else:
 #                 raise Exception("Type not handled: " + type(variable_value).__name__)
 #
@@ -82,7 +89,7 @@
 # class RunImportPythonScriptHandler(webapp2.RequestHandler):
 #     @require_admin
 #     def get(self):
-#         #Paste generated script from DataImportPythonScript here and run it in dev
+#         # Paste generated script from DataImportPythonScript here and run it in dev
 #         pass
 #
 #
@@ -93,7 +100,7 @@
 #         ok_204(self.response)
 #
 #
-# #class Migrate1Handler(webapp2.RequestHandler):
+# # class Migrate1Handler(webapp2.RequestHandler):
 # #    @require_admin
 # #    def get(self):
 # #        for vote in Vote.query():
@@ -101,7 +108,7 @@
 # #            vote.put()
 # #        ok_204(self.response)
 #
-# #class Migrate2Handler(webapp2.RequestHandler):
+# # class Migrate2Handler(webapp2.RequestHandler):
 # #    @require_admin
 # #    def get(self):
 # #        for vote in Vote.query():
@@ -111,10 +118,13 @@
 # #        ok_204(self.response)
 #
 #
-# app = webapp2.WSGIApplication([
-#     (r'/api/actions/admin/dataimportpythonscript/', DataImportPythonScriptHandler),
-#     (r'/api/actions/admin/runimportpythonscript/', RunImportPythonScriptHandler),
-#     (r'/api/actions/admin/recalculategnsums/', RecalcluateGameNightSumsHandler),
-#     #(r'/api/actions/admin/migrate/1', Migrate1Handler),
-#     #(r'/api/actions/admin/migrate/2', Migrate2Handler),
-# ], debug=True)
+# app = webapp2.WSGIApplication(
+#     [
+#         (r"/api/actions/admin/dataimportpythonscript/", DataImportPythonScriptHandler),
+#         (r"/api/actions/admin/runimportpythonscript/", RunImportPythonScriptHandler),
+#         (r"/api/actions/admin/recalculategnsums/", RecalcluateGameNightSumsHandler),
+#         # (r'/api/actions/admin/migrate/1', Migrate1Handler),
+#         # (r'/api/actions/admin/migrate/2', Migrate2Handler),
+#     ],
+#     debug=True,
+# )
