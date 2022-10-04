@@ -20,7 +20,7 @@ class GameNight(DbModelBase):
         completely_voted = len([vote for vote in votes if not vote.complete_vote()]) == 0
 
         return {
-            "id": self.key.id(),
+            "id": self.id,
             "host": self.host,
             "date_epoch": date_to_epoch(self.date) if self.date else None,
             "description": self.description,
@@ -43,11 +43,3 @@ class GameNight(DbModelBase):
             return False
         else:
             return len([vote for vote in votes if not vote.complete_vote()]) == 0
-
-    def calculate_and_save_sum(self) -> None:
-        if weighed_votes := [
-            vote.weighed_sum()
-            for vote in Vote.query(Vote.game_night == self.key, Vote.present == True)  # noqa
-        ]:
-            self.sum = sum(weighed_votes) / len(weighed_votes)
-            self.put()

@@ -3,7 +3,6 @@ from http import HTTPStatus
 from fastapi.testclient import TestClient
 
 from api.app import app
-from api.decorators import ensure_db_context
 from models.db.game_night import GameNight
 from models.db.vote import Vote
 from tests.data_service import DataService
@@ -11,8 +10,7 @@ from tests.data_service import DataService
 client = TestClient(app)
 
 
-@ensure_db_context
-def test_gamenights_api_post() -> None:
+def test_gamenights_api_post(clean_db_context) -> None:
     response = client.post(
         url="/api/gamenights/",
         json={
@@ -27,8 +25,7 @@ def test_gamenights_api_post() -> None:
     assert data["host"] == "Stian"
 
 
-@ensure_db_context
-def test_gamenights_api_put() -> None:
+def test_gamenights_api_put(clean_db_context) -> None:
     # Setup
     game_night = DataService.create_game_night()
     vote = DataService.create_vote(game_night=game_night, voter="André", appetizer=1)
@@ -56,8 +53,7 @@ def test_gamenights_api_put() -> None:
     assert data["votes"][0]["appetizer"] == 2
 
 
-@ensure_db_context
-def test_gamenights_api_delete() -> None:
+def test_gamenights_api_delete(clean_db_context) -> None:
     # Setup
     game_night = DataService.create_game_night()
     vote = DataService.create_vote(game_night)
@@ -69,8 +65,7 @@ def test_gamenights_api_delete() -> None:
     assert Vote.get_by_id(vote.id) is None
 
 
-@ensure_db_context
-def test_gamenights_api_get_many() -> None:
+def test_gamenights_api_get_many(clean_db_context) -> None:
     DataService.create_game_night()
 
     response = client.get("/api/gamenights/")
@@ -78,8 +73,7 @@ def test_gamenights_api_get_many() -> None:
     assert len(response.json()) > 0
 
 
-@ensure_db_context
-def test_gamenights_api_get_one() -> None:
+def test_gamenights_api_get_one(clean_db_context) -> None:
     game_night = DataService.create_game_night()
 
     response = client.get(f"/api/gamenights/{game_night.id}/")

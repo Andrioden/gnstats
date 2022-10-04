@@ -3,12 +3,13 @@ from typing import Optional
 from models.db.game_night import GameNight
 from models.db.person import Person
 from models.db.vote import Vote
+from repos.person import PersonRepo
 
 
 class DataService:
-    @staticmethod
-    def ensure_person(name: str) -> Person:
-        if person := Person.query(Person.name == name).get():
+    @classmethod
+    def ensure_person(cls, name: str) -> Person:
+        if person := PersonRepo.get_one_or_none_by_name(name):
             return person
         else:
             person = Person(
@@ -20,26 +21,29 @@ class DataService:
             person.put()
             return person
 
-    @staticmethod
-    def ensure_person_deleted(name: str) -> None:
-        if person := Person.query(Person.name == name).get():
-            person.key.delete()
+    @classmethod
+    def ensure_person_deleted(cls, name: str) -> None:
+        if person := PersonRepo.get_one_or_none_by_name(name):
+            PersonRepo.delete(person)
 
-    @staticmethod
-    def create_game_night() -> GameNight:
+    @classmethod
+    def create_game_night(cls) -> GameNight:
         game_night = GameNight(host="Stian", description="test")
         game_night.put()
         return game_night
 
-    @staticmethod
+    @classmethod
     def create_vote(
-        game_night: GameNight,
+        cls,
+        game_night: Optional[GameNight] = None,
         voter: str = "André",
+        present: bool = True,
         appetizer: Optional[int] = None,
     ) -> Vote:
         vote = Vote(
-            game_night=game_night.key,
+            game_night=game_night.key if game_night else cls.create_game_night().key,
             voter=DataService.ensure_person(voter).name,
+            present=present,
             appetizer=appetizer,
         )
         vote.put()

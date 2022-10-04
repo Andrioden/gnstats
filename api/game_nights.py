@@ -1,7 +1,6 @@
 from typing import List, Optional, Union
 
 from fastapi import APIRouter, HTTPException
-from google.cloud import ndb
 
 from api.decorators import ensure_db_context
 from api.utils import current_user_person_name
@@ -10,6 +9,8 @@ from models.api.vote import VoteCreate, VoteUpdate
 from models.db.game_night import GameNight
 from models.db.person import Person
 from models.db.vote import Vote
+from repos.game_night import GameNightRepo
+from repos.vote import VoteRepo
 
 router = APIRouter()
 
@@ -29,9 +30,7 @@ def put(id_: int, update: GameNightUpdate) -> dict:
 # @require_admin
 @router.delete("/{id_}/")
 def delete(id_: int) -> None:
-    game_night_key = GameNight.get_by_id(id_).key
-    ndb.delete_multi(Vote.query(Vote.game_night == game_night_key).fetch(keys_only=True))
-    game_night_key.delete()
+    GameNightRepo.delete_by_id(id_)
 
 
 @router.get("/", response_model=List[dict])
@@ -53,7 +52,7 @@ def get_many(limit: Optional[int] = None) -> List[dict]:
 @router.get("/{id_}/", response_model=dict)
 @ensure_db_context
 def get_one(id_: int) -> dict:
-    if game_night := GameNight.get_by_id(id_):
+    if game_night := GameNightRepo.get_one_or_none(id_):
         return game_night.get_data(current_user_person_name())
     else:
         raise HTTPException(status_code=404)
@@ -67,7 +66,7 @@ def _create_or_update(
     if isinstance(input_, GameNightCreate):
         game_night = GameNight()
     elif isinstance(input_, GameNightUpdate):
-        game_night = GameNight.get_by_id(id_)
+        game_night = GameNightRepo.get(id_)
     else:
         raise Exception(f"Unknown type '{type(input_)}'")
 
@@ -105,6 +104,8 @@ def _create_or_update(
             vote.put()
 
     # Calculate sum after vote changes
-    game_night.calculate_and_save_sum()
+    if weighed_votes := [vote.weighed_sum() for vote in VoteRepo.get_many_by_present(game_night)]:
+        game_night.sum = sum(weighed_votes) / len(weighed_votes)
+        game_night.put()
 
     return game_night
