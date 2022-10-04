@@ -8,21 +8,14 @@ from starlette.responses import RedirectResponse
 
 import os
 from starlette.config import Config
-from authlib.integrations.starlette_client import OAuth
+from authlib.integrations.starlette_client import OAuth, StarletteOAuth2App
 
 from api.decorators import ensure_db_context
 from models.db.person import Person
 from models.external.google import GoogleUser
+from clients.oauth import google_oauth_client
 
 router = APIRouter()
-
-oauth = OAuth(Config(environ={'GOOGLE_CLIENT_ID': os.environ['GOOGLE_CLIENT_ID'],
-                              'GOOGLE_CLIENT_SECRET': os.environ['GOOGLE_CLIENT_SECRET']}))
-oauth_google_client = oauth.register(
-    name='google',
-    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
-    client_kwargs={'scope': 'openid email profile'},
-)
 
 
 SESSION_VAR_GOOGLE_USER = "GN_GOOGLE_USER"
@@ -37,6 +30,7 @@ def me_google_user(request: Request) -> Optional[GoogleUser]:
         return GoogleUser.parse_obj(user_dict)
     else:
         return None
+
 
 def me_google_user_or_401(request: Request) -> GoogleUser:
     if user := me_google_user(request):
@@ -61,16 +55,15 @@ def me_person_or_401(request: Request) -> Person:
 
 
 @router.get('/login/')
-async def login(request: Request):
+async def login(request: Request, oauth_client: StarletteOAuth2App = Depends(google_oauth_client)):
     redirect_uri = request.url_for('callback')
-    return await oauth_google_client.authorize_redirect(request, redirect_uri)
+    return await oauth_client.authorize_redirect(request, redirect_uri)
 
 
 @router.get('/callback/')
-async def callback(request: Request):
-    token = await oauth_google_client.authorize_access_token(request)
-    google_user_info = GoogleUser.parse_obj(token["userinfo"])
-    request.session[SESSION_VAR_GOOGLE_USER] = google_user_info.dict()
+async def callback(request: Request, oauth_client: StarletteOAuth2App = Depends(google_oauth_client)):
+    token = await oauth_client.authorize_access_token(request)
+    request.session[SESSION_VAR_GOOGLE_USER] = GoogleUser.parse_obj(token["userinfo"]).dict()
     return RedirectResponse(url='/')
 
 

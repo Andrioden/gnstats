@@ -5,7 +5,7 @@ from starlette.staticfiles import StaticFiles
 
 from api.game_nights import router as game_nights_router
 from api.users import router as users_router
-from api.auth import router as auth_router, SESSION_VAR_GOOGLE_USER
+from api.auth import router as auth_router
 
 from fastapi import FastAPI
 from fastapi import Request
