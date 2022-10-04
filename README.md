@@ -16,6 +16,7 @@
 6. (Verify) [Open page](http://localhost:8000/)
 7. (Verify) [Open api](http://localhost:8000/docs)
 8. (Verify) Run tests `pytest .`
+9. (Optional) Setup pre-commit: `cp pre-commit.sh .git/hooks/pre-commit`
 
 
 ## Using prod data

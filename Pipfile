@@ -15,6 +15,11 @@ itsdangerous = "*"
 httpx = "*"
 
 [dev-packages]
+vulture = "*"
+isort = "*"
+black = "*"
+flake8 = "*"
+mypy = "*"
 pytest = "*"
 
 [requires]
