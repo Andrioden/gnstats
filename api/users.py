@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends
 from models.api.user import ClaimUserData
 from models.db.person import Person
 from models.external.google import GoogleUser
+from repos.person import PersonRepo
 
 from .decorators import ensure_db_context
 from .session import me_user, me_user_or_401
@@ -15,7 +16,7 @@ router = APIRouter()
 @router.get("/", response_model=List[dict])
 @ensure_db_context
 def get_many() -> List[dict]:
-    return [person.get_data() for person in Person.query()]
+    return [person.get_data() for person in PersonRepo.get_all()]
 
 
 @router.get("/available-names/", response_model=List[str])
