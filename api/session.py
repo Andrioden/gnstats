@@ -1,6 +1,6 @@
 from typing import Optional
 
-from fastapi import HTTPException
+from fastapi import Depends, HTTPException
 from starlette import status
 from starlette.requests import Request
 
@@ -29,12 +29,21 @@ def me_user_or_401(request: Request) -> GoogleUser:
 
 
 @ensure_db_context
-def me_person_or_401(request: Request) -> Person:
-    user = me_user_or_401(request)
-    if person := Person.query(Person.google_account_id == user.sub).get():
+def me_person_or_401(user: GoogleUser = Depends(me_user_or_401)) -> Person:
+    if person := Person.query(Person.google_id == user.sub).get():
         return person
     else:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Not logged into a person",
         )
+
+
+def me_activated_or_401(person: Person = Depends(me_person_or_401)) -> None:
+    if not person.activated:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not activated")
+
+
+def me_admin_or_401(person: Person = Depends(me_person_or_401)) -> None:
+    if not person.admin:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not admin")

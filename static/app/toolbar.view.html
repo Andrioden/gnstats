@@ -12,7 +12,7 @@
                         <md-button ng-href="/api/auth/login/" ng-hide="user.google_email">Login</md-button>
                         <md-button ng-href="/api/auth/logout/" ng-show="user.google_email">Logout</md-button>
                     </md-menu-item>
-                    <md-menu-item ng-show="!user.verified && user.google_email">
+                    <md-menu-item ng-show="!user.person && user.google_email">
                         <md-button ng-click="openVerificationDialog($event)">Verify</md-button>
                     </md-menu-item>
                     <md-menu-item ng-show="user.admin">

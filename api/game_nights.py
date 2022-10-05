@@ -1,8 +1,9 @@
 from typing import List, Optional, Union
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from api.decorators import ensure_db_context
+from api.session import me_activated_or_401, me_admin_or_401
 from api.utils import current_user_person_name
 from models.api.game_night import GameNightCreate, GameNightUpdate
 from models.api.vote import VoteCreate, VoteUpdate
@@ -15,22 +16,19 @@ from repos.vote import VoteRepo
 router = APIRouter()
 
 
-# @require_verified
-@router.post("/", response_model=dict)
+@router.post("/", dependencies=[Depends(me_activated_or_401)], response_model=dict)
 @ensure_db_context
 def post(create: GameNightCreate) -> dict:
     return _create_or_update(create).get_data(current_user_person_name())
 
 
-# @require_verified
-@router.put("/{id_}/", response_model=dict)
+@router.put("/{id_}/", dependencies=[Depends(me_activated_or_401)], response_model=dict)
 @ensure_db_context
 def put(id_: int, update: GameNightUpdate) -> dict:
     return _create_or_update(update, id_).get_data(current_user_person_name())
 
 
-# @require_admin
-@router.delete("/{id_}/")
+@router.delete("/{id_}/", dependencies=[Depends(me_admin_or_401)])
 def delete(id_: int) -> None:
     GameNightRepo.delete_by_id(id_)
 

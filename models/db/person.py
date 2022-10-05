@@ -8,11 +8,11 @@ person_names_allowed = ["Stian", "André", "Ole", "Damian", "Øivind"]
 
 
 class Person(DbModelBase):
-    google_account_id = StringProperty(required=True)
+    google_id = StringProperty(required=True)
     google_email = StringProperty()
     google_picture_url = StringProperty()
     name = StringProperty(required=True, choices=person_names_allowed)
-    activated = BooleanProperty(required=True, default=True)
+    activated = BooleanProperty(required=True, default=False)
     admin = BooleanProperty(default=False)
 
     @staticmethod

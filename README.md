@@ -17,6 +17,7 @@
 6. (Verify) [Open page](http://localhost:8000/)
 7. (Verify) [Open api](http://localhost:8000/docs)
 8. (Verify) Run tests `pytest .`
+    - Take note tests may randomly fail, probably because of the local datastore returning stale values in integration tests, or because of a bug in the db context yielding
 9. (Optional) Setup pre-commit: `cp pre-commit.sh .git/hooks/pre-commit`
 
 
