@@ -1,5 +1,6 @@
 [tool.vulture]
 min_confidence = 61
+ignore_names = ["clean_db_context"]
 
 [tool.isort]
 profile = "black"
