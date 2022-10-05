@@ -65,10 +65,10 @@ def _create_or_update(
     # Create/Load GameNight
     if isinstance(input_, GameNightCreate):
         game_night = GameNight()
-    elif isinstance(input_, GameNightUpdate):
+    elif isinstance(input_, GameNightUpdate) and id_:
         game_night = GameNightRepo.get(id_)
     else:
-        raise Exception(f"Unknown type '{type(input_)}'")
+        raise Exception(f"Invalid input, input_ type '{type(input_)}' and {id_=}")
 
     # Update GameNight
     game_night.date = input_.date

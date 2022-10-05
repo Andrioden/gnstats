@@ -26,3 +26,7 @@ python_version = 3.9
 [[tool.mypy.overrides]]
 module = "authlib.*"
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "google.cloud.*"
+ignore_missing_imports = true
