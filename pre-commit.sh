@@ -38,6 +38,6 @@ fi
 if dmypy run . ; then
     echo "mypy ok!"
 else
-    echo "mypy failed! Will not commit."
+    echo "mypy failed! Will not commit. If daemon died, try again."
     exit 1
 fi
