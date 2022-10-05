@@ -17,12 +17,14 @@ router = APIRouter()
 
 # @require_verified
 @router.post("/", response_model=dict)
+@ensure_db_context
 def post(create: GameNightCreate) -> dict:
     return _create_or_update(create).get_data(current_user_person_name())
 
 
 # @require_verified
 @router.put("/{id_}/", response_model=dict)
+@ensure_db_context
 def put(id_: int, update: GameNightUpdate) -> dict:
     return _create_or_update(update, id_).get_data(current_user_person_name())
 

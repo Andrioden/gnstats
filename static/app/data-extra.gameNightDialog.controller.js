@@ -24,7 +24,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
 
     $scope.create = function() {
         $scope.submitting = true;
-        $scope.gameNight.dateOnly = moment($scope.gameNight.date).format("DD/MM/YYYY");
+        $scope.gameNight.date = moment($scope.gameNight.date).format("YYYY-MM-DD");
 
         $http.post('/api/gamenights/', $scope.gameNight, {}).
             // Success
@@ -40,7 +40,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
 
     $scope.save = function () {
         $scope.submitting = true;
-        $scope.gameNight.dateOnly = moment($scope.gameNight.date).format("DD/MM/YYYY");
+        $scope.gameNight.date = moment($scope.gameNight.date).format("YYYY-MM-DD");
 
         $http.put('/api/gamenights/' + $scope.gameNight.id + "/", $scope.gameNight, {}).
             // Success
