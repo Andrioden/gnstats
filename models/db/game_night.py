@@ -1,3 +1,5 @@
+from typing import List
+
 from google.cloud.ndb import DateProperty, FloatProperty, StringProperty
 
 from models.db.base import DbModelBase
@@ -12,7 +14,7 @@ class GameNight(DbModelBase):
     description = StringProperty(required=True)
     sum = FloatProperty(default=0)
 
-    def get_data(self, query_person_name=None, votes=None) -> dict:
+    def get_data(self, query_person_name: str = None, votes: List[Vote] = None) -> dict:
         if votes is None:
             votes = [vote for vote in Vote.query(Vote.game_night == self.key)]
         else:

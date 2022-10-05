@@ -21,7 +21,7 @@ class Person(DbModelBase):
         person_names_taken = [person.name for person in Person.query()]
         return [name for name in person_names_allowed if name not in person_names_taken]
 
-    def get_data(self):
+    def get_data(self) -> dict:
         return {
             "id": self.key.id(),
             "name": self.name,

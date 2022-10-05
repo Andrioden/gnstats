@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+from google.cloud.ndb import Context
 from starlette.testclient import TestClient
 
 from api.app import app
@@ -8,7 +9,7 @@ from tests.data_service import DataService
 client = TestClient(app)
 
 
-def test_users_api_get_many(clean_db_context) -> None:
+def test_users_api_get_many(clean_db_context: Context) -> None:
     DataService.ensure_person("André")
 
     response = client.get("/api/users/")
@@ -16,7 +17,7 @@ def test_users_api_get_many(clean_db_context) -> None:
     assert len(response.json()) > 0
 
 
-def test_users_api_get_available_names(clean_db_context) -> None:
+def test_users_api_get_available_names(clean_db_context: Context) -> None:
     response = client.get("/api/users/available-names/")
     assert response.status_code == HTTPStatus.OK
     assert "Ole" in response.json()

@@ -1,6 +1,7 @@
 from http import HTTPStatus
 
 from fastapi.testclient import TestClient
+from google.cloud.ndb import Context
 
 from api.app import app
 from models.db.game_night import GameNight
@@ -10,7 +11,7 @@ from tests.data_service import DataService
 client = TestClient(app)
 
 
-def test_gamenights_api_post(clean_db_context) -> None:
+def test_gamenights_api_post(clean_db_context: Context) -> None:
     response = client.post(
         url="/api/gamenights/",
         json={
@@ -25,7 +26,7 @@ def test_gamenights_api_post(clean_db_context) -> None:
     assert data["host"] == "Stian"
 
 
-def test_gamenights_api_put(clean_db_context) -> None:
+def test_gamenights_api_put(clean_db_context: Context) -> None:
     # Setup
     game_night = DataService.create_game_night()
     vote = DataService.create_vote(game_night=game_night, voter="André", appetizer=1)
@@ -53,7 +54,7 @@ def test_gamenights_api_put(clean_db_context) -> None:
     assert data["votes"][0]["appetizer"] == 2
 
 
-def test_gamenights_api_delete(clean_db_context) -> None:
+def test_gamenights_api_delete(clean_db_context: Context) -> None:
     # Setup
     game_night = DataService.create_game_night()
     vote = DataService.create_vote(game_night)
@@ -65,7 +66,7 @@ def test_gamenights_api_delete(clean_db_context) -> None:
     assert Vote.get_by_id(vote.id) is None
 
 
-def test_gamenights_api_get_many(clean_db_context) -> None:
+def test_gamenights_api_get_many(clean_db_context: Context) -> None:
     DataService.create_game_night()
 
     response = client.get("/api/gamenights/")
@@ -73,7 +74,7 @@ def test_gamenights_api_get_many(clean_db_context) -> None:
     assert len(response.json()) > 0
 
 
-def test_gamenights_api_get_one(clean_db_context) -> None:
+def test_gamenights_api_get_one(clean_db_context: Context) -> None:
     game_night = DataService.create_game_night()
 
     response = client.get(f"/api/gamenights/{game_night.id}/")

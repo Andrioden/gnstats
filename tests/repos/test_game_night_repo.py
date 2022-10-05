@@ -1,4 +1,5 @@
 import pytest
+from google.cloud.ndb import Context
 
 from repos import NotFoundError
 from repos.game_night import GameNightRepo
@@ -6,7 +7,7 @@ from repos.vote import VoteRepo
 from tests.data_service import DataService
 
 
-def test_game_night_repo_delete_by_id(clean_db_context) -> None:
+def test_game_night_repo_delete_by_id(clean_db_context: Context) -> None:
     # Dont delete these
     game_night1 = DataService.create_game_night()
     DataService.create_vote(game_night1)
@@ -29,13 +30,13 @@ def test_game_night_repo_delete_by_id(clean_db_context) -> None:
     assert VoteRepo.count_all() == 0
 
 
-def test_game_night_repo_count_all(clean_db_context) -> None:
+def test_game_night_repo_count_all(clean_db_context: Context) -> None:
     assert GameNightRepo.count_all() == 0
     DataService.create_game_night()
     assert GameNightRepo.count_all() == 1
 
 
-def test_game_night_repo_get(clean_db_context):
+def test_game_night_repo_get(clean_db_context: Context) -> None:
     game_night = DataService.create_game_night()
 
     assert GameNightRepo.get(game_night.id) is not None

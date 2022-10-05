@@ -1,4 +1,5 @@
 from functools import wraps
+from typing import Any, Callable
 
 from google.cloud.ndb import Client, get_context
 
@@ -6,9 +7,9 @@ from google.cloud.ndb import Client, get_context
 # not have a request attribute. Have you used it on the class instead of the class get/post function?"
 
 
-def ensure_db_context(func):
+def ensure_db_context(func: Callable) -> Callable:
     @wraps(func)
-    def wrapper_do_twice(*args, **kwargs):
+    def wrapper_do_twice(*args: Any, **kwargs: Any) -> Callable:
         if get_context(False):
             return func(*args, **kwargs)
         else:

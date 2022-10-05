@@ -14,9 +14,9 @@ class Vote(DbModelBase):
     dessert = IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
     game = IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
 
-    def get_data(self):
+    def get_data(self) -> dict:
         return {
-            "id": self.key.id(),
+            "id": self.id,
             "voter": self.voter,
             "present": self.present,
             "appetizer": self.appetizer,
@@ -47,10 +47,10 @@ class Vote(DbModelBase):
         sum_ += self.game_int() * Weight_Game
         return sum_ / (Weight_Appetizer + Weight_MainCourse + Weight_Dessert + Weight_Game)
 
-    def nonweighed_sum(self):
+    def nonweighed_sum(self) -> int:
         return self.appetizer_int() + self.main_course_int() + self.dessert_int() + self.game_int()
 
-    def complete_vote(self):
+    def complete_vote(self) -> bool:
         if self.present:
             return None not in [self.appetizer, self.main_course, self.dessert, self.game]
         else:
