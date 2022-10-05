@@ -40,17 +40,6 @@ def get_me(user: Optional[GoogleUser] = Depends(me_user)) -> dict:
         return {}
 
 
-# @router.post("/me/avatar/")
-# @ensure_db_context
-# def post_me_avatar(file: UploadFile) -> None:
-#     try:
-#         person = me_person()
-#         person.avatar = file.file.read()  # type: ignore
-#         person.put()  # type: ignore
-#     except RequestTooLargeError:
-#         raise HTTPException(status_code=404, detail="File to large")
-
-
 @router.post("/me/claim/")
 @ensure_db_context
 def post_me_claim(data: ClaimUserData, user: GoogleUser = Depends(me_user_or_401)) -> None:
@@ -77,19 +66,8 @@ def post_me_claim(data: ClaimUserData, user: GoogleUser = Depends(me_user_or_401
 #         person.put()
 #
 #
-# class UserAvatarHandler(webapp2.RequestHandler):
-#     def get(self, person_id):
-#         person = Person.get_by_id(int(person_id))
-#         if person and person.avatar:
-#             self.response.headers['Content-Type'] = 'image/jpeg'
-#             self.response.cache_control = 'public'
-#             self.response.cache_control.max_age = 300
-#             self.response.out.write(person.avatar)
-#         else:
-#             self.abort(404)
-#
+
 #
 # app = webapp2.WSGIApplication([
 #     (r'/api/users/(\d+)/', UserHandler),
-#     (r'/api/users/(\d+)/avatar/', UserAvatarHandler),
 # ], debug=True)

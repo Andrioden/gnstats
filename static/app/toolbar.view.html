@@ -15,9 +15,6 @@
                     <md-menu-item ng-show="!user.verified && user.google_email">
                         <md-button ng-click="openVerificationDialog($event)">Verify</md-button>
                     </md-menu-item>
-                    <md-menu-item ng-show="user.person">
-                        <md-button ng-click="openAvatarDialog($event)">Set avatar</md-button>
-                    </md-menu-item>
                     <md-menu-item ng-show="user.admin">
                         <md-button ng-click="openAdminDialog($event)">Admin</md-button>
                     </md-menu-item>

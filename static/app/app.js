@@ -1,4 +1,4 @@
-var app = angular.module('gnstats', ['ngMaterial', 'angularFileUpload', 'ngCacheBuster']);
+var app = angular.module('gnstats', ['ngMaterial', 'ngCacheBuster']);
 
 angular.module('gnstats')
     .config(function ($mdDateLocaleProvider) {

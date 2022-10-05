@@ -122,10 +122,10 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
         }
     }
 
-    $scope.avatarUrl = function (name) {
-        var host = $rootScope.persons.find(x => x.name === name && x.id !== 'undefined');
-        if (typeof host !== "undefined" && host.avatar)
-            return "/api/users/" + host.id + "/avatar/";
+    $scope.pictureUrl = function (name) {
+        let host = $rootScope.persons.find(x => x.name === name && x.id !== 'undefined');
+        if (typeof host !== "undefined" && host.picture_url)
+            return host.picture_url;
         else
             return "";
     }

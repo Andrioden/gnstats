@@ -48,9 +48,6 @@
 #         data_string = "%s(id=%s, " % (type(obj).__name__, obj.id)
 #         # __dict__['_values'] contains all class object variables
 #         for variable_name in list(obj.__dict__["_values"].keys()):
-#             if variable_name in ["avatar"]:
-#                 continue
-#
 #             variable_value = getattr(obj, variable_name, None)
 #
 #             if variable_value is None:

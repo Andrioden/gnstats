@@ -1,6 +1,6 @@
 from typing import List
 
-from google.cloud.ndb import BlobProperty, BooleanProperty, StringProperty
+from google.cloud.ndb import BooleanProperty, StringProperty
 
 from models.db.base import DbModelBase
 
@@ -13,7 +13,6 @@ class Person(DbModelBase):
     google_picture_url = StringProperty()
     name = StringProperty(required=True, choices=person_names_allowed)
     activated = BooleanProperty(required=True, default=True)
-    avatar = BlobProperty()
     admin = BooleanProperty(default=False)
 
     @staticmethod
@@ -26,5 +25,5 @@ class Person(DbModelBase):
             "id": self.id,
             "name": self.name,
             "activated": self.activated,
-            "avatar": self.avatar is not None,
+            "picture_url": self.google_picture_url,
         }

@@ -27,9 +27,3 @@ def test_users_api_get_me_empty() -> None:
     response = client.get("/api/users/me/")
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {}
-
-
-# def test_users_api_post_me_avatar() -> None:
-#     with TestClient(app) as client_:
-#         response = client_.post("/api/users/me/avatar/", files={"file": "./test_users.py"})
-#         assert response.status_code == HTTPStatus.OK
