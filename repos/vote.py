@@ -13,7 +13,7 @@ class VoteRepo:
     @classmethod
     def get(cls, id_: int) -> Vote:
         if vote := Vote.get_by_id(id_):
-            return vote  # type: ignore
+            return vote
         else:
             raise NotFoundError(f"No {Vote.__name__} found")
 

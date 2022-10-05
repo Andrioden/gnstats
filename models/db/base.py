@@ -4,4 +4,4 @@ from google.cloud.ndb import Model
 class DbModelBase(Model):  # type: ignore[misc]
     @property
     def id(self) -> int:
-        return self.key.id()  # type: ignore[union-attr]
+        return self.key.id()

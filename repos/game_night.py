@@ -12,7 +12,7 @@ class GameNightRepo:
     def delete_by_id(cls, id_: int) -> None:
         game_night_key = Key(GameNight, id_)
         delete_multi(Vote.query(Vote.game_night == game_night_key).fetch(keys_only=True))
-        game_night_key.delete()  # type: ignore[union-attr]
+        game_night_key.delete()
 
     @classmethod
     def count_all(cls) -> int:
@@ -21,10 +21,10 @@ class GameNightRepo:
     @classmethod
     def get(cls, id_: int) -> GameNight:
         if game_night := GameNight.get_by_id(id_):
-            return game_night  # type: ignore
+            return game_night
         else:
             raise NotFoundError(f"No {GameNight.__name__} found")
 
     @classmethod
     def get_one_or_none(cls, id_: int) -> Optional[GameNight]:
-        return GameNight.get_by_id(id_)  # type: ignore
+        return GameNight.get_by_id(id_)
