@@ -6,8 +6,8 @@ from models.api.user import ClaimUserData
 from models.db.person import Person
 from models.external.google import GoogleUser
 
-from .auth import me_google_user, me_google_user_or_401
 from .decorators import ensure_db_context
+from .session import me_user, me_user_or_401
 
 router = APIRouter()
 
@@ -26,7 +26,7 @@ def get_available_names() -> List[str]:
 
 @router.get("/me/", response_model=dict)
 @ensure_db_context
-def get_me(user: Optional[GoogleUser] = Depends(me_google_user)) -> dict:
+def get_me(user: Optional[GoogleUser] = Depends(me_user)) -> dict:
     if user:
         person = Person.query(Person.google_account_id == user.sub).get()
         return {
@@ -52,7 +52,7 @@ def get_me(user: Optional[GoogleUser] = Depends(me_google_user)) -> dict:
 
 @router.post("/me/claim/")
 @ensure_db_context
-def post_me_claim(data: ClaimUserData, user: GoogleUser = Depends(me_google_user_or_401)) -> None:
+def post_me_claim(data: ClaimUserData, user: GoogleUser = Depends(me_user_or_401)) -> None:
     if data.name not in Person.api_get_available_names():
         raise Exception("Name not available")
 
