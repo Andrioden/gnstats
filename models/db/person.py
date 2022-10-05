@@ -23,7 +23,7 @@ class Person(DbModelBase):
 
     def get_data(self) -> dict:
         return {
-            "id": self.key.id(),
+            "id": self.id,
             "name": self.name,
             "activated": self.activated,
             "avatar": self.avatar is not None,

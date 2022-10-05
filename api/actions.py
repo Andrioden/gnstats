@@ -17,7 +17,7 @@
 #
 #         for gn in GameNight.query():
 #             gn._votes = []
-#             gn_votes[gn.key.id()] = gn
+#             gn_votes[gn.id] = gn
 #
 #         for vote in Vote.query(Vote.present == True):
 #             gn_id = vote.game_night.id()

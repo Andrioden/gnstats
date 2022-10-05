@@ -45,7 +45,7 @@
 #         # self.response.headers['Content-Disposition'] = "attachment; filename=siage_import_script.py"
 #
 #     def _get_data_dump_string_of_object(self, obj):
-#         data_string = "%s(id=%s, " % (type(obj).__name__, obj.key.id())
+#         data_string = "%s(id=%s, " % (type(obj).__name__, obj.id)
 #         # __dict__['_values'] contains all class object variables
 #         for variable_name in list(obj.__dict__["_values"].keys()):
 #             if variable_name in ["avatar"]:
