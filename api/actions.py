@@ -48,7 +48,7 @@
 #
 #             vote_count = len(gn._votes) * 1.0
 #             avg_vote = {
-#                 'appetizer': sum([vote.appertizer_int() for vote in gn._votes]) / vote_count,
+#                 'appetizer': sum([vote.appetizer_int() for vote in gn._votes]) / vote_count,
 #                 'main_course': sum([vote.main_course_int() for vote in gn._votes]) / vote_count,
 #                 'dessert': sum([vote.dessert_int() for vote in gn._votes]) / vote_count,
 #                 'game': sum([vote.game_int() for vote in gn._votes]) / vote_count,
@@ -62,7 +62,7 @@
 #                       'dessert': 0, 'game': 0, 'sum': 0, 'sum_weighed': 0 }
 #
 #                 behaviors[vote.voter]['count'] += 1
-#                 behaviors[vote.voter]['appetizer'] += vote.appertizer_int() -avg_vote['appetizer']
+#                 behaviors[vote.voter]['appetizer'] += vote.appetizer_int() -avg_vote['appetizer']
 #                 behaviors[vote.voter]['main_course']+=vote.main_course_int()-avg_vote['main_course']
 #                 behaviors[vote.voter]['dessert'] += vote.dessert_int() - avg_vote['dessert']
 #                 behaviors[vote.voter]['game'] += vote.game_int() - avg_vote['game']

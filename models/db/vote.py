@@ -27,28 +27,28 @@ class Vote(DbModelBase):
             "complete_vote": self.complete_vote(),
         }
 
-    def appertizer_int(self):
+    def appetizer_int(self) -> int:
         return self.appetizer if self.appetizer else 0
 
-    def main_course_int(self):
+    def main_course_int(self) -> int:
         return self.main_course if self.main_course else 0
 
-    def dessert_int(self):
+    def dessert_int(self) -> int:
         return self.dessert if self.dessert else 0
 
-    def game_int(self):
+    def game_int(self) -> int:
         return self.game if self.game else 0
 
-    def weighed_sum(self):
-        sum = 0
-        sum += self.appertizer_int() * Weight_Appetizer
-        sum += self.main_course_int() * Weight_MainCourse
-        sum += self.dessert_int() * Weight_Dessert
-        sum += self.game_int() * Weight_Game
-        return sum / (Weight_Appetizer + Weight_MainCourse + Weight_Dessert + Weight_Game)
+    def weighed_sum(self) -> float:
+        sum_ = 0.0
+        sum_ += self.appetizer_int() * Weight_Appetizer
+        sum_ += self.main_course_int() * Weight_MainCourse
+        sum_ += self.dessert_int() * Weight_Dessert
+        sum_ += self.game_int() * Weight_Game
+        return sum_ / (Weight_Appetizer + Weight_MainCourse + Weight_Dessert + Weight_Game)
 
     def nonweighed_sum(self):
-        return self.appertizer_int() + self.main_course_int() + self.dessert_int() + self.game_int()
+        return self.appetizer_int() + self.main_course_int() + self.dessert_int() + self.game_int()
 
     def complete_vote(self):
         if self.present:
