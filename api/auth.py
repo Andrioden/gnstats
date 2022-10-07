@@ -40,6 +40,6 @@ async def callback(
 
 
 @router.get("/logout/")
-async def logout(request: Request) -> RedirectResponse:
+def logout(request: Request) -> RedirectResponse:
     request.session.pop(SESSION_VAR_GOOGLE_USER, None)
     return RedirectResponse(url="/")
