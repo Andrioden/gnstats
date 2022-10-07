@@ -2,12 +2,12 @@ from google.cloud.ndb import BooleanProperty, IntegerProperty, KeyProperty, Stri
 
 from config import Weight_Appetizer, Weight_Dessert, Weight_Game, Weight_MainCourse
 from models.db.base import DbModelBase
-from models.db.person import person_names_allowed
+from models.db.user import ALLOWED_NAMES
 
 
 class Vote(DbModelBase):
     game_night = KeyProperty("GameNight", required=True)
-    voter = StringProperty(required=True, choices=person_names_allowed)
+    voter = StringProperty(required=True, choices=ALLOWED_NAMES)
     present = BooleanProperty(default=True)
     appetizer = IntegerProperty(choices=[1, 2, 3, 4, 5, 6])
     main_course = IntegerProperty(choices=[1, 2, 3, 4, 5, 6])

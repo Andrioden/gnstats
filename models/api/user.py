@@ -1,9 +1,9 @@
 from pydantic import BaseModel
 
 
-class ClaimPersonData(BaseModel):
+class ClaimUserData(BaseModel):
     name: str
 
 
-class UpdatePersonData(BaseModel):
+class UpdateUserData(BaseModel):
     activated: bool

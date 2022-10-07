@@ -13,9 +13,9 @@ from authlib.integrations.starlette_client import StarletteOAuth2App
 from fastapi import APIRouter, Depends, Request
 from starlette.responses import RedirectResponse
 
-from api.session import SESSION_VAR_GOOGLE_USER
+from api.session import SESSION_VAR_GOOGLE_ACCOUNT
 from clients.oauth import google_oauth_client
-from models.external.google import GoogleUser
+from models.external.google import GoogleAccount
 
 router = APIRouter()
 
@@ -35,11 +35,11 @@ async def callback(
     oauth_client: StarletteOAuth2App = Depends(google_oauth_client),
 ) -> RedirectResponse:
     token = await oauth_client.authorize_access_token(request)
-    request.session[SESSION_VAR_GOOGLE_USER] = GoogleUser.parse_obj(token["userinfo"]).dict()
+    request.session[SESSION_VAR_GOOGLE_ACCOUNT] = GoogleAccount.parse_obj(token["userinfo"]).dict()
     return RedirectResponse(url="/")
 
 
 @router.get("/logout/")
 def logout(request: Request) -> RedirectResponse:
-    request.session.pop(SESSION_VAR_GOOGLE_USER, None)
+    request.session.pop(SESSION_VAR_GOOGLE_ACCOUNT, None)
     return RedirectResponse(url="/")

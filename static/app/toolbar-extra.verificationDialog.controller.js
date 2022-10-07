@@ -2,13 +2,13 @@ function VerificationDialogController($rootScope, $scope, $mdDialog, $http, $win
 
     // CONSTRUCTOR
 
-    $scope.availablePersonNames;
+    $scope.availableUserNames;
 
     $scope.submitting = false;
 
     $http.get('/api/users/available-names/').
         then(function(response) {
-            $scope.availablePersonNames = response.data;
+            $scope.availableUserNames = response.data;
         }, function(response) {
             alertError(response);
         });

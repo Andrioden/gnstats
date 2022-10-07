@@ -3,18 +3,23 @@ from google.cloud.ndb import Context
 from starlette.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED
 
 from models.db.game_night import GameNight
+from models.db.user import User
 from models.db.vote import Vote
 from tests.data_service import DataService
 
 
-def test_gamenights_api_post(clean_db_context: Context, client_as_activated: TestClient) -> None:
+def test_gamenights_api_post(
+    clean_db_context: Context,
+    client_as_activated: TestClient,
+    me_created: User,
+) -> None:
     response = client_as_activated.post(
         url="/api/gamenights/",
         json={
             "host": "Stian",
             "date": "2020-01-01",
             "description": "test",
-            "votes": [{"voter": DataService.create_person("Ole").name, "present": True}],
+            "votes": [{"voter": me_created.name, "present": True}],
         },
     )
     assert response.status_code == HTTP_200_OK
@@ -22,7 +27,11 @@ def test_gamenights_api_post(clean_db_context: Context, client_as_activated: Tes
     assert data["host"] == "Stian"
 
 
-def test_gamenights_api_put(clean_db_context: Context, client_as_activated: TestClient) -> None:
+def test_gamenights_api_put(
+    clean_db_context: Context,
+    client_as_activated: TestClient,
+    me_created: User,
+) -> None:
     # Setup
     game_night = DataService.create_game_night()
     vote = DataService.create_vote(game_night=game_night, voter="André", appetizer=1)
@@ -37,7 +46,7 @@ def test_gamenights_api_put(clean_db_context: Context, client_as_activated: Test
             "votes": [
                 {
                     "id": vote.id,
-                    "voter": DataService.create_person("André").name,
+                    "voter": me_created.name,
                     "present": True,
                     "appetizer": 2,
                     "main_course": 2,

@@ -51,10 +51,10 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
             sum: "vote",
             votes: (function(){
                 var votes = [];
-                for(var i=0; i < $rootScope.persons.length; i++) {
-                    if ($rootScope.persons[i].activated) {
+                for(var i=0; i < $rootScope.users.length; i++) {
+                    if ($rootScope.users[i].activated) {
                         votes.push({
-                            voter: $rootScope.persons[i].name,
+                            voter: $rootScope.users[i].name,
                         });
                     }
                 }
@@ -123,7 +123,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
     }
 
     $scope.pictureUrl = function (name) {
-        let host = $rootScope.persons.find(x => x.name === name && x.id !== 'undefined');
+        let host = $rootScope.users.find(x => x.name === name && x.id !== 'undefined');
         if (typeof host !== "undefined" && host.picture_url)
             return host.picture_url;
         else

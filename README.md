@@ -11,7 +11,7 @@
    1. Run db admin `.\scripts\run_db_admin.ps1`
    2. [Open db admin](http://localhost:8080)
 4. Add secrets 
-   1. Copy and rename`.\scripts\secrets_example.ps1` to `secrets.ps1`
+   1. Copy and rename`.\scripts\env_secrets_example.ps1` to `env_secrets.ps1`
    2. Set values in file
 5. Run `.\scripts\run_web.ps1`
 6. (Verify) [Open page](http://localhost:8000/)
@@ -26,7 +26,6 @@
 1. As logged in admin run `[PROD_URL]/api/actions/admin/dataimportpythonscript/`
 2. Copy paste data into `api/actions_admin.py > RunImportPythonScriptHandler`
 3. As admin run `[LOCAL_URL]/api/actions/admin/runimportpythonscript/`
-4. To verify delete an existing Person entity and reverify in the menu
 
 
 ## Relevant links

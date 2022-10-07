@@ -6,7 +6,7 @@ from tests.data_service import DataService
 
 
 def test_users_api_get_many(clean_db_context: Context, client_as_anon: TestClient) -> None:
-    DataService.create_person("André")
+    DataService.create_user("André")
 
     response = client_as_anon.get("/api/users/")
     assert response.status_code == HTTP_200_OK
@@ -16,9 +16,13 @@ def test_users_api_get_many(clean_db_context: Context, client_as_anon: TestClien
 def test_users_api_get_available_names(
     clean_db_context: Context, client_as_anon: TestClient
 ) -> None:
+    DataService.create_user("Stian")
+
     response = client_as_anon.get("/api/users/available-names/")
     assert response.status_code == HTTP_200_OK
-    assert "Ole" in response.json()
+    data = response.json()
+    assert "Ole" in data
+    assert "Stian" not in data
 
 
 def test_users_api_get_me_as_anon(client_as_anon: TestClient) -> None:

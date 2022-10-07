@@ -3,14 +3,14 @@ from typing import List, Optional
 from google.cloud.ndb import DateProperty, FloatProperty, StringProperty
 
 from models.db.base import DbModelBase
-from models.db.person import person_names_allowed
+from models.db.user import ALLOWED_NAMES
 from models.db.vote import Vote
 from utils.date import date_to_epoch
 
 
 class GameNight(DbModelBase):
     date = DateProperty(required=True)
-    host = StringProperty(required=True, choices=person_names_allowed)
+    host = StringProperty(required=True, choices=ALLOWED_NAMES)
     description = StringProperty(required=True)
     sum = FloatProperty(default=0)
 

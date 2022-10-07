@@ -1,7 +1,7 @@
 # import csv
 # import json
 # from google.cloud import ndb
-# from models import GameNight, Vote, person_names_allowed
+# from models import GameNight, Vote
 # from .utils import *
 # from .decorators import *
 # from datetime import datetime, date
@@ -21,13 +21,13 @@
 #         self.response.out.write("<br/>")
 #
 #         self.response.out.write("# CLEAR DB: <br/>")
-#         self.response.out.write("ndb.delete_multi(Person.query().fetch(keys_only=True)) <br/>")
+#         self.response.out.write("ndb.delete_multi(User.query().fetch(keys_only=True)) <br/>")
 #         self.response.out.write("ndb.delete_multi(GameNight.query().fetch(keys_only=True)) <br/>")
 #         self.response.out.write("ndb.delete_multi(Vote.query().fetch(keys_only=True)) <br/>")
 #
 #         self.response.out.write("<br/>")
-#         self.response.out.write("# Persons: <br/>")
-#         for obj in Person.query().fetch():
+#         self.response.out.write("# Users: <br/>")
+#         for obj in User.query().fetch():
 #             self.response.out.write(self._get_data_dump_string_of_object(obj) + "<br><br>")
 #
 #         self.response.out.write("<br/>")

@@ -10,7 +10,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
     if ($scope.gameNight === null)
         $scope.gameNight = createNewLocalGameNightObject();
 
-    var host = $rootScope.persons.find(x => x.name === $scope.gameNight.host && x.id !== 'undefined');
+    var host = $rootScope.users.find(x => x.name === $scope.gameNight.host && x.id !== 'undefined');
     if (typeof host !== "undefined")
         $scope.hostId = host.id;
 
@@ -70,7 +70,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
     // Currently needed because gameNight.host reference is name which has special chars. Which fails when <md-option ng-value="André">.
     // So this is a workaround that used host_id
     $scope.setGameNightHostValue = function() {
-        $scope.gameNight.host = $rootScope.persons.find(x => x.id === $scope.hostId).name;
+        $scope.gameNight.host = $rootScope.users.find(x => x.id === $scope.hostId).name;
     }
 
 
@@ -82,10 +82,10 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
             sum: "vote",
             votes: (function(){
                 var votes = [];
-                for(var i=0; i < $rootScope.persons.length; i++) {
-                    if ($rootScope.persons[i].activated) {
+                for(var i=0; i < $rootScope.users.length; i++) {
+                    if ($rootScope.users[i].activated) {
                         votes.push({
-                            voter: $rootScope.persons[i].name,
+                            voter: $rootScope.users[i].name,
                             present: true
                         });
                     }

@@ -71,8 +71,8 @@
 #
 #         # Convert to array as its better for the client
 #         behaviors_arr = []
-#         for person, behavior in behaviors.items():
-#             behavior['person'] = person
+#         for user, behavior in behaviors.items():
+#             behavior['user'] = user
 #             behavior['appetizer'] = behavior['appetizer'] / behavior['count']
 #             behavior['main_course'] = behavior['main_course'] / behavior['count']
 #             behavior['dessert'] = behavior['dessert'] / behavior['count']
@@ -99,7 +99,7 @@
 #
 #         for gn in sorted(gn_votes, key=lambda gn: gn.date):
 #
-#             # Initiate data structures if they are missing for new persons and new years
+#             # Initiate data structures if they are missing for new users and new years
 #             if not gn.host in host_performances['total']:
 #                 host_performances['total'][gn.host] = { 'hosted': 0, 'best': 0,
 #                 'worst': 0, 'total_sum': 0, 'avg': None }

@@ -19,7 +19,7 @@
                         <md-button ng-click="openAdminDialog($event)">Admin</md-button>
                     </md-menu-item>
                     <md-divider></md-divider>
-                    <md-menu-item ng-show="$root.persons.length > 0">
+                    <md-menu-item ng-show="$root.users.length > 0">
                         <md-button ng-click="openStatsDialog($event)">Stats</md-button>
                     </md-menu-item>
                 </md-menu-content>
@@ -31,7 +31,7 @@
                 <md-button ng-show="user.google_email && !user.person" ng-click="openVerificationDialog($event)">(click to verify)</md-button>
             </h2>
 
-            <md-button class="md-icon-button" ng-click="openCreateNewGameNightDialog($event)" ng-show="user.person && $root.persons.length > 0">
+            <md-button class="md-icon-button" ng-click="openCreateNewGameNightDialog($event)" ng-show="user.person && $root.users.length > 0">
                 <i class="material-icons md-light">add</i>
             </md-button>
         </div>

@@ -2,53 +2,55 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Depends
 
-from models.api.user import ClaimPersonData, UpdatePersonData
-from models.db.person import Person
-from models.external.google import GoogleUser
-from repos.person import PersonRepo
+from models.api.user import ClaimUserData, UpdateUserData
+from models.db.user import User
+from models.external.google import GoogleAccount
+from repos.user import UserRepo
 from utils.db import ensure_db_context
 
-from .session import me_admin_or_401, me_user_or_401, me_user_or_none
+from .session import me_admin_or_401, me_google_acc_or_401, me_google_acc_or_none
 
 router = APIRouter()
 
 
 @router.post("/me/verify/")
 @ensure_db_context
-def post_me_verify(data: ClaimPersonData, user: GoogleUser = Depends(me_user_or_401)) -> None:
-    if data.name not in Person.api_get_available_names():
+def post_me_verify(
+    data: ClaimUserData, google_acc: GoogleAccount = Depends(me_google_acc_or_401)
+) -> None:
+    if data.name not in User.api_get_available_names():
         raise Exception("Name not available")
-    PersonRepo.create(user=user, name=data.name)
+    UserRepo.create(google_acc=google_acc, name=data.name)
 
 
 @router.put("/{id_}/", dependencies=[Depends(me_admin_or_401)])
 @ensure_db_context
-def put(id_: int, data: UpdatePersonData) -> None:
-    PersonRepo.update_activated(id_=id_, value=data.activated)
+def put(id_: int, data: UpdateUserData) -> None:
+    UserRepo.update_activated(id_=id_, value=data.activated)
 
 
 @router.get("/", response_model=List[dict])
 @ensure_db_context
 def get_many() -> List[dict]:
-    return [person.get_data() for person in PersonRepo.get_all()]
+    return [user.get_data() for user in UserRepo.get_all()]
 
 
 @router.get("/available-names/", response_model=List[str])
 @ensure_db_context
 def get_available_names() -> List[str]:
-    return Person.api_get_available_names()
+    return User.api_get_available_names()
 
 
 @router.get("/me/", response_model=dict)
 @ensure_db_context
-def get_me(user: Optional[GoogleUser] = Depends(me_user_or_none)) -> dict:
-    if user:
-        person = PersonRepo.get_one_or_none_by_google_id(user.sub)
+def get_me(google_acc: Optional[GoogleAccount] = Depends(me_google_acc_or_none)) -> dict:
+    if google_acc:
+        user = UserRepo.get_one_or_none_by_google_id(google_acc.sub)
         return {
-            "google_email": user.email,
-            "name": person.name if person else None,
-            "person": True if person else False,
-            "admin": person.admin if person else False,
+            "google_email": google_acc.email,
+            "name": user.name if user else None,
+            "person": True if user else False,  # TODO FIX
+            "admin": user.admin if user else False,
         }
     else:
         return {}

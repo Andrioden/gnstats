@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class GoogleUser(BaseModel):
+class GoogleAccount(BaseModel):
     sub: str  # id
     email: str
     email_verified: bool

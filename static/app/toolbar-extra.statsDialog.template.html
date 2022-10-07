@@ -35,7 +35,7 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="behavior in stats.behaviors | orderBy:statsBehaviorOrderByField:statsBehaviorReverseSort">
-                            <td>{{ behavior.person }}</td>
+                            <td>{{ behavior.user }}</td>
                             <td class="right">{{ behavior.count }}</td>
                             <td class="right">{{ behavior.appetizer.toFixed(2) }}</td>
                             <td class="right">{{ behavior.main_course.toFixed(2) }}</td>
@@ -54,14 +54,14 @@
                     <thead>
                         <tr>
                             <th>Year</th>
-                            <th ng-repeat="person in $root.persons">{{ person.name }}</th>
+                            <th ng-repeat="user in $root.users">{{ user.name }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="(category, performances) in stats.host_performances">
                             <td>{{ category }}</td>
-                            <td ng-repeat="person in $root.persons" ng-style="backgroundStyle(performances[person.name])">
-                                <span ng-show="performances[person.name]">{{ performances[person.name].best }}, {{ performances[person.name].worst }}, {{ performances[person.name].hosted }}</span>
+                            <td ng-repeat="user in $root.users" ng-style="backgroundStyle(performances[user.name])">
+                                <span ng-show="performances[user.name]">{{ performances[user.name].best }}, {{ performances[user.name].worst }}, {{ performances[user.name].hosted }}</span>
                             </td>
                         </tr>
                     </tbody>
@@ -73,14 +73,14 @@
                     <thead>
                         <tr>
                             <th>Year</th>
-                            <th ng-repeat="person in $root.persons">{{ person.name }}</th>
+                            <th ng-repeat="user in $root.users">{{ user.name }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="(category, performances) in stats.host_performances">
                             <td>{{ category }}</td>
-                            <td ng-repeat="person in $root.persons" class="right">
-                                <span ng-show="performances[person.name]">{{ performances[person.name].avg.toFixed(2) }}</span>
+                            <td ng-repeat="user in $root.users" class="right">
+                                <span ng-show="performances[user.name]">{{ performances[user.name].avg.toFixed(2) }}</span>
                             </td>
                         </tr>
                     </tbody>

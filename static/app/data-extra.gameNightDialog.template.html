@@ -17,7 +17,7 @@
                     <label>Host</label>
                     <md-select ng-model="hostId" ng-change="setGameNightHostValue()" required>
                         <md-option><em>None</em></md-option>
-                        <md-option ng-repeat="person in $root.persons | filter:{ activated: true }" ng-value="person.id">{{person.name}}</md-option>
+                        <md-option ng-repeat="user in $root.users | filter:{ activated: true }" ng-value="user.id">{{user.name}}</md-option>
                     </md-select>
                 </md-input-container>
 
@@ -66,7 +66,7 @@
                 </div>
 
                 <div ng-show="!$root.user.person">
-                    <i>Login with a person user to vote.</i>
+                    <i>Login with an activated user to vote.</i>
                 </div>
 
             </div>

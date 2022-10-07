@@ -7,7 +7,7 @@ from api.session import me_activated_or_401, me_admin_or_401, me_or_none
 from models.api.game_night import GameNightCreate, GameNightUpdate
 from models.api.vote import VoteCreate, VoteUpdate
 from models.db.game_night import GameNight
-from models.db.person import Person
+from models.db.user import User
 from models.db.vote import Vote
 from repos.game_night import GameNightRepo
 from repos.vote import VoteRepo
@@ -18,13 +18,13 @@ router = APIRouter()
 
 @router.post("/", response_model=dict)
 @ensure_db_context
-def post(create: GameNightCreate, me: Person = Depends(me_activated_or_401)) -> dict:
+def post(create: GameNightCreate, me: User = Depends(me_activated_or_401)) -> dict:
     return _create_or_update(me, create).get_data(me_name=me.name)
 
 
 @router.put("/{id_}/", response_model=dict)
 @ensure_db_context
-def put(id_: int, update: GameNightUpdate, me: Person = Depends(me_activated_or_401)) -> dict:
+def put(id_: int, update: GameNightUpdate, me: User = Depends(me_activated_or_401)) -> dict:
     return _create_or_update(me, update, id_).get_data(me_name=me.name)
 
 
@@ -35,7 +35,7 @@ def delete(id_: int) -> None:
 
 @router.get("/", response_model=List[dict])
 @ensure_db_context
-def get_many(limit: Optional[int] = None, me: Person = Depends(me_or_none)) -> List[dict]:
+def get_many(limit: Optional[int] = None, me: User = Depends(me_or_none)) -> List[dict]:
     if limit is None:
         game_nights = [gn for gn in GameNight.query()]
         all_votes = [vote for vote in Vote.query()]
@@ -51,15 +51,15 @@ def get_many(limit: Optional[int] = None, me: Person = Depends(me_or_none)) -> L
 
 @router.get("/{id_}/", response_model=dict)
 @ensure_db_context
-def get_one(id_: int, me: Person = Depends(me_or_none)) -> dict:
+def get_one(id_: int, me: User = Depends(me_or_none)) -> dict:
     if game_night := GameNightRepo.get_one_or_none(id_):
-        return game_night.get_data(me_name=me.name)
+        return game_night.get_data(me_name=me.name if me else None)
     else:
         raise HTTPException(HTTP_404_NOT_FOUND)
 
 
 def _create_or_update(
-    me: Person,
+    me: User,
     input_: Union[GameNightCreate, GameNightUpdate],
     id_: Optional[int] = None,
 ) -> GameNight:
@@ -80,10 +80,8 @@ def _create_or_update(
     # Create/Update Votes
     if not game_night.completely_voted():
         for vote_input in input_.votes:
-            if not Person.query(
-                Person.name == vote_input.voter, Person.activated == True  # noqa
-            ).get():
-                raise HTTPException(HTTP_400_BAD_REQUEST, "Deactivated person")
+            if not User.query(User.name == vote_input.voter, User.activated == True).get():  # noqa
+                raise HTTPException(HTTP_400_BAD_REQUEST, "Deactivated user")
             if vote_input.voter == input_.host:
                 continue
 

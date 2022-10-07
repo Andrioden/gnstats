@@ -3,8 +3,8 @@ app.controller('ToolbarController', function($rootScope, $scope, $http, $window,
 
     // *************** PUBLIC VARIABLES ***************
 
-    $rootScope.loadingPersons = false;
-    $rootScope.persons = [];
+    $rootScope.loadingUsers = false;
+    $rootScope.users = [];
     $rootScope.user = {
         google_email: "",
         person: false
@@ -20,13 +20,13 @@ app.controller('ToolbarController', function($rootScope, $scope, $http, $window,
             alertError(response);
         });
 
-    $rootScope.loadingPersons = true;
+    $rootScope.loadingUsers = true;
     $http.get('/api/users/').
         then(function(response) {
-            $rootScope.persons = response.data;
-            $rootScope.loadingPersons = false;
+            $rootScope.users = response.data;
+            $rootScope.loadingUsers = false;
         }, function (response) {
-            $rootScope.loadingPersons = false;
+            $rootScope.loadingUsers = false;
             alertError(response);
         });
 
