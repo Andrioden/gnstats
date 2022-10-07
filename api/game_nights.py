@@ -1,6 +1,7 @@
 from typing import List, Optional, Union
 
 from fastapi import APIRouter, Depends, HTTPException
+from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
 from api.session import me_activated_or_401, me_admin_or_401, me_or_none
 from api.utils import ensure_db_context
@@ -54,7 +55,7 @@ def get_one(id_: int, me: Person = Depends(me_or_none)) -> dict:
     if game_night := GameNightRepo.get_one_or_none(id_):
         return game_night.get_data(me_name=me.name)
     else:
-        raise HTTPException(status_code=404)
+        raise HTTPException(HTTP_404_NOT_FOUND)
 
 
 def _create_or_update(
@@ -82,7 +83,7 @@ def _create_or_update(
             if not Person.query(
                 Person.name == vote_input.voter, Person.activated == True  # noqa
             ).get():
-                raise HTTPException(status_code=400, detail="Deactivated person")
+                raise HTTPException(HTTP_400_BAD_REQUEST, "Deactivated person")
             if vote_input.voter == input_.host:
                 continue
 

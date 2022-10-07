@@ -3,6 +3,7 @@ from typing import Optional
 from fastapi import Depends, HTTPException
 from starlette import status
 from starlette.requests import Request
+from starlette.status import HTTP_401_UNAUTHORIZED
 
 from api.utils import ensure_db_context
 from models.db.person import Person
@@ -23,10 +24,7 @@ def me_user_or_401(request: Request) -> GoogleUser:
     if user := me_user_or_none(request):
         return user
     else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not logged into a google account",
-        )
+        raise HTTPException(HTTP_401_UNAUTHORIZED, "Not logged into a google account")
 
 
 @ensure_db_context
@@ -42,21 +40,18 @@ def me_or_401(user: GoogleUser = Depends(me_user_or_401)) -> Person:
     if person := PersonRepo.get_one_or_none_by_google_id(user.sub):
         return person
     else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not logged into a person",
-        )
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Not logged into a person")
 
 
 def me_activated_or_401(person: Person = Depends(me_or_401)) -> Person:
     if person.activated:
         return person
     else:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not activated")
+        raise HTTPException(HTTP_401_UNAUTHORIZED, "Not activated")
 
 
 def me_admin_or_401(person: Person = Depends(me_or_401)) -> Person:
     if person.admin:
         return person
     else:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not admin")
+        raise HTTPException(HTTP_401_UNAUTHORIZED, "Not admin")
