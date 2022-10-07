@@ -13,7 +13,7 @@
 4. Add secrets 
    1. Copy and rename`.\scripts\secrets_example.ps1` to `secrets.ps1`
    2. Set values in file
-5. Run `.\scripts\run_dev.ps1`
+5. Run `.\scripts\run_web.ps1`
 6. (Verify) [Open page](http://localhost:8000/)
 7. (Verify) [Open api](http://localhost:8000/docs)
 8. (Verify) Run tests `pytest .`
