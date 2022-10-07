@@ -6,11 +6,11 @@ from api.app import app
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-@app.get("/")
+@app.get("/", include_in_schema=False)
 def index() -> FileResponse:
-    return FileResponse("index.html")
+    return FileResponse("static/index.html")
 
 
-@app.get("/favicon.ico")
+@app.get("/favicon.ico", include_in_schema=False)
 def favicon() -> FileResponse:
-    return FileResponse("favicon.ico")
+    return FileResponse("static/favicon.ico")

@@ -3,4 +3,4 @@ $env:DATASTORE_EMULATOR_HOST='localhost:8001'
 
 ./scripts/secrets.ps1
 
-uvicorn main:app --reload
+uvicorn main_dev:app --reload

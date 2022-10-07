@@ -1,0 +1,24 @@
+# Project files
+scripts
+.flake8
+pyproject.toml
+README.md
+pre-commit.sh
+
+# Caches
+__pycache__/
+.mypy_cache
+.pytest_cache
+.idea/
+.dmypy.json
+
+# GiHub
+gha-creds-*
+.github
+
+#  Div
+Pipfile
+Pipfile.lock
+.gcloudignore
+.git
+.gitignore
