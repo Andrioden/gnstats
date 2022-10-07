@@ -7,8 +7,8 @@ from models.db.person import Person
 from models.external.google import GoogleUser
 from repos.person import PersonRepo
 
-from .decorators import ensure_db_context
-from .session import me_admin_or_401, me_user, me_user_or_401
+from .session import me_admin_or_401, me_user_or_401, me_user_or_none
+from .utils import ensure_db_context
 
 router = APIRouter()
 
@@ -41,7 +41,7 @@ def get_available_names() -> List[str]:
 
 @router.get("/me/", response_model=dict)
 @ensure_db_context
-def get_me(user: Optional[GoogleUser] = Depends(me_user)) -> dict:
+def get_me(user: Optional[GoogleUser] = Depends(me_user_or_none)) -> dict:
     if user:
         person = PersonRepo.get_one_or_none_by_google_id(user.sub)
         return {

@@ -2,9 +2,8 @@ from typing import List, Optional, Union
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from api.decorators import ensure_db_context
-from api.session import me_activated_or_401, me_admin_or_401
-from api.utils import current_user_person_name
+from api.session import me_activated_or_401, me_admin_or_401, me_or_none
+from api.utils import ensure_db_context
 from models.api.game_night import GameNightCreate, GameNightUpdate
 from models.api.vote import VoteCreate, VoteUpdate
 from models.db.game_night import GameNight
@@ -16,16 +15,16 @@ from repos.vote import VoteRepo
 router = APIRouter()
 
 
-@router.post("/", dependencies=[Depends(me_activated_or_401)], response_model=dict)
+@router.post("/", response_model=dict)
 @ensure_db_context
-def post(create: GameNightCreate) -> dict:
-    return _create_or_update(create).get_data(current_user_person_name())
+def post(create: GameNightCreate, me: Person = Depends(me_activated_or_401)) -> dict:
+    return _create_or_update(me, create).get_data(me_name=me.name)
 
 
-@router.put("/{id_}/", dependencies=[Depends(me_activated_or_401)], response_model=dict)
+@router.put("/{id_}/", response_model=dict)
 @ensure_db_context
-def put(id_: int, update: GameNightUpdate) -> dict:
-    return _create_or_update(update, id_).get_data(current_user_person_name())
+def put(id_: int, update: GameNightUpdate, me: Person = Depends(me_activated_or_401)) -> dict:
+    return _create_or_update(me, update, id_).get_data(me_name=me.name)
 
 
 @router.delete("/{id_}/", dependencies=[Depends(me_admin_or_401)])
@@ -35,30 +34,31 @@ def delete(id_: int) -> None:
 
 @router.get("/", response_model=List[dict])
 @ensure_db_context
-def get_many(limit: Optional[int] = None) -> List[dict]:
+def get_many(limit: Optional[int] = None, me: Person = Depends(me_or_none)) -> List[dict]:
     if limit is None:
-        gamenights = [gn for gn in GameNight.query()]
+        game_nights = [gn for gn in GameNight.query()]
         all_votes = [vote for vote in Vote.query()]
     else:
-        gamenights = [gn for gn in GameNight.query().order(-GameNight.date).fetch(int(limit))]
-        gamenight_keys = [gn.key for gn in gamenights]
-        if gamenight_keys:
-            all_votes = [vote for vote in Vote.query(Vote.game_night.IN(gamenight_keys))]
+        game_nights = [gn for gn in GameNight.query().order(-GameNight.date).fetch(int(limit))]
+        game_night_keys = [gn.key for gn in game_nights]
+        if game_night_keys:
+            all_votes = [vote for vote in Vote.query(Vote.game_night.IN(game_night_keys))]
         else:
             all_votes = []
-    return [gn.get_data(current_user_person_name(), all_votes) for gn in gamenights]
+    return [gn.get_data(me_name=me, votes=all_votes) for gn in game_nights]
 
 
 @router.get("/{id_}/", response_model=dict)
 @ensure_db_context
-def get_one(id_: int) -> dict:
+def get_one(id_: int, me: Person = Depends(me_or_none)) -> dict:
     if game_night := GameNightRepo.get_one_or_none(id_):
-        return game_night.get_data(current_user_person_name())
+        return game_night.get_data(me_name=me.name)
     else:
         raise HTTPException(status_code=404)
 
 
 def _create_or_update(
+    me: Person,
     input_: Union[GameNightCreate, GameNightUpdate],
     id_: Optional[int] = None,
 ) -> GameNight:
@@ -95,7 +95,7 @@ def _create_or_update(
             else:
                 raise Exception(f"Unknown type '{type(vote_input)}'")
 
-            if vote_input.voter == current_user_person_name():  # Only allow vote for self
+            if vote_input.voter == me.name:  # Only allow vote for self
                 vote.present = vote_input.present
                 vote.appetizer = vote_input.appetizer
                 vote.main_course = vote_input.main_course

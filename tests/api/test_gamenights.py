@@ -40,6 +40,9 @@ def test_gamenights_api_put(clean_db_context: Context, client_as_activated: Test
                     "voter": DataService.create_person("André").name,
                     "present": True,
                     "appetizer": 2,
+                    "main_course": 2,
+                    "dessert": 2,
+                    "game": 2,
                 }
             ],
         },

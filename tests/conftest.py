@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 from google.cloud.ndb import Client, Context
 
 from api.app import app
-from api.session import me_person_or_401
+from api.session import me_or_401
 from tests.data_service import DataService
 from tests.helpers import clean_db
 
@@ -30,20 +30,20 @@ def client_as_anon() -> Iterator[TestClient]:
 
 @pytest.fixture(scope="function")
 def client_as_deactivated() -> Iterator[TestClient]:
-    app.dependency_overrides[me_person_or_401] = DataService.build_deactivated_person
+    app.dependency_overrides[me_or_401] = DataService.build_deactivated_person
     yield TestClient(app)
     app.dependency_overrides = {}
 
 
 @pytest.fixture(scope="function")
 def client_as_activated() -> Iterator[TestClient]:
-    app.dependency_overrides[me_person_or_401] = DataService.build_activated_person
+    app.dependency_overrides[me_or_401] = DataService.build_activated_person
     yield TestClient(app)
     app.dependency_overrides = {}
 
 
 @pytest.fixture(scope="function")
 def client_as_admin() -> Iterator[TestClient]:
-    app.dependency_overrides[me_person_or_401] = DataService.build_admin_person
+    app.dependency_overrides[me_or_401] = DataService.build_admin_person
     yield TestClient(app)
     app.dependency_overrides = {}

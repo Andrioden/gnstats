@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from models.db.game_night import GameNight
@@ -48,7 +49,7 @@ class DataService:
 
     @classmethod
     def create_game_night(cls) -> GameNight:
-        game_night = GameNight(host="Stian", description="test")
+        game_night = GameNight(date=datetime.now().date(), host="Stian", description="test")
         game_night.put()
         return game_night
 

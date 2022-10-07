@@ -9,12 +9,12 @@ from utils.date import date_to_epoch
 
 
 class GameNight(DbModelBase):
-    date = DateProperty()
+    date = DateProperty(required=True)
     host = StringProperty(required=True, choices=person_names_allowed)
     description = StringProperty(required=True)
     sum = FloatProperty(default=0)
 
-    def get_data(self, query_person_name: str, votes: Optional[List[Vote]] = None) -> dict:
+    def get_data(self, me_name: str, votes: Optional[List[Vote]] = None) -> dict:
         if votes is None:
             votes = [vote for vote in Vote.query(Vote.game_night == self.key)]
         else:
@@ -28,14 +28,10 @@ class GameNight(DbModelBase):
             "description": self.description,
             "sum": self.sum if completely_voted else 0,
             "votes": [
-                vote.get_data()
-                for vote in votes
-                if (vote.voter == query_person_name or completely_voted)
+                vote.get_data() for vote in votes if (vote.voter == me_name or completely_voted)
             ],
             "not_voted": [vote.voter for vote in votes if not vote.complete_vote()],
-            "own_vote": next(
-                (vote.get_data() for vote in votes if vote.voter == query_person_name), None
-            ),
+            "own_vote": next((vote.get_data() for vote in votes if vote.voter == me_name), None),
             "completely_voted": completely_voted,
         }
 
