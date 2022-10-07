@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 fastapi = "*"
 uvicorn = {extras = ["standard"], version = "*"}
+gunicorn = "*"
 google-cloud-ndb = "*"
 pydantic = "*"
 python-multipart = "*"
