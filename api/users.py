@@ -6,9 +6,9 @@ from models.api.user import ClaimPersonData, UpdatePersonData
 from models.db.person import Person
 from models.external.google import GoogleUser
 from repos.person import PersonRepo
+from utils.db import ensure_db_context
 
 from .session import me_admin_or_401, me_user_or_401, me_user_or_none
-from .utils import ensure_db_context
 
 router = APIRouter()
 

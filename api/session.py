@@ -5,10 +5,10 @@ from starlette import status
 from starlette.requests import Request
 from starlette.status import HTTP_401_UNAUTHORIZED
 
-from api.utils import ensure_db_context
 from models.db.person import Person
 from models.external.google import GoogleUser
 from repos.person import PersonRepo
+from utils.db import ensure_db_context
 
 SESSION_VAR_GOOGLE_USER = "GN_GOOGLE_USER"
 

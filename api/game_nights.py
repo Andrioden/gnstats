@@ -4,7 +4,6 @@ from fastapi import APIRouter, Depends, HTTPException
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
 from api.session import me_activated_or_401, me_admin_or_401, me_or_none
-from api.utils import ensure_db_context
 from models.api.game_night import GameNightCreate, GameNightUpdate
 from models.api.vote import VoteCreate, VoteUpdate
 from models.db.game_night import GameNight
@@ -12,6 +11,7 @@ from models.db.person import Person
 from models.db.vote import Vote
 from repos.game_night import GameNightRepo
 from repos.vote import VoteRepo
+from utils.db import ensure_db_context
 
 router = APIRouter()
 
