@@ -34,16 +34,6 @@ def delete(id_: int) -> None:
     GameNightRepo.delete_by_id(id_)
 
 
-@router.post("/actions/recalculate-sum/", dependencies=[Depends(me_admin_or_401)])
-@ensure_db_context
-def post_recalculate_sums() -> None:
-    for game_night in GameNightRepo.get_all():
-        new_sum = _calculate_sum(game_night)
-        if game_night.sum != new_sum:
-            game_night.sum = new_sum
-            game_night.put()
-
-
 @router.get("/", response_model=List[dict])
 @ensure_db_context
 def get_many(limit: Optional[int] = None, me: User = Depends(me_or_none)) -> List[dict]:
@@ -67,6 +57,16 @@ def get_one(id_: int, me: User = Depends(me_or_none)) -> dict:
         return game_night.get_data(me_name=me.name if me else None)
     else:
         raise HTTPException(HTTP_404_NOT_FOUND)
+
+
+@router.post("/actions/recalculate-sum/", dependencies=[Depends(me_admin_or_401)])
+@ensure_db_context
+def post_recalculate_sums() -> None:
+    for game_night in GameNightRepo.get_all():
+        new_sum = _calculate_sum(game_night)
+        if game_night.sum != new_sum:
+            game_night.sum = new_sum
+            game_night.put()
 
 
 def _create_or_update(
