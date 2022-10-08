@@ -33,8 +33,8 @@ def test_game_nights_api_put(
     client_as_activated: TestClient,
     me_created: User,
 ) -> None:
-    # Setup a not completed game night vote
-    game_night = DataService.create_game_night()
+    # A not completed game night vote
+    game_night = DataService.create_game_night(sum_=None)
     vote = DataService.create_vote(game_night=game_night, voter=me_created.name, appetizer=None)
 
     # Test
@@ -61,6 +61,8 @@ def test_game_nights_api_put(
     data = response.json()
     assert data["votes"][0]["voter"] == me_created.name
     assert data["votes"][0]["appetizer"] == 2
+
+    assert GameNightRepo.get(game_night.id).sum is not None
 
 
 def test_game_nights_api_delete_as_admin(
