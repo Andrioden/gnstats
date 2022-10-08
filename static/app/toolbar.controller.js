@@ -7,7 +7,7 @@ app.controller('ToolbarController', function($rootScope, $scope, $http, $window,
     $rootScope.users = [];
     $rootScope.user = {
         google_email: "",
-        person: false
+        registered: false
     };
 
 

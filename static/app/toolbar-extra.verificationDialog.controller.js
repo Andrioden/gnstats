@@ -25,7 +25,7 @@ function VerificationDialogController($rootScope, $scope, $mdDialog, $http, $win
         $http.post('/api/users/me/verify/', {name: $rootScope.user.name}, {}).
             then(function(response) {
                 $scope.submitting = false;
-                $rootScope.user.person = true;
+                $rootScope.user.registered = true;
                 $mdDialog.cancel();
                 $window.location.reload();
             }, function(response) {

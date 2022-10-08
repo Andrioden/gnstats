@@ -12,7 +12,7 @@
                         <md-button ng-href="/api/auth/login/" ng-hide="user.google_email">Login</md-button>
                         <md-button ng-href="/api/auth/logout/" ng-show="user.google_email">Logout</md-button>
                     </md-menu-item>
-                    <md-menu-item ng-show="!user.person && user.google_email">
+                    <md-menu-item ng-show="!user.registered && user.google_email">
                         <md-button ng-click="openVerificationDialog($event)">Verify</md-button>
                     </md-menu-item>
                     <md-menu-item ng-show="user.admin">
@@ -28,10 +28,10 @@
             <h2 flex md-truncate>
                 <span ng-hide="user.name">{{user.google_email}}</span>
                 <span ng-show="user.name">{{user.name}}</span>
-                <md-button ng-show="user.google_email && !user.person" ng-click="openVerificationDialog($event)">(click to verify)</md-button>
+                <md-button ng-show="user.google_email && !user.registered" ng-click="openVerificationDialog($event)">(click to verify)</md-button>
             </h2>
 
-            <md-button class="md-icon-button" ng-click="openCreateNewGameNightDialog($event)" ng-show="user.person && $root.users.length > 0">
+            <md-button class="md-icon-button" ng-click="openCreateNewGameNightDialog($event)" ng-show="user.registered && $root.users.length > 0">
                 <i class="material-icons md-light">add</i>
             </md-button>
         </div>

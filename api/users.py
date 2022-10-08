@@ -48,8 +48,8 @@ def get_me(google_acc: Optional[GoogleAccount] = Depends(me_google_acc_or_none))
         user = UserRepo.get_one_or_none_by_google_id(google_acc.sub)
         return {
             "google_email": google_acc.email,
+            "registered": True if user else False,
             "name": user.name if user else None,
-            "person": True if user else False,  # TODO FIX
             "admin": user.admin if user else False,
         }
     else:
