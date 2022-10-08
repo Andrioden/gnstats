@@ -1,4 +1,4 @@
-var app = angular.module('gnstats', ['ngMaterial', 'ngCacheBuster']);
+let app = angular.module('gnstats', ['ngMaterial', 'ngCacheBuster']);
 
 angular.module('gnstats')
     .config(function ($mdDateLocaleProvider) {
@@ -6,7 +6,7 @@ angular.module('gnstats')
             return moment(date).format('DD/MM/YYYY');
         };
         $mdDateLocaleProvider.parseDate = function (dateString) {
-            var m = moment(dateString, 'DD/MM/YYYY', true);
+            let m = moment(dateString, 'DD/MM/YYYY', true);
             return m.isValid() ? m.toDate() : new Date(NaN);
         };
     })

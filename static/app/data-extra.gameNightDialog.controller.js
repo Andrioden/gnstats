@@ -10,7 +10,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
     if ($scope.gameNight === null)
         $scope.gameNight = createNewLocalGameNightObject();
 
-    var host = $rootScope.users.find(x => x.name === $scope.gameNight.host && x.id !== 'undefined');
+    let host = $rootScope.users.find(x => x.name === $scope.gameNight.host && x.id !== 'undefined');
     if (typeof host !== "undefined")
         $scope.hostId = host.id;
 
@@ -58,7 +58,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
         if (confirm("Do you want to delete: " + $scope.gameNight.description)) {
             $http.delete('/api/gamenights/' + $scope.gameNight.id + "/").
                 // Success
-                then(function (response) {
+                then(function () {
                     $mdDialog.hide({ deleted: $scope.gameNight.id });
                 // Error
                 }, function(response) {
@@ -81,8 +81,8 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
             date: new Date(),
             sum: "vote",
             votes: (function(){
-                var votes = [];
-                for(var i=0; i < $rootScope.users.length; i++) {
+                let votes = [];
+                for(let i=0; i < $rootScope.users.length; i++) {
                     if ($rootScope.users[i].activated) {
                         votes.push({
                             voter: $rootScope.users[i].name,

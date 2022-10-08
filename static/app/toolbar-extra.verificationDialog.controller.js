@@ -1,9 +1,7 @@
 function VerificationDialogController($rootScope, $scope, $mdDialog, $http, $window) {
 
     // CONSTRUCTOR
-
-    $scope.availableUserNames;
-
+    $scope.availableUserNames = undefined;
     $scope.submitting = false;
 
     $http.get('/api/users/available-names/').
@@ -23,7 +21,7 @@ function VerificationDialogController($rootScope, $scope, $mdDialog, $http, $win
         $scope.submitting = true;
 
         $http.post('/api/users/me/verify/', {name: $rootScope.user.name}, {}).
-            then(function(response) {
+            then(function() {
                 $scope.submitting = false;
                 $rootScope.user.registered = true;
                 $mdDialog.cancel();
