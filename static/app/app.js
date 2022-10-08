@@ -15,12 +15,5 @@ angular.module('gnstats')
     });
 
 function alertError(response) {
-    if (response.error_message)
-        alert(response.error_message);
-    else if (response.data) {
-        if (response.data.error_message)
-            alert(response.data.error_message);
-        else
-            alert(response.data);
-    }
+    alert(`${response.status}: ${response.data.detail}`);
 }
