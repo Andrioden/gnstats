@@ -20,3 +20,6 @@ class User(DbModelBase):
             "activated": self.activated,
             "picture_url": self.google_picture_url,
         }
+
+    def __repr__(self) -> str:
+        return self.name

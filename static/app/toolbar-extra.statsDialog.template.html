@@ -47,26 +47,6 @@
                     </tbody>
                 </table>
 
-                <h2>Hosting Performance - Rounds</h2>
-                <p>Format is [best in round], [worst in round], [times hosted].</p>
-
-                <table class="zui-table">
-                    <thead>
-                        <tr>
-                            <th>Year</th>
-                            <th ng-repeat="user in $root.users">{{ user.name }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="(category, performances) in stats.host_performances">
-                            <td>{{ category }}</td>
-                            <td ng-repeat="user in $root.users" ng-style="backgroundStyle(performances[user.name])">
-                                <span ng-show="performances[user.name]">{{ performances[user.name].best }}, {{ performances[user.name].worst }}, {{ performances[user.name].hosted }}</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
                 <h2>Hosting Performance - Average</h2>
 
                 <table class="zui-table">
@@ -80,7 +60,7 @@
                         <tr ng-repeat="(category, performances) in stats.host_performances">
                             <td>{{ category }}</td>
                             <td ng-repeat="user in $root.users" class="right">
-                                <span ng-show="performances[user.name]">{{ performances[user.name].avg.toFixed(2) }}</span>
+                                <span ng-show="performances[user.name]"><small>({{ performances[user.name].hosted }})</small> {{ performances[user.name].avg.toFixed(2) }}</span>
                             </td>
                         </tr>
                     </tbody>

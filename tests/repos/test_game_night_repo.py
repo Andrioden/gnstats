@@ -36,6 +36,14 @@ def test_game_night_repo_count_all(clean_db_context: Context) -> None:
     assert GameNightRepo.count_all() == 1
 
 
+def test_game_night_repo_get_all_with_sum(clean_db_context: Context) -> None:
+    assert len(GameNightRepo.get_all_with_sum()) == 0
+    DataService.create_game_night(sum_=None)
+    assert len(GameNightRepo.get_all_with_sum()) == 0
+    DataService.create_game_night(sum_=1)
+    assert len(GameNightRepo.get_all_with_sum()) == 1
+
+
 def test_game_night_repo_get(clean_db_context: Context) -> None:
     game_night = DataService.create_game_night()
 

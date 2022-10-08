@@ -32,9 +32,9 @@ def test_gamenights_api_put(
     client_as_activated: TestClient,
     me_created: User,
 ) -> None:
-    # Setup
+    # Setup a not completed game night vote
     game_night = DataService.create_game_night()
-    vote = DataService.create_vote(game_night=game_night, voter="André", appetizer=1)
+    vote = DataService.create_vote(game_night=game_night, voter=me_created.name, appetizer=None)
 
     # Test
     response = client_as_activated.put(
@@ -58,7 +58,7 @@ def test_gamenights_api_put(
     )
     assert response.status_code == HTTP_200_OK
     data = response.json()
-    assert data["votes"][0]["voter"] == "André"
+    assert data["votes"][0]["voter"] == me_created.name
     assert data["votes"][0]["appetizer"] == 2
 
 

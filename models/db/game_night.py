@@ -12,7 +12,7 @@ class GameNight(DbModelBase):
     date = DateProperty(required=True)
     host = StringProperty(required=True, choices=ALLOWED_NAMES)
     description = StringProperty(required=True)
-    sum = FloatProperty(default=0)
+    sum = FloatProperty(default=None)
 
     def get_data(self, me_name: str, votes: Optional[List[Vote]] = None) -> dict:
         if votes is None:

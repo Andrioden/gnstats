@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from google.cloud.ndb import Key, delete_multi
 
@@ -17,6 +17,10 @@ class GameNightRepo:
     @classmethod
     def count_all(cls) -> int:
         return GameNight.query().count()
+
+    @classmethod
+    def get_all_with_sum(cls) -> List[GameNight]:
+        return GameNight.query(GameNight.sum != None).fetch()  # noqa: E711
 
     @classmethod
     def get(cls, id_: int) -> GameNight:

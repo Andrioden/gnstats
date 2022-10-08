@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import Optional
 
+from google.cloud.ndb import Key
+
 from models.db.game_night import GameNight
 from models.db.user import User
 from models.db.vote import Vote
@@ -48,10 +50,43 @@ class DataService:
         return user
 
     @classmethod
-    def create_game_night(cls) -> GameNight:
-        game_night = GameNight(date=datetime.now().date(), host="Stian", description="test")
+    def build_game_night(
+        cls, id_: Optional[int] = None, host: str = "Stian", sum_: Optional[int] = None
+    ) -> GameNight:
+        return GameNight(
+            key=Key(GameNight, id_) if id_ else None,
+            date=datetime.now().date(),
+            host=host,
+            description="test",
+            sum=sum_,
+        )
+
+    @classmethod
+    def create_game_night(cls, sum_: Optional[int] = None) -> GameNight:
+        game_night = cls.build_game_night(sum_=sum_)
         game_night.put()
         return game_night
+
+    @classmethod
+    def build_vote(
+        cls,
+        game_night: GameNight,
+        voter: str = "André",
+        present: bool = True,
+        appetizer: Optional[int] = 1,
+        main_course: Optional[int] = 1,
+        dessert: Optional[int] = 1,
+        game: Optional[int] = 1,
+    ) -> Vote:
+        return Vote(
+            game_night=game_night.key,
+            voter=DataService.create_user(voter).name,
+            present=present,
+            appetizer=appetizer,
+            main_course=main_course,
+            dessert=dessert,
+            game=game,
+        )
 
     @classmethod
     def create_vote(
@@ -61,9 +96,9 @@ class DataService:
         present: bool = True,
         appetizer: Optional[int] = None,
     ) -> Vote:
-        vote = Vote(
-            game_night=game_night.key if game_night else cls.create_game_night().key,
-            voter=DataService.create_user(voter).name,
+        vote = cls.build_vote(
+            game_night=game_night if game_night else cls.create_game_night(),
+            voter=voter,
             present=present,
             appetizer=appetizer,
         )

@@ -21,6 +21,14 @@ def test_vote_repo_get(clean_db_context: Context) -> None:
         VoteRepo.get(-1)
 
 
+def test_vote_repo_get_all_present(clean_db_context: Context) -> None:
+    assert len(VoteRepo.get_all_present()) == 0
+    DataService.create_vote(present=False)
+    assert len(VoteRepo.get_all_present()) == 0
+    DataService.create_vote(present=True)
+    assert len(VoteRepo.get_all_present()) == 1
+
+
 def test_vote_repo_get_many_by_present(clean_db_context: Context) -> None:
     game_night = DataService.create_game_night()
 

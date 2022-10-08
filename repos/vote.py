@@ -18,5 +18,9 @@ class VoteRepo:
             raise NotFoundError(f"No {Vote.__name__} found")
 
     @classmethod
+    def get_all_present(cls) -> List[Vote]:
+        return Vote.query(Vote.present == True).fetch()  # noqa: E712
+
+    @classmethod
     def get_many_by_present(cls, game_night: GameNight) -> List[Vote]:
         return Vote.query(Vote.game_night == game_night.key, Vote.present == True).fetch()  # noqa
