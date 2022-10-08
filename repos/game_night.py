@@ -19,6 +19,10 @@ class GameNightRepo:
         return GameNight.query().count()
 
     @classmethod
+    def get_all(cls) -> List[GameNight]:
+        return GameNight.query().fetch()
+
+    @classmethod
     def get_all_with_sum(cls) -> List[GameNight]:
         return GameNight.query(GameNight.sum != None).fetch()  # noqa: E711
 

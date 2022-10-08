@@ -34,6 +34,16 @@ def delete(id_: int) -> None:
     GameNightRepo.delete_by_id(id_)
 
 
+@router.post("/actions/recalculate-sum/", dependencies=[Depends(me_admin_or_401)])
+@ensure_db_context
+def post_recalculate_sums() -> None:
+    for game_night in GameNightRepo.get_all():
+        new_sum = _calculate_sum(game_night)
+        if game_night.sum != new_sum:
+            game_night.sum = new_sum
+            game_night.put()
+
+
 @router.get("/", response_model=List[dict])
 @ensure_db_context
 def get_many(limit: Optional[int] = None, me: User = Depends(me_or_none)) -> List[dict]:
@@ -104,8 +114,15 @@ def _create_or_update(
             vote.put()
 
     # Calculate sum after vote changes
-    if weighed_votes := [vote.weighed_sum() for vote in VoteRepo.get_many_by_present(game_night)]:
-        game_night.sum = sum(weighed_votes) / len(weighed_votes)
+    if sum_ := _calculate_sum(game_night):
+        game_night.sum = sum_
         game_night.put()
 
     return game_night
+
+
+def _calculate_sum(game_night: GameNight) -> Optional[float]:
+    if weighed_votes := [vote.weighed_sum() for vote in VoteRepo.get_many_by_present(game_night)]:
+        return sum(weighed_votes) / len(weighed_votes)
+    else:
+        return None

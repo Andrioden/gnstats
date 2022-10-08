@@ -94,13 +94,19 @@ class DataService:
         game_night: Optional[GameNight] = None,
         voter: str = "André",
         present: bool = True,
-        appetizer: Optional[int] = None,
+        appetizer: Optional[int] = 1,
+        main_course: Optional[int] = 1,
+        dessert: Optional[int] = 1,
+        game: Optional[int] = 1,
     ) -> Vote:
         vote = cls.build_vote(
             game_night=game_night if game_night else cls.create_game_night(),
             voter=voter,
             present=present,
             appetizer=appetizer,
+            main_course=main_course,
+            dessert=dessert,
+            game=game,
         )
         vote.put()
         return vote
