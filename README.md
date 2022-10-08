@@ -21,11 +21,9 @@
 9. (Optional) Setup pre-commit: `cp pre-commit.sh .git/hooks/pre-commit`
 
 
-## Using prod data
+## Import prod data to local db
 
-1. As logged in admin run `[PROD_URL]/api/actions/admin/dataimportpythonscript/`
-2. Copy paste data into `api/actions_admin.py > RunImportPythonScriptHandler`
-3. As admin run `[LOCAL_URL]/api/actions/admin/runimportpythonscript/`
+1. Run `.\scripts\populate.ps1`
 
 
 ## Relevant links
