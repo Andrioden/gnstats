@@ -188,7 +188,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
 
     function setGameNightVoteStatus(gameNights) {
         for(let i=0; i<gameNights.length; i++) {
-            if (gameNights[i].own_vote && !gameNights[i].own_vote.complete_vote && gameNights[i].host !== $rootScope.user.name)
+            if (gameNights[i].own_vote && !gameNights[i].own_vote.completed_vote && gameNights[i].host !== $rootScope.user.name)
                 gameNights[i].voteStatus = "red";
             else if (gameNights[i].votes.length < 3)
                 gameNights[i].voteStatus = "orange";

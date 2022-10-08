@@ -24,7 +24,7 @@ class Vote(DbModelBase):
             "dessert": self.dessert,
             "game": self.game,
             "sum": self.weighed_sum() if self.present else 0,
-            "complete_vote": self.complete_vote(),
+            "completed_vote": self.completed_vote(),
         }
 
     def appetizer_int(self) -> int:
@@ -50,7 +50,7 @@ class Vote(DbModelBase):
     def nonweighed_sum(self) -> int:
         return self.appetizer_int() + self.main_course_int() + self.dessert_int() + self.game_int()
 
-    def complete_vote(self) -> bool:
+    def completed_vote(self) -> bool:
         if self.present:
             return None not in [self.appetizer, self.main_course, self.dessert, self.game]
         else:

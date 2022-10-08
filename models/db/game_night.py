@@ -20,20 +20,20 @@ class GameNight(DbModelBase):
             votes = [vote for vote in VoteRepo.get_many(self.key)]
         else:
             votes = [vote for vote in votes if vote.game_night == self.key]
-        completely_voted = len([vote for vote in votes if not vote.complete_vote()]) == 0
+        completed_votes = len([vote for vote in votes if not vote.completed_vote()]) == 0
 
         return {
             "id": self.id,
             "host": self.host,
             "date_epoch": date_to_epoch(self.date) if self.date else None,
             "description": self.description,
-            "sum": self.sum if completely_voted else 0,
+            "sum": self.sum if completed_votes else 0,
             "votes": [
-                vote.get_data() for vote in votes if (vote.voter == me_name or completely_voted)
+                vote.get_data() for vote in votes if (vote.voter == me_name or completed_votes)
             ],
-            "not_voted": [vote.voter for vote in votes if not vote.complete_vote()],
+            "not_voted": [vote.voter for vote in votes if not vote.completed_vote()],
             "own_vote": next((vote.get_data() for vote in votes if vote.voter == me_name), None),
-            "completely_voted": completely_voted,
+            "completely_voted": completed_votes,
         }
 
     def completely_voted(self) -> bool:
@@ -41,4 +41,4 @@ class GameNight(DbModelBase):
         if len(votes) == 0:  # Just created
             return False
         else:
-            return len([vote for vote in votes if not vote.complete_vote()]) == 0
+            return len([vote for vote in votes if not vote.completed_vote()]) == 0
