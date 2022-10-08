@@ -47,3 +47,9 @@ def test_user_repo_get_all(clean_db_context: Context) -> None:
     assert len(UserRepo.get_all()) == 0
     DataService.create_user("Ole")
     assert len(UserRepo.get_all()) == 1
+
+
+def test_user_repo_get_available_names(clean_db_context: Context) -> None:
+    assert "Ole" in UserRepo.get_available_names()
+    DataService.create_user("Ole")
+    assert "Ole" not in UserRepo.get_available_names()

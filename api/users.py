@@ -3,7 +3,6 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends
 
 from models.api.user import ClaimUserData, UpdateUserData
-from models.db.user import User
 from models.external.google import GoogleAccount
 from repos.user import UserRepo
 from utils.db import ensure_db_context
@@ -18,7 +17,7 @@ router = APIRouter()
 def post_me_verify(
     data: ClaimUserData, google_acc: GoogleAccount = Depends(me_google_acc_or_401)
 ) -> None:
-    if data.name not in User.api_get_available_names():
+    if data.name not in UserRepo.get_available_names():
         raise Exception("Name not available")
     UserRepo.create(google_acc=google_acc, name=data.name)
 
@@ -38,7 +37,7 @@ def get_many() -> List[dict]:
 @router.get("/available-names/", response_model=List[str])
 @ensure_db_context
 def get_available_names() -> List[str]:
-    return User.api_get_available_names()
+    return UserRepo.get_available_names()
 
 
 @router.get("/me/", response_model=dict)

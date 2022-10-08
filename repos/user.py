@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from models.db.user import User
+from models.db.user import ALLOWED_NAMES, User
 from models.external.google import GoogleAccount
 from repos import IntegrityError, NotFoundError
 
@@ -45,6 +45,11 @@ class UserRepo:
     @classmethod
     def get_all(cls) -> List[User]:
         return User.query().fetch()
+
+    @classmethod
+    def get_available_names(cls) -> List[str]:
+        names_taken = [user.name for user in User.query()]
+        return [name for name in ALLOWED_NAMES if name not in names_taken]
 
     @classmethod
     def delete(cls, user: User) -> None:

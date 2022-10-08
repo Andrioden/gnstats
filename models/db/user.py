@@ -1,5 +1,3 @@
-from typing import List
-
 from google.cloud.ndb import BooleanProperty, StringProperty
 
 from models.db.base import DbModelBase
@@ -14,11 +12,6 @@ class User(DbModelBase):
     name = StringProperty(required=True, choices=ALLOWED_NAMES)
     activated = BooleanProperty(required=True, default=False)
     admin = BooleanProperty(default=False)
-
-    @staticmethod
-    def api_get_available_names() -> List[str]:
-        names_taken = [user.name for user in User.query()]
-        return [name for name in ALLOWED_NAMES if name not in names_taken]
 
     def get_data(self) -> dict:
         return {
