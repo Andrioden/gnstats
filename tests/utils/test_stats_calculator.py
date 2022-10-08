@@ -69,7 +69,11 @@ def test_stats_calculator_host_performances(clean_db_context: Context) -> None:
 # def test_stats_calculator_host_performances_workbench(db_context: Context) -> None:
 #     from repos.game_night import GameNightRepo
 #     from repos.vote import VoteRepo
-#     calc = StatsCalculator(game_nights=GameNightRepo.get_all_with_sum(), votes=VoteRepo.get_all_present())
+#
+#     calc = StatsCalculator(
+#         game_nights=GameNightRepo.get_all_with_sum(),
+#         votes=VoteRepo.get_all_present(),
+#     )
 #     behaviors = calc.behaviors()
 #     host_performances = calc.host_performances()
 #     print(behaviors)
