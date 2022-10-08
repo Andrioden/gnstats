@@ -63,10 +63,7 @@ def get_one(id_: int, me: User = Depends(me_or_none)) -> dict:
 @ensure_db_context
 def post_recalculate_sums() -> None:
     for game_night in GameNightRepo.get_all():
-        new_sum = _calculate_sum(game_night)
-        if game_night.sum != new_sum:
-            game_night.sum = new_sum
-            game_night.put()
+        _update_sum_if_needed(game_night)
 
 
 def _create_or_update(
@@ -114,15 +111,19 @@ def _create_or_update(
             vote.put()
 
     # Calculate sum after vote changes
-    if sum_ := _calculate_sum(game_night):
-        game_night.sum = sum_
-        game_night.put()
+    _update_sum_if_needed(game_night)
 
     return game_night
 
 
-def _calculate_sum(game_night: GameNight) -> Optional[float]:
-    if weighed_votes := [vote.weighed_sum() for vote in VoteRepo.get_many_by_present(game_night)]:
-        return sum(weighed_votes) / len(weighed_votes)
+def _update_sum_if_needed(game_night: GameNight) -> None:
+    weighed_votes = [vote.weighed_sum() for vote in VoteRepo.get_many_by_present(game_night)]
+
+    if weighed_votes:
+        new_sum = sum(weighed_votes) / len(weighed_votes)
     else:
-        return None
+        new_sum = None
+
+    if game_night.sum != new_sum:
+        game_night.sum = new_sum
+        game_night.put()
