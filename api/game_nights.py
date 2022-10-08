@@ -29,6 +29,7 @@ def put(id_: int, update: GameNightUpdate, me: User = Depends(me_activated_or_40
 
 
 @router.delete("/{id_}/", dependencies=[Depends(me_admin_or_401)])
+@ensure_db_context
 def delete(id_: int) -> None:
     GameNightRepo.delete_by_id(id_)
 
