@@ -133,20 +133,13 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
 
     // *************** PRIVATE METHODS ***************
 
-    function loadGameNights(limit = null, loadFullAfterwards = false) {
-        console.log("Loading game nights with limit=" + limit);
+    function loadGameNights() {
         $scope.loadingData = true;
-
-        let limitStr = limit === null ? "" : "?limit=" + limit;
-
-        $http.get('/api/gamenights/' + limitStr).
+        $http.get('/api/gamenights/').
             then(function(response) {
                 $scope.loadingData = false;
                 $scope.gameNights = response.data;
                 loadedGameNightsProcessing();
-
-                if (loadFullAfterwards)
-                    loadGameNights(null);
             }, function(response) {
                 $scope.loadingData = false;
                 alertError(response);
@@ -240,7 +233,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
         return sum;
     }
 
-    loadGameNights(20, true);
+    loadGameNights();
 
     console.log("DataController loaded");
 });

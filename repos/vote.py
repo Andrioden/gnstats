@@ -1,6 +1,7 @@
-from typing import List
+from typing import List, Optional
 
-from models.db.game_night import GameNight
+from google.cloud.ndb import Key
+
 from models.db.vote import Vote
 from repos import NotFoundError
 
@@ -18,9 +19,21 @@ class VoteRepo:
             raise NotFoundError(f"No {Vote.__name__} found")
 
     @classmethod
+    def get_one_or_none(cls, id_: int) -> Optional[Vote]:
+        return Vote.get_by_id(id_)
+
+    @classmethod
+    def get_all(cls) -> List[Vote]:
+        return Vote.query().fetch()
+
+    @classmethod
     def get_all_present(cls) -> List[Vote]:
         return Vote.query(Vote.present == True).fetch()  # noqa: E712
 
     @classmethod
-    def get_many_by_present(cls, game_night: GameNight) -> List[Vote]:
-        return Vote.query(Vote.game_night == game_night.key, Vote.present == True).fetch()  # noqa
+    def get_many(cls, game_night_key: Key) -> List[Vote]:
+        return Vote.query(Vote.game_night == game_night_key).fetch()  # noqa
+
+    @classmethod
+    def get_many_by_present(cls, game_night_key: Key) -> List[Vote]:
+        return Vote.query(Vote.game_night == game_night_key, Vote.present == True).fetch()  # noqa

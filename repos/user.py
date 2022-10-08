@@ -28,6 +28,10 @@ class UserRepo:
         return user
 
     @classmethod
+    def exists(cls, name: str, activated: bool) -> bool:
+        return User.query(User.name == name, User.activated == activated).count() > 0
+
+    @classmethod
     def get(cls, id_: int) -> User:
         if user := User.get_by_id(id_):
             return user

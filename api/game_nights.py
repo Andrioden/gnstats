@@ -10,6 +10,7 @@ from models.db.game_night import GameNight
 from models.db.user import User
 from models.db.vote import Vote
 from repos.game_night import GameNightRepo
+from repos.user import UserRepo
 from repos.vote import VoteRepo
 from utils.db import ensure_db_context
 
@@ -36,18 +37,15 @@ def delete(id_: int) -> None:
 
 @router.get("/", response_model=List[dict])
 @ensure_db_context
-def get_many(limit: Optional[int] = None, me: User = Depends(me_or_none)) -> List[dict]:
-    if limit is None:
-        game_nights = [gn for gn in GameNight.query()]
-        all_votes = [vote for vote in Vote.query()]
-    else:
-        game_nights = [gn for gn in GameNight.query().order(-GameNight.date).fetch(int(limit))]
-        game_night_keys = [gn.key for gn in game_nights]
-        if game_night_keys:
-            all_votes = [vote for vote in Vote.query(Vote.game_night.IN(game_night_keys))]
-        else:
-            all_votes = []
-    return [gn.get_data(me_name=me, votes=all_votes) for gn in game_nights]
+def get_many(me: Optional[User] = Depends(me_or_none)) -> List[dict]:
+    all_votes = VoteRepo.get_all_present()
+    return [
+        gn.get_data(
+            me_name=me.name if me else None,
+            votes=all_votes,
+        )
+        for gn in GameNightRepo.get_all()
+    ]
 
 
 @router.get("/{id_}/", response_model=dict)
@@ -88,7 +86,7 @@ def _create_or_update(
     # Create/Update Votes
     if not game_night.completely_voted():
         for vote_input in input_.votes:
-            if not User.query(User.name == vote_input.voter, User.activated == True).get():  # noqa
+            if not UserRepo.exists(name=vote_input.voter, activated=True):
                 raise HTTPException(HTTP_400_BAD_REQUEST, "Deactivated user")
             if vote_input.voter == input_.host:
                 continue
@@ -98,7 +96,7 @@ def _create_or_update(
                 vote.game_night = game_night.key
                 vote.voter = vote_input.voter
             elif isinstance(vote_input, VoteUpdate):
-                vote = Vote.get_by_id(vote_input.id)
+                vote = VoteRepo.get(vote_input.id)
             else:
                 raise Exception(f"Unknown type '{type(vote_input)}'")
 
@@ -117,7 +115,7 @@ def _create_or_update(
 
 
 def _update_sum_if_needed(game_night: GameNight) -> None:
-    weighed_votes = [vote.weighed_sum() for vote in VoteRepo.get_many_by_present(game_night)]
+    weighed_votes = [vote.weighed_sum() for vote in VoteRepo.get_many_by_present(game_night.key)]
 
     if weighed_votes:
         new_sum = sum(weighed_votes) / len(weighed_votes)

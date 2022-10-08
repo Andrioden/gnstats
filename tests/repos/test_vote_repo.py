@@ -21,6 +21,18 @@ def test_vote_repo_get(clean_db_context: Context) -> None:
         VoteRepo.get(-1)
 
 
+def test_vote_repo_get_one_or_none(clean_db_context: Context) -> None:
+    vote = DataService.create_vote()
+    assert VoteRepo.get_one_or_none(vote.id) is not None
+    assert VoteRepo.get_one_or_none(-1) is None
+
+
+def test_vote_repo_get_all(clean_db_context: Context) -> None:
+    assert len(VoteRepo.get_all()) == 0
+    DataService.create_vote()
+    assert len(VoteRepo.get_all()) == 1
+
+
 def test_vote_repo_get_all_present(clean_db_context: Context) -> None:
     assert len(VoteRepo.get_all_present()) == 0
     DataService.create_vote(present=False)
@@ -29,11 +41,20 @@ def test_vote_repo_get_all_present(clean_db_context: Context) -> None:
     assert len(VoteRepo.get_all_present()) == 1
 
 
+def test_vote_repo_get_many(clean_db_context: Context) -> None:
+    gn1 = DataService.create_game_night()
+    gn2 = DataService.create_game_night()
+
+    DataService.create_vote(game_night=gn1)
+    assert len(VoteRepo.get_many(gn1.key)) == 1
+    assert len(VoteRepo.get_many(gn2.key)) == 0
+
+
 def test_vote_repo_get_many_by_present(clean_db_context: Context) -> None:
     game_night = DataService.create_game_night()
 
     DataService.create_vote(game_night=game_night, present=True)
-    assert len(VoteRepo.get_many_by_present(game_night)) == 1
+    assert len(VoteRepo.get_many_by_present(game_night.key)) == 1
 
     DataService.create_vote(game_night=game_night, present=False)
-    assert len(VoteRepo.get_many_by_present(game_night)) == 1
+    assert len(VoteRepo.get_many_by_present(game_night.key)) == 1

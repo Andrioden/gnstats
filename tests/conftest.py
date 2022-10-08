@@ -11,7 +11,7 @@ from tests.data_service import DataService
 from tests.helpers import clean_db
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def db_context() -> Iterator[Context]:
     with Client().context() as context:
         yield context

@@ -5,6 +5,7 @@ from google.cloud.ndb import DateProperty, FloatProperty, StringProperty
 from models.db.base import DbModelBase
 from models.db.user import ALLOWED_NAMES
 from models.db.vote import Vote
+from repos.vote import VoteRepo
 from utils.date import date_to_epoch
 
 
@@ -16,7 +17,7 @@ class GameNight(DbModelBase):
 
     def get_data(self, me_name: str, votes: Optional[List[Vote]] = None) -> dict:
         if votes is None:
-            votes = [vote for vote in Vote.query(Vote.game_night == self.key)]
+            votes = [vote for vote in VoteRepo.get_many(self.key)]
         else:
             votes = [vote for vote in votes if vote.game_night == self.key]
         completely_voted = len([vote for vote in votes if not vote.complete_vote()]) == 0

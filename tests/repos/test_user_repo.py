@@ -27,6 +27,20 @@ def test_user_repo_update_activated(clean_db_context: Context) -> None:
     assert UserRepo.get(user.id).activated is True
 
 
+def test_user_repo_exists(clean_db_context: Context) -> None:
+    DataService.create_user(name="Stian", activated=True)
+    DataService.create_user(name="André", activated=False)
+
+    assert UserRepo.exists(name="Stian", activated=True) is True
+    assert UserRepo.exists(name="Stian", activated=False) is False
+
+    assert UserRepo.exists(name="André", activated=True) is False
+    assert UserRepo.exists(name="André", activated=False) is True
+
+    assert UserRepo.exists(name="Ole", activated=True) is False
+    assert UserRepo.exists(name="Ole", activated=False) is False
+
+
 def test_user_repo_get(clean_db_context: Context) -> None:
     user = DataService.create_user("Ole")
 
