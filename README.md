@@ -12,7 +12,7 @@
    2. [Open db admin](http://localhost:8080)
 4. Add secrets 
    1. Copy and rename`.\scripts\env_secrets_example.ps1` to `env_secrets.ps1`
-   2. Set values in file
+   2. Get values from André and set them in the file
 5. Run `.\scripts\run_web.ps1`
 6. (Verify) [Open page](http://localhost:8000/)
 7. (Verify) [Open api](http://localhost:8000/docs)
@@ -29,7 +29,8 @@
 ## Relevant links
 
 - Backend
-  - [Google OAuth Credentials](https://console.cloud.google.com/apis/credentials?project=game-night-stats)
+  - [Gcloud OAuth Credentials](https://console.cloud.google.com/apis/credentials?project=game-night-stats)
+  - [Gcloud db backup job](https://console.cloud.google.com/cloudscheduler?referrer=search&hl=NO&project=game-night-stats)
   - Web framework: https://fastapi.tiangolo.com/
   - Database framework: https://googleapis.dev/python/python-ndb/latest/index.html
   - Datastore admin: https://github.com/remko/dsadmin
