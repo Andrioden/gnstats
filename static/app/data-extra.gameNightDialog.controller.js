@@ -79,6 +79,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
     function createNewLocalGameNightObject() {
         return {
             date: new Date(),
+            round_start: false,
             sum: "vote",
             votes: (function(){
                 let votes = [];

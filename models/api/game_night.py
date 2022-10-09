@@ -10,6 +10,7 @@ class GameNightBase(BaseModel):
     host: str
     date: date
     description: str
+    round_start: bool
 
 
 class GameNightCreate(GameNightBase):

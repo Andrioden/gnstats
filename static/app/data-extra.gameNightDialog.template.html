@@ -32,6 +32,14 @@
                     <textarea ng-model="gameNight.description" required></textarea>
                 </md-input-container>
 
+                <md-input-container class="md-block" flex-gt-sm>
+                    <md-checkbox ng-model="gameNight.round_start" class="md-primary">Round start</md-checkbox>
+                </md-input-container>
+
+                <md-toolbar class="md-theme-light">
+                    <h2 class="md-toolbar-tools">Votes</h2>
+                </md-toolbar>
+
                 <div layout="column" ng-repeat="vote in gameNight.votes | orderBy:['voter']" ng-show="vote.voter != gameNight.host && (gameNight.id || vote.voter == $root.user.name)">
                     <div layout="row">
                         <div flex="nogrow">

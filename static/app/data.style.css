@@ -1,5 +1,5 @@
 md-list#dataView {
-    padding: 0px;
+    padding: 0;
 }
 
 .game-night {
@@ -7,7 +7,7 @@ md-list#dataView {
 }
 
 .game-night.round-separator {
-    border-top: 3px solid #de8e48;
+    border-bottom: 3px solid #de8e48;
 }
 
 .red-background {

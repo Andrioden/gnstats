@@ -81,6 +81,7 @@ def _create_or_update(
     game_night.date = input_.date
     game_night.host = input_.host
     game_night.description = input_.description
+    game_night.round_start = input_.round_start
     game_night.put()  # Ensures we have a key
 
     # Create/Update Votes
