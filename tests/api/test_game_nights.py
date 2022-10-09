@@ -19,6 +19,7 @@ def test_game_nights_api_post(
             "host": "Stian",
             "date": "2020-01-01",
             "description": "test",
+            "round_start": False,
             "votes": [{"voter": me_created.name, "present": True}],
         },
     )
@@ -50,6 +51,7 @@ def test_game_nights_api_put(
             "host": "Stian",
             "date": "2020-01-01",
             "description": "test",
+            "round_start": False,
             "votes": [
                 {
                     "id": vote.id,
