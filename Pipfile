@@ -5,14 +5,14 @@ name = "pypi"
 
 [packages]
 fastapi = "*"
+pydantic = "*"
 uvicorn = {extras = ["standard"], version = "*"}
 gunicorn = "*"
-google-cloud-ndb = "*"
-pydantic = "*"
-python-multipart = "*"
 authlib = "*"
 itsdangerous = "*"
 httpx = "*"
+python-multipart = "*"
+google-cloud-ndb = "*"
 google-cloud-secret-manager = "*"
 
 [dev-packages]
