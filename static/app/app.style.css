@@ -1,0 +1,10 @@
+html {
+    line-height: 1.4;
+}
+#footer {
+    color: gray;
+    font-size: 70%;
+    padding-bottom: 15px;
+    padding-top: 5px;
+    text-align: center;
+}
