@@ -33,7 +33,7 @@ class DataService:
 
     @classmethod
     def build_deactivated_user(cls) -> User:
-        return cls.build_user(name="Ole", activated=True)
+        return cls.build_user(name="Ole", activated=False)
 
     @classmethod
     def build_activated_user(cls) -> User:

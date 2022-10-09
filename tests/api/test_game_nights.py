@@ -27,6 +27,13 @@ def test_game_nights_api_post(
     assert data["host"] == "Stian"
 
 
+def test_game_nights_api_post_as_deactivated(
+    clean_db_context: Context, client_as_deactivated: TestClient
+) -> None:
+    response = client_as_deactivated.post(url="/api/gamenights/")
+    assert response.status_code == HTTP_401_UNAUTHORIZED
+
+
 def test_game_nights_api_put(
     clean_db_context: Context,
     client_as_activated: TestClient,
@@ -62,6 +69,13 @@ def test_game_nights_api_put(
     assert data["votes"][0]["appetizer"] == 2
 
     assert GameNightRepo.get(game_night.id).sum is not None
+
+
+def test_game_nights_api_put_as_deactivated(
+    clean_db_context: Context, client_as_deactivated: TestClient
+) -> None:
+    response = client_as_deactivated.put(url="/api/gamenights/1/")
+    assert response.status_code == HTTP_401_UNAUTHORIZED
 
 
 def test_game_nights_api_delete_as_admin(
