@@ -6,9 +6,8 @@ from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 from api.session import me_activated_or_401, me_admin_or_401, me_or_none
 from models.api.game_night import GameNightCreate, GameNightUpdate
 from models.api.vote import VoteCreate, VoteUpdate
-from models.db.game_night import GameNight
+from models.db.game_night import GameNight, Vote
 from models.db.user import User
-from models.db.vote import Vote
 from repos.game_night import GameNightRepo
 from repos.user import UserRepo
 from repos.vote import VoteRepo
@@ -38,7 +37,7 @@ def delete(id_: int) -> None:
 @router.get("/", response_model=List[dict])
 @ensure_db_context
 def get_many(me: Optional[User] = Depends(me_or_none)) -> List[dict]:
-    all_votes = VoteRepo.get_all_present()
+    all_votes = VoteRepo.get_all()
     return [
         gn.get_data(
             me_name=me.name if me else None,

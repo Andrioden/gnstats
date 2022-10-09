@@ -32,6 +32,7 @@
   - [Google OAuth Credentials](https://console.cloud.google.com/apis/credentials?project=game-night-stats)
   - Web framework: https://fastapi.tiangolo.com/
   - Database framework: https://googleapis.dev/python/python-ndb/latest/index.html
+  - Datastore admin: https://github.com/remko/dsadmin
 - Frontend
   - Framework: https://angularjs.org/
   - UI components: https://material.angularjs.org/latest/

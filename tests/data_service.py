@@ -3,9 +3,8 @@ from typing import Optional
 
 from google.cloud.ndb import Key
 
-from models.db.game_night import GameNight
+from models.db.game_night import GameNight, Vote
 from models.db.user import User
-from models.db.vote import Vote
 from models.external.google import GoogleAccount
 
 

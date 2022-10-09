@@ -2,13 +2,16 @@ runtime: python39
 entrypoint: gunicorn -w 4 -k uvicorn.workers.UvicornWorker main_prod:app
 instance_class: F2
 
+env_variables:
+  SECRET_ENV: projects/1033422528296/secrets/PROD_ENV/versions/latest
+
 handlers:
   - url: /favicon\.ico
-    static_files: favicon.ico
+    static_files: static/favicon.ico
     upload: static/favicon\.ico
 
   - url: /
-    static_files: index.html
+    static_files: static/index.html
     upload: static/index\.html
 
   - url: /static

@@ -41,15 +41,6 @@ def test_vote_repo_get_all_present(clean_db_context: Context) -> None:
     assert len(VoteRepo.get_all_present()) == 1
 
 
-def test_vote_repo_get_many(clean_db_context: Context) -> None:
-    gn1 = DataService.create_game_night()
-    gn2 = DataService.create_game_night()
-
-    DataService.create_vote(game_night=gn1)
-    assert len(VoteRepo.get_many(gn1.key)) == 1
-    assert len(VoteRepo.get_many(gn2.key)) == 0
-
-
 def test_vote_repo_get_many_by_present(clean_db_context: Context) -> None:
     game_night = DataService.create_game_night()
 

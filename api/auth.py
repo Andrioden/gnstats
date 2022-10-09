@@ -14,8 +14,8 @@ from fastapi import APIRouter, Depends, Request
 from starlette.responses import RedirectResponse
 
 from api.session import SESSION_VAR_GOOGLE_ACCOUNT
-from clients.oauth import google_oauth_client
 from models.external.google import GoogleAccount
+from utils.oauth import google_oauth_client
 
 router = APIRouter()
 

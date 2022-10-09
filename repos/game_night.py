@@ -2,8 +2,7 @@ from typing import List, Optional
 
 from google.cloud.ndb import Key, delete_multi
 
-from models.db.game_night import GameNight
-from models.db.vote import Vote
+from models.db.game_night import GameNight, Vote
 from repos import NotFoundError
 
 

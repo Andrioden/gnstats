@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from google.cloud.ndb import Key
 
-from models.db.vote import Vote
+from models.db.game_night import Vote
 from repos import NotFoundError
 
 
@@ -29,10 +29,6 @@ class VoteRepo:
     @classmethod
     def get_all_present(cls) -> List[Vote]:
         return Vote.query(Vote.present == True).fetch()  # noqa: E712
-
-    @classmethod
-    def get_many(cls, game_night_key: Key) -> List[Vote]:
-        return Vote.query(Vote.game_night == game_night_key).fetch()  # noqa
 
     @classmethod
     def get_many_by_present(cls, game_night_key: Key) -> List[Vote]:

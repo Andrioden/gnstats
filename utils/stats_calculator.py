@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 from typing import Dict, List, Union
 
-from models.db.game_night import GameNight
-from models.db.vote import Vote
+from models.db.game_night import GameNight, Vote
 from models.internal.stats import Behaviour, HostPerformance
 
 

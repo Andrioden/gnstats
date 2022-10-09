@@ -3,9 +3,8 @@ from datetime import date
 
 from google.cloud.ndb import Client, Key, delete_multi
 
-from models.db.game_night import GameNight
+from models.db.game_night import GameNight, Vote
 from models.db.user import User
-from models.db.vote import Vote
 
 # CLEAR DB:
 
