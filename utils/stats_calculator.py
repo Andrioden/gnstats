@@ -6,18 +6,18 @@ from models.internal.stats import Behaviour, HostPerformance
 
 
 @dataclass
-class GameNightVotes:
+class _GameNightVotes:
     game_night: GameNight
     votes: List[Vote]
 
 
 class StatsCalculator:
-    data: List[GameNightVotes]
+    data: List[_GameNightVotes]
 
     def __init__(self, game_nights: List[GameNight], votes: List[Vote]):
         # First we cache a hierarchy of the games and votes in a fast-accessing games id dict
-        data_dict: Dict[int, GameNightVotes] = {
-            gn.id: GameNightVotes(game_night=gn, votes=[]) for gn in game_nights
+        data_dict: Dict[int, _GameNightVotes] = {
+            gn.id: _GameNightVotes(game_night=gn, votes=[]) for gn in game_nights
         }
 
         # Extend data with votes
