@@ -15,20 +15,15 @@
 
                 <md-input-container class="md-block" flex-gt-sm>
                     <label>Google Account</label>
-                    <input type="text" ng-model="$root.user.nickname" placeholder="Should be read from google login..." readonly>
+                    <input type="text" ng-model="$root.user.google_email" placeholder="Should be read from google login..." readonly>
                 </md-input-container>
 
                 <md-input-container class="md-block" flex-gt-sm>
                     <label>Who are you?</label>
                     <md-select ng-model="$root.user.name">
                         <md-option><em>None</em></md-option>
-                        <md-option ng-repeat="name in availablePersonNames" ng-value="name">{{name}}</md-option>
+                        <md-option ng-repeat="name in availableUserNames" ng-value="name">{{name}}</md-option>
                     </md-select>
-                </md-input-container>
-                <br>
-                <md-input-container class="md-block" flex-gt-sm>
-                    <label>Site entry password</label>
-                    <input type="password" ng-model="password" placeholder="Password given by André">
                 </md-input-container>
 
             </div>

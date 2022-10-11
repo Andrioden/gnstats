@@ -17,20 +17,28 @@
                     <label>Host</label>
                     <md-select ng-model="hostId" ng-change="setGameNightHostValue()" required>
                         <md-option><em>None</em></md-option>
-                        <md-option ng-repeat="person in $root.persons | filter:{ activated: true }" ng-value="person.id">{{person.name}}</md-option>
+                        <md-option ng-repeat="user in $root.users | filter:{ activated: true }" ng-value="user.id">{{user.name}}</md-option>
                     </md-select>
                 </md-input-container>
 
                 <br />
                 <md-input-container class="md-block" flex-gt-sm>
                     <label>Date</label>
-                    <md-datepicker ng-model="gameNight.date" md-hide-icons="calendar" required></md-datepicker>
+                    <md-datepicker ng-model="gameNight.date" md-hide-icons="calendar" ng-model-options="{timezone: '+0000'}" required></md-datepicker>
                 </md-input-container>
 
                 <md-input-container class="md-block" flex-gt-sm>
                     <label>Description</label>
                     <textarea ng-model="gameNight.description" required></textarea>
                 </md-input-container>
+
+                <md-input-container class="md-block" flex-gt-sm>
+                    <md-checkbox ng-model="gameNight.round_start" class="md-primary">Round start</md-checkbox>
+                </md-input-container>
+
+                <md-toolbar class="md-theme-light">
+                    <h2 class="md-toolbar-tools">Votes</h2>
+                </md-toolbar>
 
                 <div layout="column" ng-repeat="vote in gameNight.votes | orderBy:['voter']" ng-show="vote.voter != gameNight.host && (gameNight.id || vote.voter == $root.user.name)">
                     <div layout="row">
@@ -65,8 +73,8 @@
                     </div>
                 </div>
 
-                <div ng-show="!$root.user.verified">
-                    <i>Login with a verified user to vote.</i>
+                <div ng-show="!$root.user.registered">
+                    <i>Login with an activated user to vote.</i>
                 </div>
 
             </div>
@@ -74,8 +82,8 @@
 
         <md-dialog-actions layout="row">
             <md-progress-circular class="md-hue-2" md-diameter="20px" ng-show="submitting"></md-progress-circular>
-            <md-button class="md-raised md-warn" ng-click="delete()" ng-disabled="submitting" ng-show="$root.user.is_admin && gameNight.id">Delete</md-button>
-            <md-button class="md-raised md-primary" ng-click="save()" ng-disabled="submitting" ng-show="$root.user.verified && gameNight.id">Save</md-button>
+            <md-button class="md-raised md-warn" ng-click="delete()" ng-disabled="submitting" ng-show="$root.user.admin && gameNight.id">Delete</md-button>
+            <md-button class="md-raised md-primary" ng-click="save()" ng-disabled="submitting" ng-show="$root.user.registered && gameNight.id">Save</md-button>
             <md-button class="md-raised md-primary" ng-click="create()" ng-disabled="submitting" ng-hide="gameNight.id">Create</md-button>
         </md-dialog-actions>
     </form>

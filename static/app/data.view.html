@@ -20,17 +20,17 @@
         </md-input-container>
     </div>
 
-    <div layout="row" layout-align="space-around" ng-show="loadingData || $root.loadingPersons">
+    <div layout="row" layout-align="space-around" ng-show="loadingData || $root.loadingUsers">
         <md-progress-linear md-mode="indeterminate"></md-progress-linear>
     </div>
 
-    <md-list-item ng-repeat="gameNight in gameNights | filter:customFilter(search)" class="md-3-line game-night" ng-class="{'red-background': (gameNight.voteStatus == 'red'), 'orange-background': (gameNight.voteStatus == 'orange'), 'round-separator': (sortingBy == 'Sort:Date' && gameNight.isLastOfRound) }" ng-click="openGameNightDialog($event, gameNight)" ng-show="$root.persons.length > 0">
+    <md-list-item ng-repeat="gameNight in gameNights | filter:customFilter(search)" class="md-3-line game-night" ng-class="{'red-background': (gameNight.voteStatus == 'red'), 'orange-background': (gameNight.voteStatus == 'orange'), 'round-separator': (sortingBy == 'Sort:Date' && gameNight.round_start) }" ng-click="openGameNightDialog($event, gameNight)">
 
-        <img ng-src="{{ avatarUrl(gameNight.host) }}" class="md-avatar" alt="{{ gameNight.host }}" />
+        <img ng-src="{{ pictureUrl(gameNight.host) }}" class="md-avatar" alt="{{ gameNight.host }}" />
 
         <div class="md-list-item-text" style="padding: 0px 10px">
             <h3>{{ gameNight.date | date: 'dd/MM/yyyy' }}</h3>
-            <h4 ng-show="gameNight.not_voted.length > 0">Not voted: <span ng-repeat="person in gameNight.not_voted">{{person}} </span></h4>
+            <h4 ng-show="gameNight.not_voted.length > 0">Not voted: <span ng-repeat="user in gameNight.not_voted">{{user}} </span></h4>
             <p>{{ gameNight.description }}</p>
         </div>
 

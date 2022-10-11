@@ -1,15 +1,12 @@
 function VerificationDialogController($rootScope, $scope, $mdDialog, $http, $window) {
 
     // CONSTRUCTOR
-
-    $scope.availablePersonNames;
-    $scope.password = "";
-
+    $scope.availableUserNames = undefined;
     $scope.submitting = false;
 
     $http.get('/api/users/available-names/').
         then(function(response) {
-            $scope.availablePersonNames = response.data;
+            $scope.availableUserNames = response.data;
         }, function(response) {
             alertError(response);
         });
@@ -23,10 +20,10 @@ function VerificationDialogController($rootScope, $scope, $mdDialog, $http, $win
     $scope.verify = function() {
         $scope.submitting = true;
 
-        $http.post('/api/users/me/verify/', {name: $rootScope.user.name, password: $scope.password}, {}).
-            then(function(response) {
+        $http.post('/api/users/me/verify/', {name: $rootScope.user.name}, {}).
+            then(function() {
                 $scope.submitting = false;
-                $rootScope.user.verified = true;
+                $rootScope.user.registered = true;
                 $mdDialog.cancel();
                 $window.location.reload();
             }, function(response) {

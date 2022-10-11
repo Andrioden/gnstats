@@ -10,7 +10,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
     if ($scope.gameNight === null)
         $scope.gameNight = createNewLocalGameNightObject();
 
-    var host = $rootScope.persons.find(x => x.name === $scope.gameNight.host && x.id !== 'undefined');
+    let host = $rootScope.users.find(x => x.name === $scope.gameNight.host && x.id !== 'undefined');
     if (typeof host !== "undefined")
         $scope.hostId = host.id;
 
@@ -24,7 +24,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
 
     $scope.create = function() {
         $scope.submitting = true;
-        $scope.gameNight.dateOnly = moment($scope.gameNight.date).format("DD/MM/YYYY");
+        $scope.gameNight.date = moment($scope.gameNight.date).format("YYYY-MM-DD");
 
         $http.post('/api/gamenights/', $scope.gameNight, {}).
             // Success
@@ -40,7 +40,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
 
     $scope.save = function () {
         $scope.submitting = true;
-        $scope.gameNight.dateOnly = moment($scope.gameNight.date).format("DD/MM/YYYY");
+        $scope.gameNight.date = moment($scope.gameNight.date).format("YYYY-MM-DD");
 
         $http.put('/api/gamenights/' + $scope.gameNight.id + "/", $scope.gameNight, {}).
             // Success
@@ -58,7 +58,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
         if (confirm("Do you want to delete: " + $scope.gameNight.description)) {
             $http.delete('/api/gamenights/' + $scope.gameNight.id + "/").
                 // Success
-                then(function (response) {
+                then(function () {
                     $mdDialog.hide({ deleted: $scope.gameNight.id });
                 // Error
                 }, function(response) {
@@ -70,7 +70,7 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
     // Currently needed because gameNight.host reference is name which has special chars. Which fails when <md-option ng-value="André">.
     // So this is a workaround that used host_id
     $scope.setGameNightHostValue = function() {
-        $scope.gameNight.host = $rootScope.persons.find(x => x.id === $scope.hostId).name;
+        $scope.gameNight.host = $rootScope.users.find(x => x.id === $scope.hostId).name;
     }
 
 
@@ -79,13 +79,14 @@ function GameNightDialogController($rootScope, $scope, $mdDialog, $http, gameNig
     function createNewLocalGameNightObject() {
         return {
             date: new Date(),
+            round_start: false,
             sum: "vote",
             votes: (function(){
-                var votes = [];
-                for(var i=0; i < $rootScope.persons.length; i++) {
-                    if ($rootScope.persons[i].activated) {
+                let votes = [];
+                for(let i=0; i < $rootScope.users.length; i++) {
+                    if ($rootScope.users[i].activated) {
                         votes.push({
-                            voter: $rootScope.persons[i].name,
+                            voter: $rootScope.users[i].name,
                             present: true
                         });
                     }

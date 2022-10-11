@@ -13,13 +13,13 @@ function AdminDialogController($rootScope, $scope, $mdDialog, $http) {
         $mdDialog.cancel();
     };
 
-    $scope.updateActivated = function (person, newActivated) {
+    $scope.updateActivated = function (user, newActivated) {
         $scope.submitting = true;
 
-        $http.put('/api/users/' + person.id + '/', { activated: newActivated}, {}).
-            then(function (response) {
+        $http.put('/api/users/' + user.id + '/', { activated: newActivated}, {}).
+            then(function () {
                 $scope.submitting = false;
-                person.activated = newActivated;
+                user.activated = newActivated;
             }, function (response) {
                 $scope.submitting = false;
                 alertError(response);
@@ -30,7 +30,7 @@ function AdminDialogController($rootScope, $scope, $mdDialog, $http) {
         $scope.submitting = true;
 
         $http.post('/api/actions/admin/recalculategnsums/', {}).
-            then(function (response) {
+            then(function () {
                 $scope.submitting = false;
                 $rootScope.$emit('loadGameNights');
             }, function (response) {

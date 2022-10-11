@@ -17,7 +17,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
     // *************** TRIGGER METHODS ***************
 
     $rootScope.$on('openGameNightDialog', function (event, args) { $scope.openGameNightDialog(args.ev, args.gameNight); });
-    $rootScope.$on('loadGameNights', function (event, args) { loadGameNights(); });
+    $rootScope.$on('loadGameNights', function () { loadGameNights(); });
 
 
     // *************** PUBLIC METHODS ***************
@@ -50,11 +50,11 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
             date: new Date(),
             sum: "vote",
             votes: (function(){
-                var votes = [];
-                for(var i=0; i < $rootScope.persons.length; i++) {
-                    if ($rootScope.persons[i].activated) {
+                let votes = [];
+                for(let i=0; i < $rootScope.users.length; i++) {
+                    if ($rootScope.users[i].activated) {
                         votes.push({
-                            voter: $rootScope.persons[i].name,
+                            voter: $rootScope.users[i].name,
                         });
                     }
                 }
@@ -109,7 +109,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
     $scope.customFilter = function (search) {
         search = search.toLowerCase();
         return function (gameNight) {
-            if (search == "" || search == undefined)
+            if (search === "" || search === undefined)
                 return true;
             if (gameNight.host.toLowerCase().indexOf(search) > -1)
                 return true;
@@ -122,10 +122,10 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
         }
     }
 
-    $scope.avatarUrl = function (name) {
-        var host = $rootScope.persons.find(x => x.name === name && x.id !== 'undefined');
-        if (typeof host !== "undefined" && host.avatar)
-            return "/api/users/" + host.id + "/avatar/";
+    $scope.pictureUrl = function (name) {
+        let host = $rootScope.users.find(x => x.name === name && x.id !== 'undefined');
+        if (typeof host !== "undefined" && host.picture_url)
+            return host.picture_url;
         else
             return "";
     }
@@ -133,20 +133,13 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
 
     // *************** PRIVATE METHODS ***************
 
-    function loadGameNights(limit = null, loadFullAfterwards = false) {
-        console.log("Loading game nights with limit=" + limit);
+    function loadGameNights() {
         $scope.loadingData = true;
-
-        var limitStr = limit === null ? "" : "?limit=" + limit;
-
-        $http.get('/api/gamenights/' + limitStr).
+        $http.get('/api/gamenights/').
             then(function(response) {
                 $scope.loadingData = false;
                 $scope.gameNights = response.data;
                 loadedGameNightsProcessing();
-
-                if (loadFullAfterwards)
-                    loadGameNights(null);
             }, function(response) {
                 $scope.loadingData = false;
                 alertError(response);
@@ -159,7 +152,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
     }
 
     function updateLocalGameNight(gameNight) {
-        for (var i = 0; i < $scope.gameNights.length; i++) {
+        for (let i = 0; i < $scope.gameNights.length; i++) {
             if ($scope.gameNights[i].id === gameNight.id) {
                 $scope.gameNights[i] = gameNight;
                 loadedGameNightsProcessing();
@@ -171,7 +164,7 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
     }
 
     function deleteLocalGameNight(gameNightId) {
-        var index = $scope.gameNights.findIndex(x => x.id === gameNightId);
+        let index = $scope.gameNights.findIndex(x => x.id === gameNightId);
         $scope.gameNights.splice(index, 1);
         loadedGameNightsProcessing();
     }
@@ -179,13 +172,12 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
     function loadedGameNightsProcessing() {
         setGameNightDates($scope.gameNights);
         setGameNightVoteStatus($scope.gameNights);
-        setGameNightLastOfRounds($scope.gameNights);
         addSearchableMetaData($scope.gameNights);
         $scope.sortByDate();
     }
 
     function setGameNightDates(gameNights) {
-        for(var i=0; i<gameNights.length; i++) {
+        for(let i=0; i<gameNights.length; i++) {
             if (gameNights[i].date_epoch)
                 gameNights[i].date = new Date(gameNights[i].date_epoch * 1000);
             else
@@ -194,8 +186,8 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
     }
 
     function setGameNightVoteStatus(gameNights) {
-        for(var i=0; i<gameNights.length; i++) {
-            if (gameNights[i].own_vote && !gameNights[i].own_vote.complete_vote && gameNights[i].host != $rootScope.user.name)
+        for(let i=0; i<gameNights.length; i++) {
+            if (gameNights[i].own_vote && !gameNights[i].own_vote.completed_vote && gameNights[i].host !== $rootScope.user.name)
                 gameNights[i].voteStatus = "red";
             else if (gameNights[i].votes.length < 3)
                 gameNights[i].voteStatus = "orange";
@@ -204,26 +196,8 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
         }
     }
 
-    function setGameNightLastOfRounds(gameNights) {
-        // Ascending sort
-        gameNights.sort(function(a, b){return a.date-b.date;});
-
-        // Offset by 1 since we have to pretend the game night before first game night was the previous one, for this algorithm to work.
-        var previousIsLastOfRoundIndex = -1;
-
-        for(var i=0; i<gameNights.length; i++) {
-            var gameNightsSinceLastFirstOfRoundCount = i - previousIsLastOfRoundIndex;
-            var peoplePartOfRound = gameNights[i].votes.length + 1; // +1 because host do not vote
-
-            if (gameNightsSinceLastFirstOfRoundCount == peoplePartOfRound) {
-                gameNights[i].isLastOfRound = true;
-                previousIsLastOfRoundIndex = i;
-            }
-        }
-    }
-
     function addSearchableMetaData(gameNights) {
-        for(var i=0; i<gameNights.length; i++) {
+        for(let i=0; i<gameNights.length; i++) {
             gameNights[i].searchMetaData = "h:" + gameNights[i].host;
             if (gameNights[i].date)
                 gameNights[i].searchMetaData += " " + moment(gameNights[i].date).format("DD/MM/YYYY");
@@ -231,16 +205,16 @@ app.controller('DataController', function($rootScope, $scope, $http, $window, $m
     }
 
     function summarizeVotesRatingPart(gameNight, part) {
-        var sum = 0;
+        let sum = 0;
 
-        for (var i = 0; i < gameNight.votes.length; i++)
+        for (let i = 0; i < gameNight.votes.length; i++)
             if (!isNaN(gameNight.votes[i][part]))
                 sum += gameNight.votes[i][part];
 
         return sum;
     }
 
-    loadGameNights(20, true);
+    loadGameNights();
 
     console.log("DataController loaded");
 });

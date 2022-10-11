@@ -1,117 +1,55 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+from typing import List, Optional
 
-import webapp2
-import json
-import logging
-from models import *
-from google.appengine.api import users
-from google.appengine.runtime.apiproxy_errors import RequestTooLargeError
-from .utils import *
-from .decorators import *
-from config_hidden import SitePassword
+from fastapi import APIRouter, Depends
 
+from models.api.user import ClaimUserData, UpdateUserData
+from models.external.google import GoogleAccount
+from repos.user import UserRepo
+from utils.db import ensure_db_context
 
-class UsersHandler(webapp2.RequestHandler):
-    def get(self):
-        ok_200(self.response, [person.get_data() for person in Person.query()])
+from .session import me_admin_or_401, me_google_acc_or_401, me_google_acc_or_none
+
+router = APIRouter()
 
 
-class AvailableNamesHandler(webapp2.RequestHandler):
-    def get(self):
-        person_names_taken = [person.name for person in Person.query()]
-        available_names = [name for name in person_names_allowed if name not in person_names_taken]
-        ok_200(self.response, available_names)
+@router.post("/me/verify/")
+@ensure_db_context
+def post_me_verify(
+    data: ClaimUserData, google_acc: GoogleAccount = Depends(me_google_acc_or_401)
+) -> None:
+    if data.name not in UserRepo.get_available_names():
+        raise Exception("Name not available")
+    UserRepo.create(google_acc=google_acc, name=data.name)
 
 
-class MyUserHandler(webapp2.RequestHandler):
-    def get(self):
-        self.response.headers['Content-Type'] = 'application/json'
-        user = users.get_current_user()
-        if user:
-            person = Person.query(Person.userid == user.user_id()).get()
-            verified = True if person else False
-            name = person.name if person else None
-            ok_200(self.response, {'name': name, 'nickname': user.nickname(), 'verified': verified, 'is_admin': users.is_current_user_admin()})
-        else:
-            ok_200(self.response, {})
+@router.put("/{id_}/", dependencies=[Depends(me_admin_or_401)])
+@ensure_db_context
+def put(id_: int, data: UpdateUserData) -> None:
+    UserRepo.update_activated(id_=id_, value=data.activated)
 
 
-class MyUserAvatarHandler(webapp2.RequestHandler):
-    @require_verified
-    def post(self):
-        person = current_user_person()
-        try:
-            person.avatar = self.request.get('file')
-            person.put()
-            ok_204(self.response)
-        except RequestTooLargeError:
-            error(400, self.response, "FILE_TO_LARGE", "The uploaded file was to large")
-        
-
-class MyLoginHandler(webapp2.RequestHandler):
-    def get(self):
-        redirect = self.request.get('redirect', "/")
-        return webapp2.redirect(users.create_login_url(redirect))
+@router.get("/", response_model=List[dict])
+@ensure_db_context
+def get_many() -> List[dict]:
+    return [user.get_data() for user in UserRepo.get_all()]
 
 
-class MyLogoutHandler(webapp2.RequestHandler):
-    def get(self):
-        redirect = self.request.get('redirect', "/")
-        return webapp2.redirect(users.create_logout_url(redirect))
+@router.get("/available-names/", response_model=List[str])
+@ensure_db_context
+def get_available_names() -> List[str]:
+    return UserRepo.get_available_names()
 
 
-class MyVerifyHandler(webapp2.RequestHandler):
-    @require_request_data(['name', 'password'])
-    def post(self):
-        request_data = json.loads(self.request.body)
-
-        if not request_data['password'] == SitePassword:
-            error(400, self.response, "error_bad_password", "Bad password")
-            return
-
-        user = users.get_current_user()
-        Person(
-            name=request_data['name'],
-            userid=user.user_id(),
-            nickname=user.nickname()
-        ).put()
-
-        ok_204(self.response)
-
-
-class UserHandler(webapp2.RequestHandler):
-    @require_admin
-    def put(self, person_id):
-        request_data = json.loads(self.request.body)
-        person = Person.get_by_id(int(person_id))
-
-        if 'activated' in request_data:
-            person.activated = request_data['activated']
-
-        person.put()
-
-
-class UserAvatarHandler(webapp2.RequestHandler):
-    def get(self, person_id):
-        person = Person.get_by_id(int(person_id))
-        if person and person.avatar:
-            self.response.headers['Content-Type'] = 'image/jpeg'
-            self.response.cache_control = 'public'
-            self.response.cache_control.max_age = 300
-            self.response.out.write(person.avatar)
-        else:
-            self.abort(404)
-
-
-app = webapp2.WSGIApplication([
-    (r'/api/users/', UsersHandler),
-    (r'/api/users/available-names/', AvailableNamesHandler),
-    (r'/api/users/me/', MyUserHandler),
-    (r'/api/users/me/avatar/', MyUserAvatarHandler),
-    (r'/api/users/me/login/', MyLoginHandler),
-    (r'/api/users/me/logout/', MyLogoutHandler),
-    (r'/api/users/me/verify/', MyVerifyHandler),
-    (r'/api/users/(\d+)/', UserHandler),
-    (r'/api/users/(\d+)/avatar/', UserAvatarHandler),
-], debug=True)
+@router.get("/me/", response_model=dict)
+@ensure_db_context
+def get_me(google_acc: Optional[GoogleAccount] = Depends(me_google_acc_or_none)) -> dict:
+    if google_acc:
+        user = UserRepo.get_one_or_none_by_google_id(google_acc.sub)
+        return {
+            "google_email": google_acc.email,
+            "registered": True if user else False,
+            "name": user.name if user else None,
+            "admin": user.admin if user else False,
+        }
+    else:
+        return {}

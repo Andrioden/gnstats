@@ -18,7 +18,7 @@
                 </div>
 
                 <h2>Voting Behavior</h2>
-                <p>Difference between average vote and persons vote within each game night. Higher number means the person tends to vote higher than the average.</p>
+                <p>Difference between average vote and user vote within each game night. Higher number means the person tends to vote higher than the average.</p>
 
                 <table class="zui-table">
                     <thead>
@@ -35,7 +35,7 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="behavior in stats.behaviors | orderBy:statsBehaviorOrderByField:statsBehaviorReverseSort">
-                            <td>{{ behavior.person }}</td>
+                            <td>{{ behavior.user }}</td>
                             <td class="right">{{ behavior.count }}</td>
                             <td class="right">{{ behavior.appetizer.toFixed(2) }}</td>
                             <td class="right">{{ behavior.main_course.toFixed(2) }}</td>
@@ -47,40 +47,20 @@
                     </tbody>
                 </table>
 
-                <h2>Hosting Performance - Rounds</h2>
-                <p>Format is [best in round], [worst in round], [times hosted].</p>
+                <h2>Hosting Performance</h2>
 
                 <table class="zui-table">
                     <thead>
                         <tr>
                             <th>Year</th>
-                            <th ng-repeat="person in $root.persons">{{ person.name }}</th>
+                            <th ng-repeat="user in $root.users">{{ user.name }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="(category, performances) in stats.host_performances">
                             <td>{{ category }}</td>
-                            <td ng-repeat="person in $root.persons" ng-style="backgroundStyle(performances[person.name])">
-                                <span ng-show="performances[person.name]">{{ performances[person.name].best }}, {{ performances[person.name].worst }}, {{ performances[person.name].hosted }}</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h2>Hosting Performance - Average</h2>
-
-                <table class="zui-table">
-                    <thead>
-                        <tr>
-                            <th>Year</th>
-                            <th ng-repeat="person in $root.persons">{{ person.name }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="(category, performances) in stats.host_performances">
-                            <td>{{ category }}</td>
-                            <td ng-repeat="person in $root.persons" class="right">
-                                <span ng-show="performances[person.name]">{{ performances[person.name].avg.toFixed(2) }}</span>
+                            <td ng-repeat="user in $root.users" class="right">
+                                <span ng-show="performances[user.name]"><small>({{ performances[user.name].hosted }})</small> {{ performances[user.name].avg.toFixed(2) }}</span>
                             </td>
                         </tr>
                     </tbody>

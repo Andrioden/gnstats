@@ -1,0 +1,27 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+pydantic = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+gunicorn = "*"
+authlib = "*"
+itsdangerous = "*"
+httpx = "*"
+python-multipart = "*"
+google-cloud-ndb = "*"
+google-cloud-secret-manager = "*"
+
+[dev-packages]
+vulture = "*"
+isort = "*"
+black = "*"
+flake8 = "*"
+mypy = "*"
+pytest = "*"
+
+[requires]
+python_version = "3.9"

@@ -9,32 +9,29 @@
                 </md-button>
                 <md-menu-content>
                     <md-menu-item>
-                        <md-button ng-href="/api/users/me/login/" ng-hide="user.nickname">Login</md-button>
-                        <md-button ng-href="/api/users/me/logout/" ng-show="user.nickname">Logout</md-button>
+                        <md-button ng-href="/api/auth/login/" ng-hide="user.google_email">Login</md-button>
+                        <md-button ng-href="/api/auth/logout/" ng-show="user.google_email">Logout</md-button>
                     </md-menu-item>
-                    <md-menu-item ng-show="!user.verified && user.nickname">
+                    <md-menu-item ng-show="!user.registered && user.google_email">
                         <md-button ng-click="openVerificationDialog($event)">Verify</md-button>
                     </md-menu-item>
-                    <md-menu-item ng-show="user.verified">
-                        <md-button ng-click="openAvatarDialog($event)">Set avatar</md-button>
-                    </md-menu-item>
-                    <md-menu-item ng-show="user.is_admin">
+                    <md-menu-item ng-show="user.admin">
                         <md-button ng-click="openAdminDialog($event)">Admin</md-button>
                     </md-menu-item>
                     <md-divider></md-divider>
-                    <md-menu-item ng-show="$root.persons.length > 0">
+                    <md-menu-item ng-show="$root.users.length > 0">
                         <md-button ng-click="openStatsDialog($event)">Stats</md-button>
                     </md-menu-item>
                 </md-menu-content>
             </md-menu>
 
             <h2 flex md-truncate>
-                <span>{{user.nickname}}</span>
-                <span ng-show="user.verified">({{user.name}})</span>
-                <md-button ng-show="user.nickname && !user.verified" ng-click="openVerificationDialog($event)">(click to verify)</md-button>
+                <span ng-hide="user.name">{{user.google_email}}</span>
+                <span ng-show="user.name">{{user.name}}</span>
+                <md-button ng-show="user.google_email && !user.registered" ng-click="openVerificationDialog($event)">(click to verify)</md-button>
             </h2>
 
-            <md-button class="md-icon-button" ng-click="openCreateNewGameNightDialog($event)" ng-show="user.verified && $root.persons.length > 0">
+            <md-button class="md-icon-button" ng-click="openCreateNewGameNightDialog($event)" ng-show="user.registered && $root.users.length > 0">
                 <i class="material-icons md-light">add</i>
             </md-button>
         </div>

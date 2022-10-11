@@ -3,11 +3,11 @@ app.controller('ToolbarController', function($rootScope, $scope, $http, $window,
 
     // *************** PUBLIC VARIABLES ***************
 
-    $rootScope.loadingPersons = false;
-    $rootScope.persons = [];
+    $rootScope.loadingUsers = false;
+    $rootScope.users = [];
     $rootScope.user = {
-        nickname: "",
-        verified: false
+        google_email: "",
+        registered: false
     };
 
 
@@ -20,13 +20,13 @@ app.controller('ToolbarController', function($rootScope, $scope, $http, $window,
             alertError(response);
         });
 
-    $rootScope.loadingPersons = true;
+    $rootScope.loadingUsers = true;
     $http.get('/api/users/').
         then(function(response) {
-            $rootScope.persons = response.data;
-            $rootScope.loadingPersons = false;
+            $rootScope.users = response.data;
+            $rootScope.loadingUsers = false;
         }, function (response) {
-            $rootScope.loadingPersons = false;
+            $rootScope.loadingUsers = false;
             alertError(response);
         });
 
@@ -44,22 +44,6 @@ app.controller('ToolbarController', function($rootScope, $scope, $http, $window,
         })
         // Hidden with potential return value
         .then(function (deletedTrueOrGameNightObject) {
-        },
-        // Cancelled
-        function () { });
-    };
-
-    $scope.openAvatarDialog = function (ev) {
-        $mdDialog.show({
-            controller: AvatarDialogController,
-            templateUrl: 'static/app/toolbar-extra.avatarDialog.template.html',
-            parent: angular.element(document.body),
-            targetEvent: ev,
-            clickOutsideToClose: true,
-            fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
-        })
-        // Hidden with potential return value
-        .then(function () {
         },
         // Cancelled
         function () { });
