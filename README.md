@@ -26,6 +26,12 @@
 1. Run `.\scripts\populate.ps1`
 
 
+## Deploy to production
+
+1. Install gcloud cli, and authenticate yourself
+2. Run `.\scripts\deploy.ps1`
+
+
 ## Relevant links
 
 - Backend
