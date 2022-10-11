@@ -102,6 +102,8 @@ def test_game_nights_api_delete_as_anon(
     response = client_as_anon.delete(f"/api/gamenights/{game_night.id}/")
     assert response.status_code == HTTP_401_UNAUTHORIZED
 
+    assert GameNightRepo.get(game_night.id) is not None
+
 
 def test_game_nights_api_post_recalculate_sums_as_admin(
     clean_db_context: Context, client_as_admin: TestClient
