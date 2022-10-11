@@ -29,7 +29,7 @@ function AdminDialogController($rootScope, $scope, $mdDialog, $http) {
     $scope.recalcGameNightSums = function () {
         $scope.submitting = true;
 
-        $http.post('/api/actions/admin/recalculategnsums/', {}).
+        $http.post('/api/gamenights/actions/recalculate-sum/', {}).
             then(function () {
                 $scope.submitting = false;
                 $rootScope.$emit('loadGameNights');
