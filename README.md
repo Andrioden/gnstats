@@ -21,6 +21,12 @@
 9. (Optional) Setup pre-commit: `cp pre-commit.sh .git/hooks/pre-commit`
 
 
+## Verifying user
+For a user to be able to make changes to the data it needs to be verified
+1. Have the user log in and select a name
+2. Go to the database admin, find the User and set activated to true
+
+
 ## Import prod data to local db
 
 1. Run `.\scripts\populate.ps1`
