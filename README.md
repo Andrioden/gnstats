@@ -22,6 +22,7 @@
 
 
 ## Verifying user
+
 For a user to be able to make changes to the data it needs to be verified
 1. Have the user log in and select a name
 2. Go to the database admin, find the User and set activated to true
