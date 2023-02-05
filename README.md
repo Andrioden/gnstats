@@ -39,11 +39,17 @@ For a user to be able to make changes to the data it needs to be verified
 2. Run `.\scripts\deploy.ps1`
 
 
+# Backup
+
+1. [Cloud Scheduler](https://console.cloud.google.com/cloudscheduler?referrer=search&hl=NO&project=game-night-stats)
+2. Pushes a message to a [Pub/Sub topic](https://console.cloud.google.com/cloudpubsub/topic/detail/datastore-backup-topic?hl=NO&project=game-night-stats)
+3. Which trigger a [Cloud Function](https://console.cloud.google.com/functions/details/us-west1/datastore-backup?env=gen1&hl=NO&project=game-night-stats)
+
+
 ## Relevant links
 
 - Backend
   - [Gcloud OAuth Credentials](https://console.cloud.google.com/apis/credentials?project=game-night-stats)
-  - [Gcloud db backup job](https://console.cloud.google.com/cloudscheduler?referrer=search&hl=NO&project=game-night-stats)
   - Web framework: https://fastapi.tiangolo.com/
   - Database framework: https://googleapis.dev/python/python-ndb/latest/index.html
   - Datastore admin: https://github.com/remko/dsadmin
