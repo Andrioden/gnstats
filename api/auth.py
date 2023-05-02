@@ -26,7 +26,7 @@ async def login(
     oauth_client: StarletteOAuth2App = Depends(google_oauth_client),
 ) -> RedirectResponse:
     redirect_uri = request.url_for("callback")
-    return await oauth_client.authorize_redirect(request, redirect_uri)
+    return await oauth_client.authorize_redirect(request, str(redirect_uri))
 
 
 @router.get("/callback/")
