@@ -7,14 +7,17 @@ env_variables:
 
 handlers:
   - url: /favicon\.ico
+    secure: always
     static_files: static/favicon.ico
     upload: static/favicon\.ico
 
   - url: /
+    secure: always
     static_files: static/index.html
     upload: static/index\.html
 
   - url: /static
+    secure: always
     static_dir: static
 
   - url: /.*
