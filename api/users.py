@@ -28,19 +28,19 @@ def put(id_: int, data: UpdateUserData) -> None:
     UserRepo.update_activated(id_=id_, value=data.activated)
 
 
-@router.get("/", response_model=List[dict])
+@router.get("/")
 @ensure_db_context
 def get_many() -> List[dict]:
     return [user.get_data() for user in UserRepo.get_all()]
 
 
-@router.get("/available-names/", response_model=List[str])
+@router.get("/available-names/")
 @ensure_db_context
 def get_available_names() -> List[str]:
     return UserRepo.get_available_names()
 
 
-@router.get("/me/", response_model=dict)
+@router.get("/me/")
 @ensure_db_context
 def get_me(google_acc: Optional[GoogleAccount] = Depends(me_google_acc_or_none)) -> dict:
     if google_acc:

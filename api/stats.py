@@ -8,7 +8,7 @@ from utils.stats_calculator import StatsCalculator
 router = APIRouter()
 
 
-@router.get("/", response_model=dict)
+@router.get("/")
 @ensure_db_context
 def get() -> dict:
     stats_calculator = StatsCalculator(

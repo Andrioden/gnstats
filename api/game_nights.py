@@ -16,13 +16,13 @@ from utils.db import ensure_db_context
 router = APIRouter()
 
 
-@router.post("/", response_model=dict)
+@router.post("/")
 @ensure_db_context
 def post(create: GameNightCreate, me: User = Depends(me_activated_or_401)) -> dict:
     return _create_or_update(me, create).get_data(me_name=me.name)
 
 
-@router.put("/{id_}/", response_model=dict)
+@router.put("/{id_}/")
 @ensure_db_context
 def put(id_: int, update: GameNightUpdate, me: User = Depends(me_activated_or_401)) -> dict:
     return _create_or_update(me, update, id_).get_data(me_name=me.name)
@@ -34,7 +34,7 @@ def delete(id_: int) -> None:
     GameNightRepo.delete_by_id(id_)
 
 
-@router.get("/", response_model=List[dict])
+@router.get("/")
 @ensure_db_context
 def get_many(me: Optional[User] = Depends(me_or_none)) -> List[dict]:
     all_votes = VoteRepo.get_all()
@@ -47,7 +47,7 @@ def get_many(me: Optional[User] = Depends(me_or_none)) -> List[dict]:
     ]
 
 
-@router.get("/{id_}/", response_model=dict)
+@router.get("/{id_}/")
 @ensure_db_context
 def get_one(id_: int, me: User = Depends(me_or_none)) -> dict:
     if game_night := GameNightRepo.get_one_or_none(id_):
