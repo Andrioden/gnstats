@@ -1,4 +1,6 @@
-## Getting started
+# Getting started
+
+**Setting up**
 
 1. Setup python env
    1. Install python 3.9.X
@@ -21,32 +23,34 @@
 9. (Optional) Setup pre-commit: `cp pre-commit.sh .git/hooks/pre-commit`
 
 
-## Verifying user
+**Import prod data to local db**
+
+1. Run `.\scripts\populate.ps1`
+
+
+**Verifying user**
 
 For a user to be able to make changes to the data it needs to be verified
 1. Have the user log in and select a name
 2. Go to the database admin, find the User and set activated to true
 
 
-## Import prod data to local db
-
-1. Run `.\scripts\populate.ps1`
-
-
-## Deploy to production
+# Deploy to production
 
 1. Install gcloud cli, and authenticate yourself
 2. Run `.\scripts\deploy.ps1`
 
 
-# Backup
+# Implementation
+
+**Backup**
 
 1. [Cloud Scheduler](https://console.cloud.google.com/cloudscheduler?referrer=search&hl=NO&project=game-night-stats)
 2. Pushes a message to a [Pub/Sub topic](https://console.cloud.google.com/cloudpubsub/topic/detail/datastore-backup-topic?hl=NO&project=game-night-stats)
 3. Which trigger a [Cloud Function](https://console.cloud.google.com/functions/details/us-west1/datastore-backup?env=gen1&hl=NO&project=game-night-stats)
 
 
-## Relevant links
+**Relevant links**
 
 - Backend
   - [Gcloud OAuth Credentials](https://console.cloud.google.com/apis/credentials?project=game-night-stats)
